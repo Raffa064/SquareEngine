@@ -1,9 +1,9 @@
 package com.raffa064.engine.core.api;
 
 import com.raffa064.engine.core.App;
-import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.ScriptEngine;
 import com.raffa064.engine.core.components.Image;
+import com.raffa064.engine.core.components.Native;
 import com.raffa064.engine.core.components.Script;
 import com.raffa064.engine.core.components.Transform2D;
 import java.util.HashMap;
@@ -38,7 +38,9 @@ public class ComponentLoader {
 	public Object create(String name) {
 		if (nativeComponents.containsKey(name)) {
 			try {
-				return (Component) nativeComponents.get(name).newInstance();
+				Native nativeComponent = (Native) nativeComponents.get(name).newInstance();
+				nativeComponent.setApp(app);
+				return nativeComponent;
 			} catch (Exception e) {}
 		}
 		

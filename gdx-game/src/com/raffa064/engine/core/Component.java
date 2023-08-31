@@ -14,8 +14,6 @@ public abstract class Component {
 	public static final String TEXTURE = "TEXTURE";
 	public static final String GAME_OBJECT = "GAME_OBJECT";
 	
-	public SpriteBatch batch;
-	public ShapeRenderer shape;
 	public String name;
 	public GameObject obj;
 	public List<ExportedProp> exportedProps = new ArrayList<>();

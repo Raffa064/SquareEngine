@@ -1,9 +1,10 @@
 package com.raffa064.engine.core.api;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.GameObject;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.raffa064.engine.core.components.Native;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 

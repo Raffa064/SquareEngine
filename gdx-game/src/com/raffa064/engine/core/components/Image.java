@@ -5,7 +5,7 @@ import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.api.Assets;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-public class Image extends Component {
+public class Image extends Native {
 	public String texturePath;
 	public Texture texture;
 	

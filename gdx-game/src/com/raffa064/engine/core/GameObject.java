@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 
 public class GameObject {
 	protected App app;
-	private String name;
+	private String name = "Unknown";
 	private List<GameObject> children = new ArrayList<>();
 	private List<Component> componentList = new ArrayList<>();
 	public GameObject parent;
@@ -143,8 +143,6 @@ public class GameObject {
 		for (int i = 0; i < componentList.size(); i++) {
 			Component component = componentList.get(i);
 			component.set("obj", this);
-			component.set("batch", app.getSceneBatch());
-			component.set("shape", app.getSceneShapeRender());
 			
 			component.ready();
 		}

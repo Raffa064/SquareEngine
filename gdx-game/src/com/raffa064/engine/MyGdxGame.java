@@ -5,8 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
-import com.raffa064.engine.core.api.Assets;
 import com.raffa064.engine.core.components.Image;
+import com.raffa064.engine.core.components.Scene;
 import com.raffa064.engine.core.components.Script;
 import com.raffa064.engine.core.components.Transform2D;
 
@@ -21,7 +21,9 @@ public class MyGdxGame extends Game {
 		app = new App();
 		app.init();
 		app.loadProject(Gdx.files.internal("project"));
-		
+
+		Scene scene = new Scene();
+		app.setScene(scene);
 		
 		GameObject bg = new GameObject();
 		
@@ -29,11 +31,11 @@ public class MyGdxGame extends Game {
 		bgTransform.get("pos", Vector2.class).set(512, 300);
 		bg.add(bgTransform);
 		
-		Image bgImage = new Image();
+		Image bgImage = (Image) app.componentLoader.create("Image");
 		bgImage.texturePath = "project/bg.jpg";
 		bg.add(bgImage);
 		
-		app.scene.addChild(bg);
+		scene.addChild(bg);
 		
 		GameObject obj = new GameObject();
 		obj.setZIndex(1);
@@ -42,7 +44,7 @@ public class MyGdxGame extends Game {
 		transform.get("pos", Vector2.class).set(100, 100);
 		obj.add(transform);
 		
-		Image img = new Image();
+		Image img = (Image) app.componentLoader.create("Image");
 		img.texturePath = "project/square.png";
 		obj.add(img);
 		
@@ -54,7 +56,7 @@ public class MyGdxGame extends Game {
 		script2.set("duration", 1);
 		obj.add(script2);
 		
-		app.scene.addChild(obj);
+		scene.addChild(obj);
 	}
 
 	@Override

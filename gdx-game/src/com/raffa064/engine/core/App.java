@@ -28,32 +28,36 @@ public class App {
 		this.scene = scene;
 		scene.setApp(this);
 		scene.init();
+
+		scriptEngine
+			.inject("batch", scene.batch)
+			.inject("shape", scene.shape);
 	}
 
 	public void init() {
-		Scene scene = new Scene();
-		setScene(scene);
-		
-		scriptEngine = new ScriptEngine();
 		componentLoader = new ComponentLoader(this);
 		assets = new Assets();
 		logger = new Logger();
-
+		
+		scriptEngine = new ScriptEngine();
+		
 		scriptEngine
 		    .inject("Scene", new com.raffa064.engine.core.api.Scene(this))
 			.inject("Component", componentLoader.js())
 			.inject("Assets", assets)
 			.inject("Logger", logger);
 	}
-	
-	
+
+
 	public void loadProject(FileHandle folder) {
+		//TODO: load project.config, and setScene(mainScene)
+		
 		for (FileHandle file : folder.list()) {
 			if (file.isDirectory()) {
 				loadProject(folder);
 				return;
 			} 
-			
+
 			String extension = file.extension();
 			switch (extension) {
 				case "js":
