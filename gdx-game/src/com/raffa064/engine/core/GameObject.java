@@ -1,8 +1,10 @@
 package com.raffa064.engine.core;
 
+import com.raffa064.engine.core.components.Script;
 import java.util.ArrayList;
 import java.util.List;
-import com.raffa064.engine.core.components.Script;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class GameObject {
 	protected App app;
@@ -52,9 +54,40 @@ public class GameObject {
 	public void setApp(App app) {
 		this.app = app;
 	}
+	
+	private String increseNumber(String name) {
+		Matcher matcher = Pattern.compile("\\([0-9]+\\)").matcher(name);
+
+		if (matcher.find()) {
+			int start = matcher.start();
+			int end = matcher.end();
+
+			int counter = Integer.parseInt(name.substring(start+1, end-1)) + 1;
+			name = name.substring(0, start) + "(" + counter + ")" + name.substring(end, name.length());
+		} else {
+			name = name + " (1)";
+		}
+		
+		return name;
+	} 
+	
+	private void checkName(GameObject child) {
+		for (GameObject c : children) {
+			if (c == child) continue;
+			
+			if (c.name.equals(child.name)) {
+				child.name = increseNumber(child.name);
+				checkName(child);
+			}
+		}
+	}
 
 	public void setName(String name) {
 		this.name = name;
+		
+		if (parent != null) {
+			parent.checkName(this);
+		}
 	}
 
 	public String getName() {
@@ -74,6 +107,7 @@ public class GameObject {
 	}
 
 	public void addChild(GameObject child) {
+		checkName(child);
 		addChildByIndex(child);
 		child.setApp(app);
 		child.ready();

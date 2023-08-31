@@ -3,16 +3,36 @@ package com.raffa064.engine.core.tests;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
 import com.raffa064.engine.core.SceneLoader;
+import com.raffa064.engine.core.ScriptEngine;
 import com.raffa064.engine.core.api.ComponentLoader;
 import com.raffa064.engine.core.components.Scene;
 import com.raffa064.engine.core.components.Transform2D;
 import java.io.File;
 import java.io.FileInputStream;
-import com.raffa064.engine.core.ScriptEngine;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		test_transpiler();
+		test_name_counter();
+	}
+	
+	private static void test_name_counter() {
+		String name = "test";
+		
+		Matcher matcher = Pattern.compile("\\([0-9]+\\)").matcher(name);
+
+		if (matcher.find()) {
+			int start = matcher.start();
+			int end = matcher.end();
+
+			int counter = Integer.parseInt(name.substring(start+1, end-1)) + 1;
+			name = name.substring(0, start) + "(" + counter + ")" + name.substring(end, name.length());
+		} else {
+			name = name + " (1)";
+		}
+
+		System.out.println("COUNTER: "+name);
 	}
 
 	private static void test_transpiler() {

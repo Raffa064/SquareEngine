@@ -14,6 +14,14 @@ public class Scene extends GameObject {
 	public ShapeRenderer shape;
 	
 	public Scene() {}
+
+	@Override
+	public int getZIndex() {
+		return 0;
+	}
+
+	@Override
+	public void setZIndex(int zIndex) {}
 	
 	public void init() {
 		setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

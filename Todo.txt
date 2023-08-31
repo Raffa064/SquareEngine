@@ -3,4 +3,4 @@ x Replace for-in into normal for
 x Create and use z-Index while addChild is called
 x Find a way to remove .js() from scripts
 • Make group and tag system
-• Prenvent child with same name
+x Prenvent child with same name
