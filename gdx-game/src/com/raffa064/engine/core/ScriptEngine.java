@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import java.lang.reflect.InvocationTargetException;
 
 public class ScriptEngine {
     public Context ctx;
@@ -22,15 +23,6 @@ public class ScriptEngine {
 		ctx = Context.enter();
 		ctx.setOptimizationLevel(-1);
 		globalScope = ctx.initStandardObjects();
-		
-
-		inject("COLOR", "COLOR");
-		inject("STRING", "STRING");
-		inject("VECTOR2", "VECTOR2");
-		inject("FLOAT", "FLOAT");
-		inject("INTEGER", "INTEGER");
-		inject("TEXTURE", "TEXTURE");
-		inject("GAME_OBJECT", "GAME_OBJECT");
 	}
 
 	public void compile(String script, String name) {
@@ -62,6 +54,12 @@ public class ScriptEngine {
 
 	public void inject(Scriptable scope, String name, Object api) {
 		ScriptableObject.putProperty(scope, name, api);
+	}
+	
+	public ScriptEngine injectClass(Class clazz) {
+		String code = "const " + clazz.getSimpleName() + " = "+clazz.getName()+"";
+		compile(code);
+		return this;
 	}
 
 	public ScriptEngine inject(String name, Object api) {

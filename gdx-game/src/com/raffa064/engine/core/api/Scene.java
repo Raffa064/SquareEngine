@@ -1,10 +1,10 @@
 package com.raffa064.engine.core.api;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.GameObject;
-import com.raffa064.engine.core.components.Native;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
@@ -39,6 +39,42 @@ public class Scene {
 	
 	public OrthographicCamera getCamera() {
 		return app.scene.camera;
+	}
+
+	public float width() {
+		return app.scene.camera.viewportWidth;
+	}
+
+	public float height() {
+		return app.scene.camera.viewportHeight;
+	}
+	
+	public float viewportWidth() {
+		return app.viewportWidth;
+	}
+
+	public float viewportHeight() {
+		return app.viewportHeight;
+	}
+
+	public void setBackground(float r, float g, float b, float a) {
+		app.scene.backgroundColor.set(r, g, b, a);
+	}
+
+	public void setBackground(float r, float g, float b) {
+		app.scene.backgroundColor.set(r, g, b, 1);
+	}
+	
+	public void setBackground(Color color) {
+		app.scene.backgroundColor.set(color);
+	}
+
+	public void setBackground(String hex) {
+		app.scene.backgroundColor.set(Color.valueOf(hex));
+	}
+
+	public void setBackground(float gray) {
+		app.scene.backgroundColor.set(gray, gray, gray, 1);
 	}
 	
 	public GameObject findObject(String name, GameObject from) {

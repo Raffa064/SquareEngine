@@ -5,6 +5,7 @@ import com.raffa064.engine.core.GameObject;
 import com.raffa064.engine.core.SceneLoader;
 import com.raffa064.engine.core.ScriptEngine;
 import com.raffa064.engine.core.api.ComponentLoader;
+import com.raffa064.engine.core.api.Logger;
 import com.raffa064.engine.core.components.Scene;
 import com.raffa064.engine.core.components.Transform2D;
 import java.io.File;
@@ -14,7 +15,6 @@ import java.util.regex.Pattern;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		test_name_counter();
 	}
 	
 	private static void test_name_counter() {

@@ -9,6 +9,7 @@ import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
 
 public class Scene extends GameObject {
+	public Color backgroundColor = Color.BLACK;
 	public OrthographicCamera camera;
 	public SpriteBatch batch;
 	public ShapeRenderer shape;

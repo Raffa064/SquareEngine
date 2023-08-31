@@ -11,4 +11,3 @@ Component::process(delta) {
 Component::exit() {
 	
 }
-

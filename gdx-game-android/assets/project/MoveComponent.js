@@ -1,4 +1,6 @@
 MoveComponent::ready() {
+	Scene.setBackground(new Color(0, 0.8, 1, 0))
+	
 	$rotSpeed = 360 # Per sec
 	$transform = $obj.get("Transform2D")
 	$speed = 10

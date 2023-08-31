@@ -10,9 +10,10 @@ import com.raffa064.engine.core.api.Logger;
 import com.raffa064.engine.core.components.Scene;
 import com.raffa064.engine.core.api.ComponentLoader;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.MathUtils;
 
 public class App {
-	public Color backgroundColor = Color.BLACK;
 	public float viewportWidth = 1024;
 	public float viewportHeight = 600;
 	public boolean keepWidth = true;
@@ -38,9 +39,23 @@ public class App {
 		componentLoader = new ComponentLoader(this);
 		assets = new Assets();
 		logger = new Logger();
-		
+
 		scriptEngine = new ScriptEngine();
 		
+		scriptEngine
+			.injectClass(Color.class)
+			.injectClass(Vector2.class)
+			.injectClass(MathUtils.class);
+
+		scriptEngine
+			.inject("COLOR", "COLOR")
+			.inject("STRING", "STRING")
+			.inject("VECTOR2", "VECTOR2")
+			.inject("FLOAT", "FLOAT")
+			.inject("INTEGER", "INTEGER")
+			.inject("TEXTURE", "TEXTURE")
+			.inject("GAME_OBJECT", "GAME_OBJECT");
+
 		scriptEngine
 		    .inject("Scene", new com.raffa064.engine.core.api.Scene(this))
 			.inject("Component", componentLoader.js())
@@ -51,7 +66,7 @@ public class App {
 
 	public void loadProject(FileHandle folder) {
 		//TODO: load project.config, and setScene(mainScene)
-		
+
 		for (FileHandle file : folder.list()) {
 			if (file.isDirectory()) {
 				loadProject(folder);
@@ -67,6 +82,8 @@ public class App {
 	}
 
     public void render(float delta) {
+		Color backgroundColor = scene.backgroundColor;
+
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
