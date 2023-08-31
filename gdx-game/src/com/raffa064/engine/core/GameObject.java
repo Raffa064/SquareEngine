@@ -106,16 +106,19 @@ public class GameObject {
 	}
 
 	public void ready() {
-		for (Component component : componentList) {
+		for (int i = 0; i < componentList.size(); i++) {
+			Component component = componentList.get(i);
 			component.set("obj", this);
 			component.set("batch", app.getSceneBatch());
 			component.set("shape", app.getSceneShapeRender());
+			
 			component.ready();
 		}
 	}
 
 	public void process(float delta) {
-		for (Component component : componentList) {
+		for (int i = 0; i < componentList.size(); i++) {
+			Component component = componentList.get(i);
 			component.process(delta);
 		}
 
@@ -132,7 +135,8 @@ public class GameObject {
 	}
 
 	public void exit() {
-		for (Component component : componentList) {
+		for (int i = 0; i < componentList.size(); i++) {
+			Component component = componentList.get(i);
 			component.exit();
 		}
 	}
