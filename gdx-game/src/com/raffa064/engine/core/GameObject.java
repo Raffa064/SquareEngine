@@ -11,6 +11,35 @@ public class GameObject {
 	private List<Component> componentList = new ArrayList<>();
 	public GameObject parent;
 	private boolean queuedFree;
+	private int zIndex = 0;
+
+	public void setZIndex(int zIndex) {
+		this.zIndex = zIndex;
+		
+		if (parent != null) {
+			parent.changeIndex(this);
+		}
+	}
+
+	public int getZIndex() {
+		return zIndex;
+	}
+	
+	public void changeIndex(GameObject child) {
+		children.remove(child);
+		addChildByIndex(child);
+	}
+	
+	private void addChildByIndex(GameObject child) {
+		for (int i = 0; i < children.size(); i++) {
+			if (child.zIndex >= children.get(i).zIndex) {
+				children.add(i, child);
+				return;
+			}
+		}
+		
+		children.add(child);
+	}
 
 	public List<Component> getComponents() {
 		return componentList;
@@ -33,7 +62,9 @@ public class GameObject {
 	}
 
 	public GameObject child(String name) {
-		for (GameObject child : children) {
+		for (int i = children.size()-1; i >= 0; i--) {
+			GameObject child = children.get(i);
+			
 			if (child.name.equals(name)) {
 				return child;
 			}
@@ -43,7 +74,7 @@ public class GameObject {
 	}
 
 	public void addChild(GameObject child) {
-		children.add(child);
+		addChildByIndex(child);
 		child.setApp(app);
 		child.ready();
 	}
@@ -88,14 +119,14 @@ public class GameObject {
 			component.process(delta);
 		}
 
-		for (int i = 0; i < children.size(); i++) {
+		for (int i = children.size()-1; i >= 0; i--) {
 			GameObject child = children.get(i);
 			child.process(delta);
 
 			if (child.isQueuedFree()) {
 				children.remove(child);
 				child.exit();
-				i--;
+				i++;
 			}
 		}
 	}

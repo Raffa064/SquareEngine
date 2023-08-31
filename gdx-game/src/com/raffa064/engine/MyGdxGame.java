@@ -36,6 +36,7 @@ public class MyGdxGame extends Game {
 		app.scene.addChild(bg);
 		
 		GameObject obj = new GameObject();
+		obj.setZIndex(1);
 		
 		Transform2D transform = (Transform2D) app.componentLoader.create("Transform2D");
 		transform.get("pos", Vector2.class).set(100, 100);
