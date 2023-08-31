@@ -1,0 +1,5 @@
+Things to do:
+• Create and use z-Index while addChild is called
+• Find a way to remove .js() from scripts
+• Make group and tag system
+• Prenvent child with same name
