@@ -9,9 +9,23 @@ MoveComponent::ready() {
 	$transform.scale.set(0.2, 0.2)
 	
 	Tag.use($obj, "Player")
+	
+	$clearTime = 0
 }
 
 MoveComponent::process(delta) {
+	$clearTime += delta
+	
+	if ($clearTime > 3) {
+		$clearTime = 0
+		
+		var particles = Group.get('particles')
+		
+		for (var i = 0; i < particles.size(); i++) {
+			particles.get(i).queueFree()
+		}
+	}
+	
 	$transform.pos.x += $speed * $dirX
 	$transform.pos.y += $speed * $dirY
 	
@@ -41,5 +55,5 @@ MoveComponent::process(delta) {
 }
 
 MoveComponent::exit() {
-	
+	Tag.free('Player')
 }

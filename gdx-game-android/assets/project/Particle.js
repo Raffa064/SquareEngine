@@ -5,6 +5,8 @@ Particle::ready() {
 	$tex = Assets.texture('project/square.png')
 	$transform = $obj.get('Transform2D')
 	$initialScale = $transform.scale.cpy()
+	
+	Group.add($obj, 'particles')
 }
 
 Particle::process(delta) {
@@ -20,4 +22,6 @@ Particle::process(delta) {
 	}
 }
 
-Particle::exit() {}
+Particle::exit() {
+	Group.remove($obj, 'particles')
+}

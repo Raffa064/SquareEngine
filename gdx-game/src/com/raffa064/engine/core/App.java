@@ -15,6 +15,7 @@ import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.components.Native;
 import com.raffa064.engine.core.components.Scene;
 import com.raffa064.engine.core.api.TagAPI;
+import com.raffa064.engine.core.api.GroupAPI;
 
 public class App {
 	public float viewportWidth = 1024;
@@ -24,6 +25,7 @@ public class App {
 	public Scene currentScene;
 	public ScriptEngine scriptEngine;
 
+	public GroupAPI Group;
 	public TagAPI Tag;
 	public SceneAPI Scene;
 	public ComponentAPI Component;
@@ -41,6 +43,7 @@ public class App {
 	}
 
 	public void init() {
+		Group = new GroupAPI(this);
 		Tag = new TagAPI(this);
 		Scene = new SceneAPI(this);
 		Component = new ComponentAPI(this);
@@ -64,6 +67,7 @@ public class App {
 			.inject("GAME_OBJECT", "GAME_OBJECT");
 
 		scriptEngine
+			.inject("Group", Group)
 			.inject("Tag", Tag)
 			.inject("Scene", Scene)
 			.inject("Component", Component.js())
@@ -72,6 +76,7 @@ public class App {
 	}
 	
 	public void injectAPIs(Native component) {
+		component.Group = Group;
 		component.Tag = Tag;
 		component.Scene = Scene;
 		component.Component = Component;

@@ -9,8 +9,10 @@ import com.raffa064.engine.core.api.ComponentAPI;
 import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
+import com.raffa064.engine.core.api.GroupAPI;
 
 public abstract class Native extends Component {
+	public GroupAPI Group;
 	public TagAPI Tag;
 	public SceneAPI Scene;
 	public ComponentAPI Component;

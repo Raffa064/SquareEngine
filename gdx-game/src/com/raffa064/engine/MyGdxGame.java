@@ -52,7 +52,7 @@ public class MyGdxGame extends Game {
 		obj.add(script);
 		
 		Script script2 = (Script) app.Component.create("ParticleEmitter");
-		script2.set("spawnTime", 0.3);
+		script2.set("spawnTime", 0.01);
 		script2.set("duration", 2);
 		obj.add(script2);
 		
