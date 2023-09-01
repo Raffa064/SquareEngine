@@ -4,10 +4,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.Component;
+import com.raffa064.engine.core.api.AssetsAPI;
+import com.raffa064.engine.core.api.ComponentAPI;
+import com.raffa064.engine.core.api.LoggerAPI;
+import com.raffa064.engine.core.api.SceneAPI;
+import com.raffa064.engine.core.api.TagAPI;
 
 public abstract class Native extends Component {
-	protected SpriteBatch batch;
-	protected ShapeRenderer shape;
+	public TagAPI Tag;
+	public SceneAPI Scene;
+	public ComponentAPI Component;
+	public AssetsAPI Assets;
+	public LoggerAPI Logger;
+	
+	public SpriteBatch batch;
+	public ShapeRenderer shape;
 	
 	public Native(String name) {
 		super(name);
@@ -16,8 +27,8 @@ public abstract class Native extends Component {
 	public void setApp(App app) {
 		if (app == null) return;
 		
-		batch = app.scene.batch;
-		shape = app.scene.shape;
+		
+		app.injectAPIs(this);
 	}
 	
 	public void exportProp(String name, String type) {

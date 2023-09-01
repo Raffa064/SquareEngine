@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
+import java.util.HashMap;
 
 public class Scene extends GameObject {
 	public Color backgroundColor = Color.BLACK;

@@ -2,7 +2,7 @@ package com.raffa064.engine.core.components;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.raffa064.engine.core.Component;
-import com.raffa064.engine.core.api.Assets;
+import com.raffa064.engine.core.api.AssetsAPI;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Image extends Native {

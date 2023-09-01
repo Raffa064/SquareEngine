@@ -7,6 +7,8 @@ MoveComponent::ready() {
 	$dirX = 1
 	$dirY = 1
 	$transform.scale.set(0.2, 0.2)
+	
+	Tag.use($obj, "Player")
 }
 
 MoveComponent::process(delta) {

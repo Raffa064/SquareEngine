@@ -4,14 +4,13 @@ import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
 import com.raffa064.engine.core.SceneLoader;
 import com.raffa064.engine.core.ScriptEngine;
-import com.raffa064.engine.core.api.ComponentLoader;
-import com.raffa064.engine.core.api.Logger;
 import com.raffa064.engine.core.components.Scene;
 import com.raffa064.engine.core.components.Transform2D;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.raffa064.engine.core.api.ComponentAPI;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
@@ -66,7 +65,7 @@ public class Main {
 		scene.addChild(gameObject2);
 
 		App app = new App();
-		app.componentLoader = new ComponentLoader(app);
+		app.Component = new ComponentAPI(app);
 		SceneLoader sceneLoader = new SceneLoader(app);
 		String json = sceneLoader.asJson(scene);
 		Scene loaded = sceneLoader.fromJson(json);

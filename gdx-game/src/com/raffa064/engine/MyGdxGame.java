@@ -27,11 +27,11 @@ public class MyGdxGame extends Game {
 		
 		GameObject bg = new GameObject();
 		
-		Transform2D bgTransform = (Transform2D) app.componentLoader.create("Transform2D");
+		Transform2D bgTransform = (Transform2D) app.Component.create("Transform2D");
 		bgTransform.get("pos", Vector2.class).set(512, 300);
 		bg.add(bgTransform);
 		
-		Image bgImage = (Image) app.componentLoader.create("Image");
+		Image bgImage = (Image) app.Component.create("Image");
 		bgImage.texturePath = "project/bg.jpg";
 		bg.add(bgImage);
 		
@@ -40,20 +40,20 @@ public class MyGdxGame extends Game {
 		GameObject obj = new GameObject();
 		obj.setZIndex(1);
 		
-		Transform2D transform = (Transform2D) app.componentLoader.create("Transform2D");
+		Transform2D transform = (Transform2D) app.Component.create("Transform2D");
 		transform.get("pos", Vector2.class).set(100, 100);
 		obj.add(transform);
 		
-		Image img = (Image) app.componentLoader.create("Image");
+		Image img = (Image) app.Component.create("Image");
 		img.texturePath = "project/square.png";
 		obj.add(img);
 		
-		Script script = (Script) app.componentLoader.create("MoveComponent");
+		Script script = (Script) app.Component.create("MoveComponent");
 		obj.add(script);
 		
-		Script script2 = (Script) app.componentLoader.create("ParticleEmitter");
-		script2.set("spawnTime", 0.01);
-		script2.set("duration", 1);
+		Script script2 = (Script) app.Component.create("ParticleEmitter");
+		script2.set("spawnTime", 0.3);
+		script2.set("duration", 2);
 		obj.add(script2);
 		
 		scene.addChild(obj);

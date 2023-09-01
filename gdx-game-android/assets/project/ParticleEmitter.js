@@ -21,7 +21,10 @@ ParticleEmitter::process(delta) {
 		var cParticle = Component.create('Particle')
 		cParticle.duration = $duration
 		
-		var particle = Scene.createObject("Particle" + $count++, cTransform, cImage, cParticle)
+		var cChaser = Component.create('Chaser')
+		cChaser.target = "Player"
+		
+		var particle = Scene.createObject("Particle" + $count++, cTransform, cImage, cParticle, cChaser)
 		Scene.addToScene(particle)
 		
 		$timer = 0

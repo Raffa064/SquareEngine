@@ -133,7 +133,7 @@ public class SceneLoader {
 
 	private Component parseComponent(JSONObject componentJSON) throws Exception {
 		String name = componentJSON.getString("name");
-		Component component = (Component) app.componentLoader.create(name);
+		Component component = (Component) app.Component.create(name);
 
 		JSONArray exportedPropsJSON = componentJSON.getJSONArray("exportedProps");
 		for (int i = 0; i < exportedPropsJSON.length(); i++) {

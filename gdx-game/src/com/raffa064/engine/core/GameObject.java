@@ -3,8 +3,8 @@ package com.raffa064.engine.core;
 import com.raffa064.engine.core.components.Script;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GameObject {
 	protected App app;
@@ -14,6 +14,17 @@ public class GameObject {
 	public GameObject parent;
 	private boolean queuedFree;
 	private int zIndex = 0;
+	
+	private String tag;
+	private List<String> groups = new ArrayList<>();
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	public String getTag() {
+		return tag;
+	}
 
 	public void setZIndex(int zIndex) {
 		this.zIndex = zIndex;
