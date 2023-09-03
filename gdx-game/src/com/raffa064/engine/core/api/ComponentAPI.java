@@ -8,17 +8,16 @@ import com.raffa064.engine.core.components.Script;
 import com.raffa064.engine.core.components.Transform2D;
 import java.util.HashMap;
 
-public class ComponentAPI {
-	private App app;
+public class ComponentAPI extends API {
 	private HashMap<String, Class> nativeComponents = new HashMap<>();
 
 	public ComponentAPI(App app) {
-		this.app = app;
+		super(app);
 		
 		loadNative(
 			Transform2D.class,
 			Image.class
-		);
+		);		
 	}
 	
 	public void loadNative(Class... classes) {
@@ -39,7 +38,6 @@ public class ComponentAPI {
 		if (nativeComponents.containsKey(name)) {
 			try {
 				Native nativeComponent = (Native) nativeComponents.get(name).newInstance();
-				nativeComponent.setApp(app);
 				return nativeComponent;
 			} catch (Exception e) {}
 		}

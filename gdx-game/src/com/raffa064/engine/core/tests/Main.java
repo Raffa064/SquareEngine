@@ -2,7 +2,7 @@ package com.raffa064.engine.core.tests;
 
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
-import com.raffa064.engine.core.SceneLoader;
+import com.raffa064.engine.core.JSONLoader;
 import com.raffa064.engine.core.ScriptEngine;
 import com.raffa064.engine.core.components.Scene;
 import com.raffa064.engine.core.components.Transform2D;
@@ -66,7 +66,7 @@ public class Main {
 
 		App app = new App();
 		app.Component = new ComponentAPI(app);
-		SceneLoader sceneLoader = new SceneLoader(app);
+		JSONLoader sceneLoader = new JSONLoader(app);
 		String json = sceneLoader.asJson(scene);
 		Scene loaded = sceneLoader.fromJson(json);
 		String json2 = sceneLoader.asJson(loaded, 10);

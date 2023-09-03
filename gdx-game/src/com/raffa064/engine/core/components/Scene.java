@@ -28,6 +28,8 @@ public class Scene extends GameObject {
 		setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch = new SpriteBatch();
 		shape = new ShapeRenderer();
+		
+		ready();
 	}
 
 	public void setupCamera(float screenWidth, float screenHeight) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.raffa064.engine.core.components.Native;
 
 public class GameObject {
 	protected App app;
@@ -14,6 +15,7 @@ public class GameObject {
 	public GameObject parent;
 	private boolean queuedFree;
 	private int zIndex = 0;
+	private boolean isReady;
 	
 	private String tag;
 	private List<String> groups = new ArrayList<>();
@@ -121,7 +123,8 @@ public class GameObject {
 		checkName(child);
 		addChildByIndex(child);
 		child.setApp(app);
-		child.ready();
+		
+		if (isReady) child.ready();
 	}
 
 	public <T extends Component> void add(T component) {
@@ -151,11 +154,22 @@ public class GameObject {
 	}
 
 	public void ready() {
+		isReady = true;
+		
 		for (int i = 0; i < componentList.size(); i++) {
 			Component component = componentList.get(i);
 			component.set("obj", this);
 			
+			if (component instanceof Native) {
+				app.injectAPIs((Native) component);
+			}
+			
 			component.ready();
+		}
+		
+		for (int i = children.size()-1; i >= 0; i--) {
+			GameObject child = children.get(i);
+			child.ready();
 		}
 	}
 
@@ -181,6 +195,11 @@ public class GameObject {
 		for (int i = 0; i < componentList.size(); i++) {
 			Component component = componentList.get(i);
 			component.exit();
+		}
+		
+		for (int i = children.size()-1; i >= 0; i--) {
+			GameObject child = children.get(i);
+			child.exit();
 		}
 	}
 }

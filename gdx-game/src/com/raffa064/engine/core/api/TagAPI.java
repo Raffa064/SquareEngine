@@ -4,13 +4,11 @@ import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
 import java.util.HashMap;
 
-public class TagAPI {
-    private App app;
-
+public class TagAPI extends API {
 	private HashMap<String, GameObject> tagMap = new HashMap<>();
 	
 	public TagAPI(App app) {
-		this.app = app;
+		super(app);
 	}
 	
 	public boolean use(GameObject obj, String tag) {

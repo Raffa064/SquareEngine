@@ -22,25 +22,21 @@ public abstract class Native extends Component {
 	public SpriteBatch batch;
 	public ShapeRenderer shape;
 	
+	public Native() {
+		super("Unknown");
+	}
+	
 	public Native(String name) {
 		super(name);
 	}
 	
-	public void setApp(App app) {
-		if (app == null) return;
-		
-		
-		app.injectAPIs(this);
-	}
-	
-	public void exportProp(String name, String type) {
-		Component.ExportedProp exportedProp = new ExportedProp(name, type);
-		exportedProps.add(exportedProp);
-	}
-	
 	public void exportProps(String... nameAndTypeList) {
 		for (int i = 0; i < nameAndTypeList.length; i += 2) {
-			exportProp(nameAndTypeList[i], nameAndTypeList[i+1]);
+			String name = nameAndTypeList[i];
+			String type = nameAndTypeList[i+1];
+			
+			ExportedProp exportedProp = new ExportedProp(name, type);
+			exportedProps.add(exportedProp);
 		}
 	}
 }

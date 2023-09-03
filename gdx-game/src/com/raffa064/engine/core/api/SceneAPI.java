@@ -8,11 +8,9 @@ import com.raffa064.engine.core.GameObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
-public class SceneAPI {
-    private App app;
-
+public class SceneAPI extends API {
 	public SceneAPI(App app) {
-		this.app = app;
+		super(app);
 	}
 	
 	public GameObject createObject(String name, Object... components) {
@@ -55,6 +53,10 @@ public class SceneAPI {
 
 	public float viewportHeight() {
 		return app.viewportHeight;
+	}
+	
+	public Color getBackground() {
+		return app.currentScene.backgroundColor;
 	}
 
 	public void setBackground(float r, float g, float b, float a) {
