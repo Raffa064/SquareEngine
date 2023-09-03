@@ -68,7 +68,7 @@ public class Main {
 		app.Component = new ComponentAPI(app);
 		JSONLoader sceneLoader = new JSONLoader(app);
 		String json = sceneLoader.asJson(scene);
-		Scene loaded = sceneLoader.fromJson(json);
+		Scene loaded = sceneLoader.sceneFromJson(json);
 		String json2 = sceneLoader.asJson(loaded, 10);
 		System.out.println(json2);
 	}

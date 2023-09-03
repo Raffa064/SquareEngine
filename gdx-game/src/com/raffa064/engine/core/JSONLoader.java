@@ -168,6 +168,11 @@ public class JSONLoader {
 
 		return obj;
 	}
+	
+	public GameObject objectFromJson(String json) throws Exception {
+		JSONObject objJSON = new JSONObject(json);
+		return parseGameObject(objJSON);
+	}
 
 	private Scene parseScene(JSONObject sceneJSON) throws Exception {
 		Scene scene = new Scene();
@@ -184,7 +189,7 @@ public class JSONLoader {
 		return scene;
 	}
 
-	public Scene fromJson(String json) throws Exception {
+	public Scene sceneFromJson(String json) throws Exception {
 		JSONObject sceneJSON = new JSONObject(json);
 		return parseScene(sceneJSON);
 	}

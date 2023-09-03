@@ -2,6 +2,11 @@ Things to do:
 x Replace for-in into normal for
 x Create and use z-Index while addChild is called
 x Find a way to remove .js() from scripts
-• Make group and tag system
+x Make group and tag system
 x Prenvent child with same name
-• Call ready/exit on object children
+x Call ready/exit on object children
+• Fix editor history
+• Replace file template to elements in app.js
+• Create File/Folder button on explorer
+• Rename file button on explorer
+• Add FPS counter

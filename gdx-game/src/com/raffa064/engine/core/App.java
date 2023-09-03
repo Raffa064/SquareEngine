@@ -86,7 +86,7 @@ public class App {
 			.inject("Logger", Logger);
 	}
 
-	public void injectAPIs(Native component) {
+	public void injectDependencies(Native component) {
 		component.Group = Group;
 		component.Tag = Tag;
 		component.Scene = Scene;
@@ -99,7 +99,7 @@ public class App {
 	}
 
 	public Scene loadScene(String name) throws Exception {
-		Scene scn = jsonLoader.fromJson(sceneFiles.get(name));
+		Scene scn = jsonLoader.sceneFromJson(sceneFiles.get(name));
 		return scn;
 	}
 

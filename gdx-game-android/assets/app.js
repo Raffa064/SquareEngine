@@ -62,6 +62,7 @@ function openFile(path) {
 	const len = Math.floor((info.getBoundingClientRect().width / 1.5) / 20)
 	info.innerText = 'Current file: ...' + path.substring(Math.max(0, path.length - len), path.length)
 	currentFile = path
+	codeEditor.clearHistory()
 	codeEditor.setValue(app.getFileContent(path))
 	
 	app.setEditorData("currentFile", currentFile)

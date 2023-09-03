@@ -123,6 +123,7 @@ public class GameObject {
 		checkName(child);
 		addChildByIndex(child);
 		child.setApp(app);
+		child.parent = this;
 		
 		if (isReady) child.ready();
 	}
@@ -161,7 +162,7 @@ public class GameObject {
 			component.set("obj", this);
 			
 			if (component instanceof Native) {
-				app.injectAPIs((Native) component);
+				app.injectDependencies((Native) component);
 			}
 			
 			component.ready();

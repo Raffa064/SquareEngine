@@ -13,6 +13,16 @@ public class SceneAPI extends API {
 		super(app);
 	}
 	
+	public GameObject prefabObject(String path) {
+		try {
+			String json = app.Assets.json(path);
+			GameObject obj = app.jsonLoader.objectFromJson(json);
+			return obj;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	public GameObject createObject(String name, Object... components) {
 		GameObject obj = new GameObject();
 		obj.setName(name);
