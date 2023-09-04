@@ -2,7 +2,7 @@ const resizer = document.querySelector('aside .resizer')
 const parent = resizer.parentNode
 
 var touchX;
-var touchY
+var touchY;
 
 resizer.ontouchstart = (event) => {
 	event.preventDefault()

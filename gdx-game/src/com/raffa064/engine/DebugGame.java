@@ -28,10 +28,14 @@ public class DebugGame extends Game {
 			App app = new App();
 			app.loadProject(Gdx.files.absolute(path));
 
+			if (this.app != null) {
+				this.app.dispose();
+			}
+			
 			this.app = app;
 		} catch(Exception e) {
 			if (reloadErr == null) {
-				reloadErr = "REALOAD ERROR\nPROJECT PATH: "+ path + "\n" + getDetailedError(e);
+				reloadErr = "RELOAD ERROR\nPROJECT PATH: "+ path + "\n" + getDetailedError(e);
 				unstable = true;
 			}
 		}
@@ -120,6 +124,18 @@ public class DebugGame extends Game {
 		} catch(Exception e) {
 			if (resizeErr == null) {
 				resizeErr = "RESIZE ERROR\n"+getDetailedError(e);
+				unstable = true;
+			}
+		}
+	}
+
+	@Override
+	public void dispose() {
+		try {
+			if (app != null) app.dispose();
+		} catch(Exception e) {
+			if (resizeErr == null) {
+				resizeErr = "DISPOSE ERROR\n"+getDetailedError(e);
 				unstable = true;
 			}
 		}

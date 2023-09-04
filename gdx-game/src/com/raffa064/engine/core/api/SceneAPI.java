@@ -7,6 +7,7 @@ import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.GameObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import com.badlogic.gdx.Gdx;
 
 public class SceneAPI extends API {
 	public SceneAPI(App app) {
@@ -87,6 +88,10 @@ public class SceneAPI extends API {
 
 	public void setBackground(float gray) {
 		app.currentScene.backgroundColor.set(gray, gray, gray, 1);
+	}
+	
+	public int fps() {
+		return Gdx.graphics.getFramesPerSecond();
 	}
 	
 	public GameObject findObject(String name, GameObject from) {

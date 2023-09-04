@@ -112,10 +112,10 @@ public class App {
 	}
 
 	private void loadProjectFiles(FileHandle folder) {
-		for (FileHandle file : projectFolder.list()) {
+		for (FileHandle file : folder.list()) {
 			if (file.isDirectory()) {
-				loadProjectFiles(folder);
-				return;
+				loadProjectFiles(file);
+				continue;
 			} 
 
 			String extension = file.extension();
@@ -155,5 +155,9 @@ public class App {
 
 	public void resize(int width, int height) {
 		currentScene.setupCamera(width, height);
+	}
+	
+	public void dispose() {
+		Assets.dispose();
 	}
 }

@@ -29,6 +29,7 @@ function openFile(path) {
 	switch (extension) {
 		case 'obj': 
 		case 'scn': 
+		case 'font': 
 		case 'cfg': 
 			codeEditor.setOption('mode', 'javascript') // JSON files
 			break;
@@ -52,6 +53,11 @@ function openFile(path) {
 		case 'ogg':
 		case 'opus':
 		case 'jpeg':
+		case 'otf':
+		case 'ttf':
+		case 'fnt':
+		case 'iso':
+		case 'img':
 		case 'bmp':
 			return // Binary files (can't open)
 		default:
@@ -62,8 +68,8 @@ function openFile(path) {
 	const len = Math.floor((info.getBoundingClientRect().width / 1.5) / 20)
 	info.innerText = 'Current file: ...' + path.substring(Math.max(0, path.length - len), path.length)
 	currentFile = path
-	codeEditor.clearHistory()
 	codeEditor.setValue(app.getFileContent(path))
+	codeEditor.clearHistory()
 	
 	app.setEditorData("currentFile", currentFile)
 }

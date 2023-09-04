@@ -5,8 +5,9 @@ x Find a way to remove .js() from scripts
 x Make group and tag system
 x Prenvent child with same name
 x Call ready/exit on object children
-• Fix editor history
+x Fix editor history
 • Replace file template to elements in app.js
 • Create File/Folder button on explorer
 • Rename file button on explorer
-• Add FPS counter
+x Add FPS counter
+x IMPORTANT: Dispose assets on reload app
