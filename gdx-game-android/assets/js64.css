@@ -28,7 +28,7 @@
 }
 
 .cm-s-js64 .CodeMirror-activeline-background {
-  background: #aaa1;
+  background: #2d2d2d;
 }
 
 .cm-s-js64 .CodeMirror-line::selection,
@@ -52,7 +52,7 @@
 }
 
 .cm-s-js64 .cm-operator-2 {
-    color: #da0;
+    color: #f60;
 }
 
 .cm-s-js64 .cm-variable-2 {

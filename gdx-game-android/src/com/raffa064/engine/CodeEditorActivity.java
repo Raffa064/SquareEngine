@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
+import java.io.IOException;
 
 
 public class CodeEditorActivity extends Activity {
@@ -85,7 +86,6 @@ public class CodeEditorActivity extends Activity {
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setUseWideViewPort(true);
 		webSettings.setJavaScriptEnabled(true);  // Habilitar JavaScript, se necessário
-
 
 		// Configurar o cliente do WebView
 		webView.setWebViewClient(new WebViewClient());
@@ -175,6 +175,19 @@ public class CodeEditorActivity extends Activity {
 
 				writeFileContent(path, editorData.toString());
 			} catch (Exception e) {}
+		}
+
+		@JavascriptInterface		
+		public void createFile(String path) throws IOException {
+			File file = new File(path);
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+		}
+
+		@JavascriptInterface		
+		public void createFolder(String path) throws IOException {
+			File folder = new File(path);
+			folder.mkdirs();
 		}
 
 		public JSONObject convertFolderToJson(File folder) throws Exception {

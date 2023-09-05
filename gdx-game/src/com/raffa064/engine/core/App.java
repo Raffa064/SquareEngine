@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
 public class App {
 	public float viewportWidth = 1024;
@@ -66,7 +69,8 @@ public class App {
 		scriptEngine
 			.injectClass(Color.class)
 			.injectClass(Vector2.class)
-			.injectClass(MathUtils.class);
+			.injectClass(MathUtils.class)
+			.injectClass(GlyphLayout.class);
 
 		scriptEngine
 			.inject("COLOR", "COLOR")

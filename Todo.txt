@@ -6,8 +6,10 @@ x Make group and tag system
 x Prenvent child with same name
 x Call ready/exit on object children
 x Fix editor history
-• Replace file template to elements in app.js
-• Create File/Folder button on explorer
-• Rename file button on explorer
+x Replace file template to elements in app.js
+x Create File/Folder button on explorer
 x Add FPS counter
 x IMPORTANT: Dispose assets on reload app
+x Reload last openned file
+• Rename file button on explorer
+• Delete file on hold

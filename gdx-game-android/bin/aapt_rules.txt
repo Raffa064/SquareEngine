@@ -1,4 +1,4 @@
-# view AndroidManifest.xml #generated:34
+# view AndroidManifest.xml #generated:35
 -keep class com.raffa064.engine.CodeEditorActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:24
