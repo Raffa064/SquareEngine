@@ -11,5 +11,7 @@ x Create File/Folder button on explorer
 x Add FPS counter
 x IMPORTANT: Dispose assets on reload app
 x Reload last openned file
-• Rename file button on explorer
-• Delete file on hold
+x Rename file button on explorer
+x Delete file on hold
+• Fit #info into screen width
+x Concertar o editableFile para usar o icone inicial...

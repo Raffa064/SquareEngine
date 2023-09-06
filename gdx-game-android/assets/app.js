@@ -12,6 +12,8 @@ if (currentFile) {
 }
 
 function onOpenFile(path) {
+	if (!app.existsFile(path)) return
+	
     const extension = path.substring(Math.max(0, path.lastIndexOf('.')) + 1, path.length);
     
     switch (extension) {
@@ -53,7 +55,7 @@ function onOpenFile(path) {
             break;
     }
     
-    const maxLength = Math.floor((window.screen.width) / 10)
+    const maxLength = Math.floor((window.screen.width) / 30) - 15 // 15 letter of "Current file: "
     const clampedPath = path.substring(Math.max(0, path.length - maxLength), path.length)    
     info.innerText = 'Current file: ' + (clampedPath.length < path.length? '...' : '') + clampedPath
    

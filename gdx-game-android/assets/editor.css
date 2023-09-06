@@ -79,8 +79,11 @@ header div.option:hover div button + button {
   justify-content: flex-start;
   align-items: center;
   width: 100vw;
+  max-width: 100vw;
   height: 20px;
   color: #aaa;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   background: #1e1e1e;
   user-select: none;
   -ms-user-select: none;

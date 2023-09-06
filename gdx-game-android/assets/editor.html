@@ -18,8 +18,8 @@
     <script type="text/javascript" src="./codemirror/active-line.js"></script>
 
     <script>
-        window.onerror = (event, source, lineno, colno, error) => {
-            document.body.innerHTML = source + ' ' + lineno + ' ' + colno + ' ' + error
+        window.onerror = () => {
+            document.body.innerHTML = 'Unexpected error...'
         }
     </script>
 </head>
@@ -41,7 +41,14 @@
             <ul id="explorer-list">
             </ul>
         </aside>
-        <textarea id="editor"></textarea>
+        <textarea id="editor">
+Welcome coder!
+Push left-side bar to open file explorer.
+- Hold files to delete (CAUTION!)
+- Double click to rename file
+
+Have a nice day!
+		</textarea>
     </main>
 	
     <script src="./editor.js"></script>

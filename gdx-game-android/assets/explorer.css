@@ -103,12 +103,21 @@
     display: none;
 }
 
-.create-file {
+.editable-file {
     display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
     background: #2a2a2a;
 }
 
-.create-file .name {
+.file .name {
+    display: block;
+	color: #aaa;
+    padding-block: 5px;
+}
+
+.editable-file .name {
     flex: 1;
     padding: 2px;
     color: #ccc;
@@ -116,71 +125,62 @@
     background: transparent;
 }
 
-.file .name {
-    display: block;
-    padding-block: 5px;
-}
-
 .file .name::before,
-.create-file .icon::before {
+.editable-file .icon::before {
     content: '📄 ';
 }
 
 .file.md .name::before,
-.create-file .icon.md::before {
+.editable-file .icon.md::before {
     content: '📰 ';
 }
 
 .file.js .name::before,
-.create-file .icon.js::before {
+.editable-file .icon.js::before {
     content: '📑 ';
 }
 
 .file.png .name::before,
 .file.jpg .name::before,
 .file.jpeg .name::before,
-.create-file .icon.png::before,
-.create-file .icon.jpg::before,
-.create-file .icon.jpeg::before {
+.editable-file .icon.png::before,
+.editable-file .icon.jpg::before,
+.editable-file .icon.jpeg::before {
     content: '️🖼️ ';
 }
 
 .file.txt .name::before,
-.create-file .icon.txt::before {
+.editable-file .icon.txt::before {
     content: '📝 ';
 }
 
 .file.cfg .name::before,
-.create-file .icon.cfg::before {
+.editable-file .icon.cfg::before {
     content: '⚙️ ';
 }
 
 .file.scn .name::before,
-.create-file .icon.scn::before {
+.editable-file .icon.scn::before {
     content: '🎬 ';
 }
 
 .file.obj .name::before,
-.create-file .icon.obj::before {
+.editable-file .icon.obj::before {
     content: '📦 ';
 }
 
 .file.font .name::before,
-.create-file .icon.font::before {
+.editable-file .icon.font::before {
     content: '✏️ ';
 }
 
 .file.ttf .name::before,
 .file.otf .name::before,
-.create-file .icon.ttf::before,
-.create-file .icon.otf::before {
+.editable-file .icon.ttf::before,
+.editable-file .icon.otf::before {
     content: '✒️ ';
 }
 
-.create-file .directory::before {
+.editable-file .directory::before {
     content: '📂 ';
-}
-
-.file span {
-    color: #aaa;
 }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <link rel="stylesheet" href="./codemirror/codemirror.css">
+    <link rel="stylesheet" href="./js64.css">
+    <link rel="stylesheet" href="./editor.css">
+    <link rel="stylesheet" href="./explorer.css">
+
+    <script type="text/javascript" src="./codemirror/codemirror.js"></script>
+    <script type="text/javascript" src="./codemirror/markdown.js"></script>
+    <script type="text/javascript" src="./codemirror/javascript.js"></script>
+    <script type="text/javascript" src="./codemirror/sublime.js"></script>
+    <script type="text/javascript" src="./codemirror/simple.js"></script>
+    <script type="text/javascript" src="./codemirror/active-line.js"></script>
+
+    <script>
+        window.onerror = (event, source, lineno, colno, error) => {
+            document.body.innerHTML = source + ' ' + lineno + ' ' + colno + ' ' + error
+        }
+    </script>
+</head>
+
+<body>
+    <!-- <header>
+        <div class="option">
+            File
+            <div>
+                <button>Open</button>
+                <button>New</button>
+                <button>Recent</button>
+            </div>
+    </header> -->
+    <div id="info"></div>
+    <main>
+        <aside id="explorer">
+            <span class="resizer"></span>
+            <ul id="explorer-list">
+            </ul>
+        </aside>
+        <textarea id="editor"></textarea>
+    </main>
+	
+    <script src="./editor.js"></script>
+    <script src="./explorer.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>

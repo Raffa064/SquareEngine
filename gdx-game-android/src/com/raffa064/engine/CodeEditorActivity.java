@@ -2,12 +2,10 @@ package com.raffa064.engine;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -15,14 +13,15 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONException;
-import java.io.IOException;
+import java.util.Arrays;
 
 
 public class CodeEditorActivity extends Activity {
@@ -189,7 +188,26 @@ public class CodeEditorActivity extends Activity {
 			File folder = new File(path);
 			folder.mkdirs();
 		}
+		
+		@JavascriptInterface		
+		public void renameFile(String path, String name) throws IOException {
+			File file = new File(path);
+			File renamedFile = new File(file.getParentFile(), name);
+			file.renameTo(renamedFile);
+		}
+		
+		@JavascriptInterface		
+		public void deleteFile(String path) throws IOException {
+			File file = new File(path);
+			file.delete();
+		}
 
+		@JavascriptInterface		
+		public boolean existsFile(String path) throws Exception {
+			File file = new File(path);
+			return file.exists();
+		}
+		
 		public JSONObject convertFolderToJson(File folder) throws Exception {
 			JSONObject folderJson = new JSONObject();
 			folderJson.putOpt("name", folder.getName());
@@ -199,6 +217,21 @@ public class CodeEditorActivity extends Activity {
 			if (folder.isDirectory()) {
 				JSONArray childrenArray = new JSONArray();
 				File[] files = folder.listFiles();
+				
+				Arrays.sort(files, new Comparator<File>() {
+					@Override
+					public int compare(File fileA, File fileB) {
+						if (fileA.isDirectory() != fileB.isDirectory()) {
+							if (fileA.isDirectory()) {
+								return -1; // A is placed after B
+							}
+							
+							return 1; // A is placed before B
+						}
+						
+						return fileA.getName().compareToIgnoreCase(fileB.getName()); // Place by name a-Z
+					}
+				});
 
 				if (files != null) {
 					for (File file : files) {

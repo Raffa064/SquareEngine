@@ -8,22 +8,102 @@ function setupExplorer() {
     setupExplorerResizer(explorer, resizer)
 
     Explorer.setFolder = (path) => {
-		loadFileList(Explorer, explorerList, path)
+        loadFileList(Explorer, explorerList, path)
     }
 
     return Explorer
 }
 
 function loadFileList(Explorer, explorerList, path, state = []) {
-        const folder = JSON.parse(app.getFolderContent(path).replace('\/', '/'))
-    	
-		const createFileElement = (file) => {
+    const folder = JSON.parse(app.getFolderContent(path).replace('\/', '/'))
+
+    const createEditableFile = (initialName, updateHandler) => {
+        const editableFile = document.createElement('li')
+        const editableFileIcon = document.createElement('span')
+        const editableFileName = document.createElement('input')
+
+        editableFile.classList.add('editable-file')
+        editableFileIcon.classList.add('icon')
+        editableFileName.classList.add('name')
+
+        editableFileName.oninput = () => {
+            if (editableFileName.value.endsWith('/')) {
+                editableFileIcon.className = 'icon directory'
+                return
+            }
+
+            const name = editableFileName.value
+            const extension = name.substring(Math.max(0, name.lastIndexOf('.')) + 1, name.length);
+            editableFileIcon.className = 'icon ' + extension
+        }
+
+        const reloadFolderContent = () => {
+            updateHandler(editableFileName.value)
+
+            loadFileList(Explorer, explorerList, path, state)
+        }
+
+        editableFileName.addEventListener('change', reloadFolderContent)
+        editableFileName.addEventListener('focusout', reloadFolderContent)
+
+        editableFile.appendChild(editableFileIcon)
+        editableFile.appendChild(editableFileName)
+
+        editableFileName.value = initialName
+        
+		editableFile.requestFocus = () => {
+			editableFileName.focus()
+        }
+		
+        return editableFile
+    }
+
+    const createFileElement = (file) => {
         const fileItem = document.createElement('li')
         const fileName = document.createElement('span')
 
         fileName.classList.add('name')
         fileName.innerText = file.name
         fileItem.appendChild(fileName)
+
+        var holdTimeout, doubleClickTimeout, waitingForDoubleClick;
+
+        fileName.ontouchstart = (event) => {
+            holdTimeout = setTimeout(() => {
+                holdTimeout = null
+
+                app.deleteFile(file.path)
+            	loadFileList(Explorer, explorerList, path, state)
+
+            }, 500)
+
+            if (waitingForDoubleClick) {
+                waitingForDoubleClick = false
+
+                const updateHandler = (name) => {
+                    app.renameFile(file.path, name)
+                }
+                
+                const editableFile = createEditableFile(fileName.innerText, updateHandler) 
+                fileItem.replaceWith(editableFile)
+				editableFile.requestFocus()
+				
+                return
+            }
+
+            waitingForDoubleClick = true
+            setTimeout(() => {
+                waitingForDoubleClick = false
+            }, 200)
+        }
+		
+		fileName.ontouchmove = (event) => {
+            clearTimeout(holdTimeout)
+        }
+
+        fileName.ontouchend = (event) => {
+            clearTimeout(holdTimeout)
+        }
 
         if (file.isDirectory) {
             fileItem.classList.add('folder')
@@ -37,45 +117,18 @@ function loadFileList(Explorer, explorerList, path, state = []) {
 
             fileAddChild.innerText = '+'
             fileAddChild.onclick = () => {
-                const createFile = document.createElement('li')
-                const createFileIcon = document.createElement('span')
-                const createFileName = document.createElement('input')
-
-                createFile.classList.add('create-file')
-                createFileIcon.classList.add('icon')
-                createFileName.classList.add('name')
-
-                createFileName.oninput = () => {
-                    if (createFileName.value.endsWith('/')) {
-                        createFileIcon.className = 'icon directory'
-                        return
-                    }
-
-                    const name = createFileName.value
-                    const extension = name.substring(Math.max(0, name.lastIndexOf('.')) + 1, name.length);
-                    createFileIcon.className = 'icon ' + extension
-                }
-
-                const reloadFolderContent = () => {
-                    if (createFileName.value.endsWith('/')) {
-                        app.createFolder(file.path + '/' + createFileName.value)
+                const updateHandler = (name) => {
+                    if (name.endsWith('/')) {
+                        app.createFolder(file.path + '/' + name)
                     } else {
-                        app.createFile(file.path + '/' + createFileName.value)
+                        app.createFile(file.path + '/' + name)
                     }
-	
-                    loadFileList(Explorer, explorerList, path, state)
                 }
-
-                createFileName.addEventListener('change', reloadFolderContent)
-                createFileName.addEventListener('focusout', reloadFolderContent)
-
-                createFile.appendChild(createFileIcon)
-                createFile.appendChild(createFileName)
-
-                fileChildren.insertBefore(createFile, fileChildren.firstChild)
-
-                createFileName.focus()
-            }
+                
+                const editableFile = createEditableFile('', updateHandler)
+                fileChildren.insertBefore(editableFile, fileChildren.firstChild)
+				editableFile.requestFocus()
+			}
 
             fileChildren.classList.add('children')
             for (const f of file.children) {
@@ -98,8 +151,8 @@ function loadFileList(Explorer, explorerList, path, state = []) {
 
             return fileItem
         }
-		
-		
+
+
         fileItem.classList.add('file', file.extension || file.name)
 
         fileName.onclick = () => {
@@ -110,10 +163,10 @@ function loadFileList(Explorer, explorerList, path, state = []) {
     }
 
     explorerList.innerHTML = ''
-    
-	const root = createFileElement(folder)
+
+    const root = createFileElement(folder)
     root.classList.remove('fold')
-	
+
     explorerList.appendChild(root)
 }
 

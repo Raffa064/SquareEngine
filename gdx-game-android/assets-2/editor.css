@@ -1,0 +1,105 @@
+* {
+    padding: 0;
+    margin: 0;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #222;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+    background: #252525;
+}
+
+header .option {
+    height: 100%;
+    padding: 10px;
+    background: transparent;
+    color: #eee;
+}
+
+header .option:hover {
+    background: #aaa2;
+}
+
+header div.option {
+    position: relative;
+}
+
+header div.option::after {
+    content: '...'; 
+}
+
+header div.option div {
+    display: none;
+}
+
+header div.option:hover div {
+    width: 200px;
+    display: block;
+    position: absolute;
+    top: 120%;
+    padding: 10px;
+    background: #333;
+    border-radius: 4px;
+    box-shadow: 0px 0px 4px #0005;
+    z-index: 1;
+}
+
+header div.option:hover div button {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    color: #eee;
+}
+
+header div.option:hover div button:hover {
+    background: #3d3d3d;
+}
+
+header div.option:hover div button + button {
+    margin-top: 10px;
+}
+
+#info {
+  display: flex;
+  padding-inline: 8px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100vw;
+  height: 20px;
+  color: #aaa;
+  background: #1e1e1e;
+  user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+main {
+    flex: 1;
+    flex-direction: row;
+    justify-self: stretch;
+    display: flex;
+}
+
+.CodeMirror {
+    flex: 1;
+    height: calc(100vh /* - 40px */ - 20px);
+}
+
+.CodeMirror * {
+    font-family: monospace;
+}

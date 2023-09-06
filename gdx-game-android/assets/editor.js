@@ -35,7 +35,7 @@ function defineModes() {
             { regex: /#.*/, token: 'comment' },
             { regex: /\/\/.*/, token: 'comment' },
 
-            { regex: /(?:export|if|else|function|return|while|do|for|in|of|this|const|var)\b/, token: 'keyword' },
+            { regex: /(?:export|if|else|function|return|while|do|for|in|of|this|const|var|new)\b/, token: 'keyword' },
 
             { regex: /(\.)(\s*)([A-z0-9_]+)/, token: ['operator-2', null, 'variable-3'] },
 
@@ -45,7 +45,7 @@ function defineModes() {
 
             { regex: /[,\.;]+/, token: "operator-2" },
 
-            { regex: /true|false|null|undefined|COLOR|STRING|FLOAT|INTEGER|GAME_OBJECT|Assets|Component|Logger|Scene|Group|Tag/, token: "atom" },
+            { regex: /true|false|null|undefined|COLOR|STRING|FLOAT|INTEGER|GAME_OBJECT|MathUtils|Vector2|GlyphLayout|Color|Assets|Component|Logger|Scene|Group|Tag/, token: "atom" },
 
             {
                 regex: /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i,
