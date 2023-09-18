@@ -11,7 +11,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 public class MainActivity extends AndroidApplication implements AndroidInterface {
 	public final int EDITOR = 1;
 	
-	public String projectPath = "/storage/emulated/0/project";
+	public String projectPath = "/storage/emulated/0/SquareEngine/project";
 	public DebugGame game;
 	
 	public TextView debug;

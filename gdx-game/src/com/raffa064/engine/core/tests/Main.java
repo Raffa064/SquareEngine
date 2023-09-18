@@ -4,7 +4,7 @@ import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
 import com.raffa064.engine.core.JSONLoader;
 import com.raffa064.engine.core.ScriptEngine;
-import com.raffa064.engine.core.components.Scene;
+import com.raffa064.engine.core.Scene;
 import com.raffa064.engine.core.components.Transform2D;
 import java.io.File;
 import java.io.FileInputStream;

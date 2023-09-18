@@ -15,14 +15,16 @@ x Rename file button on explorer
 x Delete file on hold
 x Fit #info into screen width
 x Fix editableFile to use initial extension icon...
-• Fix openEditor to open only one editor 
+x Fix openEditor to open only one editor 
 • Make "rename file" to be case sentitive
 • Separate CodeEditorActivity classes into other files
-• Move Scene class from components folder to another folder
-• Firts object can't be deleted
+x Move Scene class from components folder to another folder
+x Fix: First object can't be deleted
 • Auto open created files
 • Implement audio
 • Implement animation
 • Implement open project
 x Relative transform
-• Apply by axis rotation (relative)
+x Apply by axis rotation (relative)
+x Use global transform into collisions boxes
+• Save editor scroll

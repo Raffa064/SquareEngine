@@ -2,7 +2,7 @@ package com.raffa064.engine.core;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.raffa064.engine.core.components.Scene;
+import com.raffa064.engine.core.Scene;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.raffa064.engine.core.Component.ExportedProp;

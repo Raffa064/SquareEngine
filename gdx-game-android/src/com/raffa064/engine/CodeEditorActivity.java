@@ -192,8 +192,13 @@ public class CodeEditorActivity extends Activity {
 		@JavascriptInterface		
 		public void renameFile(String path, String name) throws IOException {
 			File file = new File(path);
+			String  tmpPrefix = "tmp_" + (System.currentTimeMillis() / 1000);
+			
+			File renamedTmpFile = new File(file.getParentFile(), tmpPrefix + name);
+			file.renameTo(renamedTmpFile);
+			
 			File renamedFile = new File(file.getParentFile(), name);
-			file.renameTo(renamedFile);
+			renamedTmpFile.renameTo(renamedFile);
 		}
 		
 		@JavascriptInterface		

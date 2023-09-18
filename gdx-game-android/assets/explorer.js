@@ -123,6 +123,7 @@ function loadFileList(Explorer, explorerList, path, state = []) {
                         app.createFolder(file.path + '/' + name)
                     } else {
                         app.createFile(file.path + '/' + name)
+						Explorer.onOpenFile(file.path + '/' + name)
                     }
                 }
                 

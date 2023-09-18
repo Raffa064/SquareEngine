@@ -6,12 +6,12 @@ import com.raffa064.engine.core.GameObject;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Transform2D extends Native {
-	public Vector2 pos = new Vector2();
-	public Vector2 scale = new Vector2(1, 1);
+	public final Vector2 pos = new Vector2();
+	public final Vector2 scale = new Vector2(1, 1);
 	public float rotation;
 
-	public Vector2 global_pos = new Vector2();
-	public Vector2 global_scale = new Vector2();
+	public final Vector2 global_pos = new Vector2();
+	public final Vector2 global_scale = new Vector2();
 	public float global_rotation;
 
 	public Transform2D() {
@@ -24,7 +24,7 @@ public class Transform2D extends Native {
 		);
 	}
 
-	public void calculateRelative() {
+	public void updateGlobals() {
 		global_pos.set(pos);
 		global_scale.set(scale);
 		global_rotation = rotation;
@@ -53,7 +53,7 @@ public class Transform2D extends Native {
 
 	@Override
 	public void process(float delta) {
-		calculateRelative();
+		updateGlobals();
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
 import com.raffa064.engine.core.components.Native;
-import com.raffa064.engine.core.components.Scene;
+import com.raffa064.engine.core.Scene;
 import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;

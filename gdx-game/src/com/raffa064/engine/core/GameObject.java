@@ -180,14 +180,14 @@ public class GameObject {
 			component.process(delta);
 		}
 
-		for (int i = children.size()-1; i >= 0; i--) {
+		for (int i = children.size() - 1; i >= 0; i--) {
 			GameObject child = children.get(i);
 			child.process(delta);
 
 			if (child.isQueuedFree()) {
 				children.remove(child);
 				child.exit();
-				i++;
+				i = Math.min(i + 1, children.size() - 1);
 				
 				if (children.isEmpty()) {
 					break;

@@ -82,8 +82,8 @@ public class CollisionAPI extends API {
 			
 			Transform2D transform = (Transform2D) obj.get("Transform2D");
 			if (transform != null) {
-				pos = transform.pos;
-				scale = transform.scale;
+				pos = transform.global_pos;
+				scale = transform.global_scale;
 				return;
 			}
 		}
@@ -99,10 +99,13 @@ public class CollisionAPI extends API {
 		}
 		
 		public void transformRect(Rectangle rect, Rectangle out) {
-			out.x = pos.x - rect.width * scale.x / 2;
-			out.y = pos.y - rect.width * scale.y / 2;
-			out.width = rect.width * scale.x;
-			out.height = rect.height * scale.y;
+			float width = rect.width * scale.x;
+			float height = rect.height * scale.y;
+			
+			out.x = pos.x - width / 2;
+			out.y = pos.y - height / 2;
+			out.width = width;
+			out.height = height;
 		}
 		
 		public boolean collides(Areas areas) {

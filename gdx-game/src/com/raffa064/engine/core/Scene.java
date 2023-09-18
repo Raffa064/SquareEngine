@@ -1,4 +1,4 @@
-package com.raffa064.engine.core.components;
+package com.raffa064.engine.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
