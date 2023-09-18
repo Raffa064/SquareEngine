@@ -24,3 +24,5 @@ x Fix editableFile to use initial extension icon...
 • Implement audio
 • Implement animation
 • Implement open project
+x Relative transform
+• Apply by axis rotation (relative)

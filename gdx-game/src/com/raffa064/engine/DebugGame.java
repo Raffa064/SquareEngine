@@ -99,16 +99,11 @@ public class DebugGame extends Game {
 		}
 	}
 
-	boolean lastD;
 	private void debugComands() {
-		boolean isPressedD = Gdx.input.isKeyPressed(Input.Keys.D);
-
-		if (!isEditorOpenned && (!lastD && isPressedD) || (Gdx.input.isTouched(0) && Gdx.input.isTouched(1) && Gdx.input.getDeltaX(0) < -10 && Gdx.input.getDeltaX(1) < -10)) {
+		if (!isEditorOpenned && (Gdx.input.isTouched(0) && Gdx.input.isTouched(1) && Gdx.input.getDeltaX(0) < -10 && Gdx.input.getDeltaX(1) < -10)) {
 			android.openEditor();
 			isEditorOpenned = true;
 		}
-
-		lastD = isPressedD;
 
 		if (Gdx.input.isKeyPressed(Input.Keys.C)) {
 			clearErrors();
