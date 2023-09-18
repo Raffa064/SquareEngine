@@ -46,7 +46,7 @@ function defineModes() {
 
             { regex: /(\(|\)|\[|\]|\{|\})/, token: "operator" },
 
-            { regex: /[-+\/*=<>!]+/, token: "operator" },
+            { regex: /[-+\/*=<>!&|]+/, token: "operator" },
 
             { regex: /[,\.;]+/, token: "operator-2" },
 

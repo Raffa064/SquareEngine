@@ -387,7 +387,7 @@ public class InputAPI extends API {
 	}
 
 	public float y(int cursor) {
-		return Gdx.input.getY(cursor);
+		return Gdx.graphics.getHeight() - Gdx.input.getY(cursor);
 	}
 
 	public float y() {
@@ -403,7 +403,7 @@ public class InputAPI extends API {
 	}
 
 	public float deltaY(int cursor) {
-		return Gdx.input.getDeltaY(cursor);
+		return -Gdx.input.getDeltaY(cursor);
 	}
 
 	public float deltaY() {

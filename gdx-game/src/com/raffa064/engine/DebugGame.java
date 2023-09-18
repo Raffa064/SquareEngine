@@ -2,8 +2,8 @@ package com.raffa064.engine;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.raffa064.engine.core.App;
 
 public class DebugGame extends Game {
