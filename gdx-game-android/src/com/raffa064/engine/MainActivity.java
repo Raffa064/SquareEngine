@@ -9,12 +9,14 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 public class MainActivity extends AndroidApplication implements AndroidInterface {
-	public final int EDITOR = 1;
+	private final int OPEN_EDITOR_CODE = 1;
 	
 	public String projectPath = "/storage/emulated/0/SquareEngine/project";
 	public DebugGame game;
+	public boolean isOpenedEditor;
 	
-	public TextView debug;
+	private LinearLayout gameParent;
+	private TextView debug;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,12 +29,22 @@ public class MainActivity extends AndroidApplication implements AndroidInterface
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         game = new DebugGame(this);
 		
-		LinearLayout game_parent = findViewById(R.id.game_parent);
+		gameParent = findViewById(R.id.game_parent);
 		debug = findViewById(R.id.debug);
 
-		game_parent.addView(initializeForView(game, cfg));
+		gameParent.addView(initializeForView(game, cfg));
 
     }
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == OPEN_EDITOR_CODE) {
+			game.requestReload(projectPath);
+			isOpenedEditor = false;
+		}
+	}
 	
 	@Override
 	public void setDebugText(final String text) {
@@ -53,15 +65,12 @@ public class MainActivity extends AndroidApplication implements AndroidInterface
 	public void openEditor() {
 		Intent intent = new Intent(this, CodeEditorActivity.class);
 		intent.putExtra("project", projectPath);
-		startActivityForResult(intent, EDITOR);
+		startActivityForResult(intent, OPEN_EDITOR_CODE);
+		isOpenedEditor = true;
 	}
-
+	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		if (requestCode == EDITOR) {
-			game.requestReload(projectPath);
-		}
+	public boolean isOpennedEditor() {
+		return isOpenedEditor;
 	}
 }

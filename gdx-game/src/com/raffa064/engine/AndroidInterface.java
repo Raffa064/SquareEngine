@@ -7,4 +7,6 @@ public interface AndroidInterface {
 	public String getProjectPath();
 
 	public void openEditor();
+	
+	public boolean isOpennedEditor();
 }

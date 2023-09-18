@@ -9,7 +9,6 @@ import com.raffa064.engine.core.App;
 public class DebugGame extends Game {
 	private AndroidInterface android;
 	
-	private boolean isEditorOpenned = false;
 	private String projectPath;
 	private App app;
 	
@@ -33,11 +32,10 @@ public class DebugGame extends Game {
 				this.app.dispose();
 			}
 			
-			isEditorOpenned = false;
 			this.app = app;
 		} catch(Exception e) {
 			if (reloadErr == null) {
-				reloadErr = "RELOAD ERROR\nPROJECT PATH: "+ path + "\n" + getDetailedError(e);
+				reloadErr = "RELOAD ERROR\nPROJECT PATH: " + path + "\n" + getDetailedError(e);
 				unstable = true;
 			}
 		}
@@ -70,19 +68,7 @@ public class DebugGame extends Game {
 		debugComands();
 		
 		if (unstable) {
-			String[] debug = new String[] {
-				reloadErr,
-				renderErr,
-				resizeErr
-			};
-			
-			for (int i = 0; i < debug.length; i++) {
-				if (debug[i] != null) {
-					android.setDebugText(debug[i]);
-					break;
-				}
-			}
-			
+			showErrors();
 			return;
 		}
 		
@@ -99,20 +85,32 @@ public class DebugGame extends Game {
 		}
 	}
 
-	private void debugComands() {
-		if (!isEditorOpenned && (Gdx.input.isTouched(0) && Gdx.input.isTouched(1) && Gdx.input.getDeltaX(0) < -10 && Gdx.input.getDeltaX(1) < -10)) {
-			android.openEditor();
-			isEditorOpenned = true;
-		}
+	private void showErrors() {
+		String[] debug = new String[] {
+			reloadErr,
+			renderErr,
+			resizeErr
+		};
 
-		if (Gdx.input.isKeyPressed(Input.Keys.C)) {
-			clearErrors();
+		for (int i = 0; i < debug.length; i++) {
+			if (debug[i] != null) {
+				android.setDebugText(debug[i]);
+				break;
+			}
 		}
 	}
 
 	private void clearErrors() {
 		reloadErr = renderErr = resizeErr = null;
 		android.setDebugText("");
+	}
+
+	private void debugComands() {
+		boolean doubleSwipeGesture = Gdx.input.getDeltaX(0) < -10 && Gdx.input.getDeltaX(1) < -10;
+		
+		if (!android.isOpennedEditor() && doubleSwipeGesture) {
+			android.openEditor();
+		}
 	}
 
 	@Override

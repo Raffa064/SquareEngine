@@ -10,6 +10,11 @@ Explorer.setFolder(app.getFolderPath())
 
 if (currentFile) {
 	onOpenFile(currentFile)
+	
+	Editor.scrollTo(
+		parseFloat(app.getEditorData('scrollX', 0)),
+		parseFloat(app.getEditorData('scrollY', 0))
+	)
 }
 
 function onOpenFile(path) {

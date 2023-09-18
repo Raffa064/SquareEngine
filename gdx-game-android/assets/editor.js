@@ -18,7 +18,12 @@ function setupEditor() {
             app.writeFileContent(currentFile, codeEditor.getValue())
         }
     })
-
+	
+    codeEditor.on('scroll', (e) => {
+        app.setEditorData('scrollX', e.getScrollInfo().left)
+        app.setEditorData('scrollY', e.getScrollInfo().top)
+    })
+	
     return codeEditor
 }
 
