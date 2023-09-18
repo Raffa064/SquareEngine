@@ -21,6 +21,11 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.math.Rectangle;
+import com.raffa064.engine.core.api.CollisionAPI;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.raffa064.engine.core.api.InputAPI;
 
 public class App {
 	public float viewportWidth = 1024;
@@ -34,6 +39,8 @@ public class App {
 	public HashMap<String, String> sceneFiles = new HashMap<>();
 	public ScriptEngine scriptEngine;
 
+	public InputAPI Input;
+	public CollisionAPI Collision;
 	public GroupAPI Group;
 	public TagAPI Tag;
 	public SceneAPI Scene;
@@ -56,6 +63,8 @@ public class App {
 	}
 
 	public void init() {
+		Input = new InputAPI(this);
+		Collision = new CollisionAPI(this);
 		Group = new GroupAPI(this);
 		Tag = new TagAPI(this);
 		Scene = new SceneAPI(this);
@@ -70,7 +79,9 @@ public class App {
 			.injectClass(Color.class)
 			.injectClass(Vector2.class)
 			.injectClass(MathUtils.class)
-			.injectClass(GlyphLayout.class);
+			.injectClass(GlyphLayout.class)
+			.injectClass(Rectangle.class)
+			.injectClass(ShapeType.class);
 
 		scriptEngine
 			.inject("COLOR", "COLOR")
@@ -82,6 +93,8 @@ public class App {
 			.inject("GAME_OBJECT", "GAME_OBJECT");
 
 		scriptEngine
+			.inject("Input", Input)
+			.inject("Collision", Collision)
 			.inject("Group", Group)
 			.inject("Tag", Tag)
 			.inject("Scene", Scene)
@@ -91,6 +104,8 @@ public class App {
 	}
 
 	public void injectDependencies(Native component) {
+		component.Input = Input;
+		component.Collision = Collision;
 		component.Group = Group;
 		component.Tag = Tag;
 		component.Scene = Scene;
@@ -153,6 +168,8 @@ public class App {
 
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		
+		Input.update();
 
 		currentScene.process(delta);
 	}

@@ -13,5 +13,14 @@ x IMPORTANT: Dispose assets on reload app
 x Reload last openned file
 x Rename file button on explorer
 x Delete file on hold
-• Fit #info into screen width
-x Concertar o editableFile para usar o icone inicial...
+x Fit #info into screen width
+x Fix editableFile to use initial extension icon...
+• Fix openEditor to open only one editor 
+• Make "rename file" to be case sentitive
+• Separate CodeEditorActivity classes into other files
+• Move Scene class from components folder to another folder
+• Firts object can't be deleted
+• Auto open created files
+• Implement audio
+• Implement animation
+• Implement open project

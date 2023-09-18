@@ -45,7 +45,7 @@ function defineModes() {
 
             { regex: /[,\.;]+/, token: "operator-2" },
 
-            { regex: /true|false|null|undefined|COLOR|STRING|FLOAT|INTEGER|GAME_OBJECT|MathUtils|Vector2|GlyphLayout|Color|Assets|Component|Logger|Scene|Group|Tag/, token: "atom" },
+            { regex: /true|false|null|undefined|VECTOR2|COLOR|STRING|FLOAT|INTEGER|GAME_OBJECT|MathUtils|Vector2|GlyphLayout|Rectangle|Color|Assets|Component|Logger|Scene|Group|Tag|Collision|Input/, token: "atom" },
 
             {
                 regex: /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i,

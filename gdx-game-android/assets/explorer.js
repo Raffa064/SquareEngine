@@ -50,6 +50,7 @@ function loadFileList(Explorer, explorerList, path, state = []) {
         editableFile.appendChild(editableFileName)
 
         editableFileName.value = initialName
+		editableFileName.oninput() // Apply initial icon
         
 		editableFile.requestFocus = () => {
 			editableFileName.focus()
@@ -84,7 +85,7 @@ function loadFileList(Explorer, explorerList, path, state = []) {
                     app.renameFile(file.path, name)
                 }
                 
-                const editableFile = createEditableFile(fileName.innerText, updateHandler) 
+                const editableFile = createEditableFile(fileName.textContent, updateHandler) 
                 fileItem.replaceWith(editableFile)
 				editableFile.requestFocus()
 				

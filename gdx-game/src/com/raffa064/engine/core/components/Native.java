@@ -2,16 +2,19 @@ package com.raffa064.engine.core.components;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.api.AssetsAPI;
+import com.raffa064.engine.core.api.CollisionAPI;
 import com.raffa064.engine.core.api.ComponentAPI;
+import com.raffa064.engine.core.api.GroupAPI;
+import com.raffa064.engine.core.api.InputAPI;
 import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
-import com.raffa064.engine.core.api.GroupAPI;
 
 public abstract class Native extends Component {
+	public InputAPI Input;
+	public CollisionAPI Collision;
 	public GroupAPI Group;
 	public TagAPI Tag;
 	public SceneAPI Scene;

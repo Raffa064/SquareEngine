@@ -9,6 +9,7 @@ import com.raffa064.engine.core.App;
 public class DebugGame extends Game {
 	private AndroidInterface android;
 	
+	private boolean isEditorOpenned = false;
 	private String projectPath;
 	private App app;
 	
@@ -32,6 +33,7 @@ public class DebugGame extends Game {
 				this.app.dispose();
 			}
 			
+			isEditorOpenned = false;
 			this.app = app;
 		} catch(Exception e) {
 			if (reloadErr == null) {
@@ -101,8 +103,9 @@ public class DebugGame extends Game {
 	private void debugComands() {
 		boolean isPressedD = Gdx.input.isKeyPressed(Input.Keys.D);
 
-		if ((!lastD && isPressedD) || (Gdx.input.isTouched(0) && Gdx.input.isTouched(1) && Gdx.input.getDeltaX(0) < -10 && Gdx.input.getDeltaX(1) < -10)) {
+		if (!isEditorOpenned && (!lastD && isPressedD) || (Gdx.input.isTouched(0) && Gdx.input.isTouched(1) && Gdx.input.getDeltaX(0) < -10 && Gdx.input.getDeltaX(1) < -10)) {
 			android.openEditor();
+			isEditorOpenned = true;
 		}
 
 		lastD = isPressedD;

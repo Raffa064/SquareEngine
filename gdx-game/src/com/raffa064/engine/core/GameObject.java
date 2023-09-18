@@ -188,6 +188,10 @@ public class GameObject {
 				children.remove(child);
 				child.exit();
 				i++;
+				
+				if (children.isEmpty()) {
+					break;
+				}
 			}
 		}
 	}

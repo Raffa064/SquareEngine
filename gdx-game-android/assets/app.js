@@ -1,3 +1,4 @@
+const Info = setupInfo()
 const Explorer = setupExplorer()
 const Editor = setupEditor()
 
@@ -54,13 +55,10 @@ function onOpenFile(path) {
             Editor.setOption('mode', 'disable')
             break;
     }
-    
-    const maxLength = Math.floor((window.screen.width) / 30) - 15 // 15 letter of "Current file: "
-    const clampedPath = path.substring(Math.max(0, path.length - maxLength), path.length)    
-    info.innerText = 'Current file: ' + (clampedPath.length < path.length? '...' : '') + clampedPath
-   
+     
     currentFile = path
-    
+    Info.showCurrentFile(currentFile)
+   
     Editor.setValue(app.getFileContent(path))
     Editor.clearHistory()
     

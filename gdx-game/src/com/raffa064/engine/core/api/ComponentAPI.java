@@ -2,6 +2,7 @@ package com.raffa064.engine.core.api;
 
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.ScriptEngine;
+import com.raffa064.engine.core.components.Collider;
 import com.raffa064.engine.core.components.Image;
 import com.raffa064.engine.core.components.Native;
 import com.raffa064.engine.core.components.Script;
@@ -16,7 +17,8 @@ public class ComponentAPI extends API {
 		
 		loadNative(
 			Transform2D.class,
-			Image.class
+			Image.class,
+			Collider.class
 		);		
 	}
 	
