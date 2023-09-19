@@ -1,8 +1,9 @@
 package com.raffa064.engine.core.api;
 
 import com.badlogic.gdx.Gdx;
-import com.raffa064.engine.core.App;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector3;
+import com.raffa064.engine.core.App;
 
 public class InputAPI extends API {
 	public static final int ANY_KEY = -1;
@@ -370,16 +371,24 @@ public class InputAPI extends API {
 	public static final int F24 = 194;
 
 	public static final int MAX_KEYCODE = 255;
-
-	public int[] fingers = new int[10];
-	public int[] keys = new int[255];
+	
+	private static final int LAST = 0;
+	private static final int CURRENT = 1;
+	
+	public int[][] fingers = new int[10][2];
+	public int[][] keys = new int[255][2];
 	
 	public InputAPI(App app) {
 		super(app);
 	}
 
+	private Vector3 getTouchCoords(int cursor) {
+		Vector3 point = new Vector3(Gdx.input.getX(cursor), Gdx.graphics.getHeight() - Gdx.input.getY(cursor), 0);
+		return app.Scene.getCamera().unproject(point);
+	}
+
 	public float x(int cursor) {
-		return Gdx.input.getX(cursor);
+		return getTouchCoords(cursor).x;
 	}
 
 	public float x() {
@@ -387,7 +396,7 @@ public class InputAPI extends API {
 	}
 
 	public float y(int cursor) {
-		return Gdx.graphics.getHeight() - Gdx.input.getY(cursor);
+		return getTouchCoords(cursor).y;
 	}
 
 	public float y() {
@@ -412,75 +421,91 @@ public class InputAPI extends API {
 	
 	public void update() {
 		for (int i = 0; i < fingers.length; i++) {
+			fingers[i][LAST] = fingers[i][CURRENT];
+			
 			if (Gdx.input.isTouched(i)) {
-				fingers[i]++;
+				fingers[i][CURRENT]++;
 			} else {
-				fingers[i] = 0;
+				fingers[i][CURRENT] = 0;
 			}
 		}
 		
 		for (int i = 0; i < keys.length; i++) {
+			keys[i][LAST] = keys[i][CURRENT];
+			
 			if (Gdx.input.isKeyPressed(i)) {
-				keys[i]++;
+				keys[i][CURRENT]++;
 			} else {
-				keys[i] = 0;
+				keys[i][CURRENT] = 0;
 			}
 		}
 	}
 	
-	public boolean isTouched(int finger) {
-		return fingers[finger] > 0;
+	public boolean pressed(int finger) {
+		return fingers[finger][CURRENT] > 0;
 	}
 
-	public boolean isTouched() {
-		return isTouched(0);
+	public boolean pressed() {
+		return pressed(0);
+	}
+
+	public boolean down(int finger) {
+		return fingers[finger][CURRENT] == 1;
+	}
+
+	public boolean down() {
+		return down(0);
 	}
 	
-	public boolean isJustTouched(int finger) {
-		return fingers[finger] == 1;
+	public int holding(int finger) {
+		return fingers[finger][CURRENT];
+	}
+
+	public int holding() {
+		return holding(0);
+	}
+
+	public boolean up(int finger) {
+		return fingers[finger][CURRENT] == 0 && fingers[finger][LAST] > 0;
+	}
+
+	public boolean up() {
+		return up(0);
 	}
 	
-	public boolean isJustTouched() {
-		return isJustTouched(0);
+	public boolean keyPressed(int keycode) {
+		return keys[keycode][CURRENT] > 0;
+	}
+
+	public boolean keyPressed() {
+		return keyPressed(0);
+	}
+
+	public boolean keyDown(int keycode) {
+		return keys[keycode][CURRENT] == 1;
+	}
+
+	public boolean keyDown() {
+		return keyDown(0);
+	}
+
+	public int keyHolding(int keycode) {
+		return keys[keycode][CURRENT];
 	}
 	
-	public int holdingTouch(int finger) {
-		return fingers[finger];
-	}
-
-	public boolean isHoldingTouch(int finger, int steps) {
-		return holdingTouch(finger) > steps;
+	public int keyHolding() {
+		return keyHolding(0);
 	}
 	
-	public boolean isHoldingTouch(int steps) {
-		return isHoldingTouch(0, steps);
+	public boolean keyUp(int keycode) {
+		return keys[keycode][CURRENT] == 0 && keys[keycode][LAST] > 0;
+	}
+
+	public boolean keyUp() {
+		return keyUp(0);
 	}
 	
-	public boolean isKeyPressed(int keycode) {
-		return keys[keycode] > 0;
-	}
-
-	public boolean isKeyTouched() {
-		return isKeyPressed(0);
-	}
-
-	public boolean isKeyJustPressed(int keycode) {
-		return keys[keycode] == 1;
-	}
-
-	public boolean isKeyJustPressed() {
-		return isKeyJustPressed(0);
-	}
-	
-	public int holdingKey(int keycode) {
-		return keys[keycode];
-	}
-
-	public boolean isHoldingKey(int keycode, int steps) {
-		return holdingKey(keycode) > steps;
-	}
-
-	public boolean isHoldingKey(int steps) {
-		return isHoldingKey(0, steps);
+	public String keyName(int keycode) {
+		return Input.Keys.toString(keycode);
 	}
 }

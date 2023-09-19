@@ -22,9 +22,11 @@ x Move Scene class from components folder to another folder
 x Fix: First object can't be deleted
 x Auto open created files
 • Implement audio
-• Implement animation
+x Implement animation
 • Implement open project
 x Relative transform
 x Apply by axis rotation (relative)
 x Use global transform into collisions boxes
 x Save editor scroll
+• Make animations easy to use
+x Add input release
