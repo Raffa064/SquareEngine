@@ -92,7 +92,7 @@ public class CodeEditorActivity extends Activity {
 		webView.addJavascriptInterface(android, "app");
 
 		// Carregar o arquivo HTML da pasta "assets"
-		webView.loadUrl("file:///android_asset/editor.html");
+		webView.loadUrl("file:///android_asset/editor/editor.html");
 	}
 
 	@Override

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:background="@drawable/float_window_background"
+	android:minWidth="150dp"
+	android:minHeight="160dp">
+
+	<RelativeLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/float_window_top_bar">
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Title"
+			android:layout_centerInParent="true"
+			android:id="@+id/float_window_title"/>
+
+		<ImageButton
+			android:layout_width="40dp"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_height="40dp"
+			android:src="@android:drawable/ic_menu_close_clear_cancel"
+			android:layout_alignParentRight="true"
+			android:id="@+id/float_window_close"/>
+
+	</RelativeLayout>
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1.0">
+
+		<WebView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_weight="1.0"
+			android:id="@+id/float_window_webview"/>
+
+		<View
+			android:background="?android:attr/dividerHorizontal"
+			android:layout_width="10dp"
+			android:layout_height="wrap_content"
+			android:id="@+id/float_window_resizer_right"/>
+
+	</LinearLayout>
+
+	<View
+		android:background="?android:attr/dividerVertical"
+		android:layout_width="wrap_content"
+		android:layout_height="10dp"
+		android:id="@+id/float_window_resizer_bottom"/>
+
+</LinearLayout>
+

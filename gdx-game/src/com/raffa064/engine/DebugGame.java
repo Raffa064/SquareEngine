@@ -2,16 +2,19 @@ package com.raffa064.engine;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.raffa064.engine.core.App;
+import com.raffa064.engine.core.Scene;
+import com.raffa064.engine.core.api.InputAPI;
+import com.raffa064.engine.core.api.SceneAPI;
 
 public class DebugGame extends Game {
 	private AndroidInterface android;
-	
+
 	private String projectPath;
 	private App app;
-	
+
 	private String reloadErr, renderErr, resizeErr;
 	private boolean unstable;
 
@@ -22,7 +25,7 @@ public class DebugGame extends Game {
 	public void requestReload(String projectPath) {
 		this.projectPath = projectPath;
 	}
-	
+
 	public void reload(String path) {
 		try {
 			App app = new App();
@@ -31,26 +34,26 @@ public class DebugGame extends Game {
 			if (this.app != null) {
 				this.app.dispose();
 			}
-			
+
 			this.app = app;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			if (reloadErr == null) {
 				reloadErr = "RELOAD ERROR\nPROJECT PATH: " + path + "\n" + getDetailedError(e);
 				unstable = true;
 			}
 		}
 	}
-	
+
 	public String getDetailedError(Exception e) {
-		String err = "Error: "+e.getMessage() + "\n";
-		
+		String err = "Error: " + e.getMessage() + "\n";
+
 		for (StackTraceElement ste : e.getStackTrace()) {
 			err += ste + "\n";
 		}
-		
+
 		return err;
 	}
-	
+
 	@Override
 	public void create() {
 		reload(android.getProjectPath());
@@ -64,20 +67,28 @@ public class DebugGame extends Game {
 			reload(projectPath);
 			projectPath = null;
 		}
-		
+
 		debugComands();
-		
+
 		if (unstable) {
 			showErrors();
 			return;
 		}
-		
+
 		try {
-			if (app != null) app.render(Gdx.graphics.getDeltaTime());
-		} catch(Exception e) {
+			if (!android.isEditorMode() && app != null) {
+				app.render(Gdx.graphics.getDeltaTime());
+			}
+
+			if (android.isEditorMode()) {
+				android.setDebugText("[ Editor mode ]");
+			} else {
+				android.setDebugText("");
+			}
+		} catch (Exception e) {
 			Gdx.gl.glClearColor(1, 0, 0, 0);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-			
+
 			if (renderErr == null) {
 				renderErr = "RENDER ERROR\n" + getDetailedError(e);
 				unstable = true;
@@ -106,10 +117,23 @@ public class DebugGame extends Game {
 	}
 
 	private void debugComands() {
-		boolean doubleSwipeGesture = Gdx.input.getDeltaX(0) < -10 && Gdx.input.getDeltaX(1) < -10;
-		
-		if (!android.isOpennedEditor() && doubleSwipeGesture) {
+		InputAPI Input = app.Input;
+		SceneAPI Scene = app.Scene;
+
+		boolean editorGesture = Input.deltaY(0) > 50 && Input.deltaY(1) > 50 && Input.touches() == 2;
+		boolean sceneTreeGesture = Input.x(0) < Scene.width() / 2 && Input.x(1) < Scene.width() / 2 && Input.deltaX(0) > 10 && Input.deltaX(1) > 10 && Input.touches() == 2;
+		boolean inspectorGesture = Input.x(0) > Scene.width() / 2 && Input.x(1) > Scene.width() / 2 && Input.deltaX(0) < -10 && Input.deltaX(1) < -10 && Input.touches() == 2;
+
+		if (!android.isOpennedEditor() && editorGesture) {
 			android.openEditor();
+		}
+
+		if (sceneTreeGesture) {
+			android.openSceneTree();
+		}
+
+		if (inspectorGesture) {
+			android.openInspector();
 		}
 	}
 
@@ -117,9 +141,9 @@ public class DebugGame extends Game {
 	public void resize(int width, int height) {
 		try {
 			if (app != null) app.resize(width, height);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			if (resizeErr == null) {
-				resizeErr = "RESIZE ERROR\n"+getDetailedError(e);
+				resizeErr = "RESIZE ERROR\n" + getDetailedError(e);
 				unstable = true;
 			}
 		}
@@ -129,9 +153,9 @@ public class DebugGame extends Game {
 	public void dispose() {
 		try {
 			if (app != null) app.dispose();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			if (resizeErr == null) {
-				resizeErr = "DISPOSE ERROR\n"+getDetailedError(e);
+				resizeErr = "DISPOSE ERROR\n" + getDetailedError(e);
 				unstable = true;
 			}
 		}

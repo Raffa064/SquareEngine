@@ -127,7 +127,7 @@ public class App {
 
 		init();
 		loadProjectFiles(folder);
-		loadMainScene();
+		loadConfigs();
 	}
 
 	private void loadProjectFiles(FileHandle folder) {
@@ -149,8 +149,8 @@ public class App {
 		}
 	}
 
-	private void loadMainScene() throws Exception {
-		JSONObject config =  new JSONObject(relative("config.cfg").readString());
+	private void loadConfigs() throws Exception {
+		JSONObject config =  new JSONObject(Assets.readFile("config.cfg"));
 		JSONObject viewport = config.getJSONObject("viewport");
 
 		viewportWidth = (float) viewport.getDouble("width");

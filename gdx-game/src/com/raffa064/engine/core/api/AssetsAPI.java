@@ -30,21 +30,21 @@ public class AssetsAPI extends API {
 		return texture;
 	}
 
-	public String json(String path) {
+	public String readFile(String path) {
 		if (assets.containsKey(path)) {
-			String json = (String) assets.get(path);
-			return json;
+			String content = (String) assets.get(path);
+			return content;
 		}
 
-		String json = app.relative(path).readString();
-		assets.put(path, json);
+		String content = app.relative(path).readString();
+		assets.put(path, content);
 
-		return json;
+		return content;
 	}
 	
 	public BitmapFont font(String path) {
 		try {
-			JSONObject json = new JSONObject(json(path)); // Certifique-se de que 'jsonString' contenha seu JSON.
+			JSONObject json = new JSONObject(readFile(path)); // Certifique-se de que 'jsonString' contenha seu JSON.
 
 			FreeTypeFontGenerator generator = fontGenerator(json.getString("font"));
 			FreeTypeFontParameter params = new FreeTypeFontParameter();

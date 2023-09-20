@@ -21,12 +21,16 @@ x Separate CodeEditorActivity classes into other files
 x Move Scene class from components folder to another folder
 x Fix: First object can't be deleted
 x Auto open created files
-• Implement audio
 x Implement animation
-• Implement open project
 x Relative transform
 x Apply by axis rotation (relative)
 x Use global transform into collisions boxes
 x Save editor scroll
-• Make animations easy to use
 x Add input release
+• Implement audio
+• Implement open project
+• Make animations easy to use
+• Add nodes list debug
+• Configure windows size and position to be separated for landscape and portrait
+• Save window positions (.editor)
+• implement setScene

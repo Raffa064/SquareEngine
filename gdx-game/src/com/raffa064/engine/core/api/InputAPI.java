@@ -386,6 +386,18 @@ public class InputAPI extends API {
 		Vector3 point = new Vector3(Gdx.input.getX(cursor), Gdx.graphics.getHeight() - Gdx.input.getY(cursor), 0);
 		return app.Scene.getCamera().unproject(point);
 	}
+	
+	public int touches() {
+		int count = 0;
+		
+		for (int i = 0; i < fingers.length; i++) {
+			if (fingers[i][CURRENT] > 0) {
+				count++;
+			}
+		}
+		
+		return count;
+	}
 
 	public float x(int cursor) {
 		return getTouchCoords(cursor).x;

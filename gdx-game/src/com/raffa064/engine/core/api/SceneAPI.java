@@ -8,6 +8,7 @@ import com.raffa064.engine.core.GameObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import com.badlogic.gdx.Gdx;
+import com.raffa064.engine.core.Scene;
 
 public class SceneAPI extends API {
 	public SceneAPI(App app) {
@@ -16,7 +17,7 @@ public class SceneAPI extends API {
 	
 	public GameObject prefabObject(String path) {
 		try {
-			String json = app.Assets.json(path);
+			String json = app.Assets.readFile(path);
 			GameObject obj = app.jsonLoader.objectFromJson(json);
 			return obj;
 		} catch (Exception e) {

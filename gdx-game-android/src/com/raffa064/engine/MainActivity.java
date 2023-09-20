@@ -2,8 +2,10 @@ package com.raffa064.engine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -14,10 +16,14 @@ public class MainActivity extends AndroidApplication implements AndroidInterface
 	public String projectPath = "/storage/emulated/0/SquareEngine/project";
 	public DebugGame game;
 	public boolean isOpenedEditor;
-	
+
+	private RelativeLayout rootLayout;
 	private LinearLayout gameParent;
 	private TextView debug;
 
+	private FloatWindow sceneTreeWindow;
+	private FloatWindow inspectorWindow;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,12 +35,50 @@ public class MainActivity extends AndroidApplication implements AndroidInterface
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         game = new DebugGame(this);
 		
+		rootLayout = findViewById(R.id.root_layout);
 		gameParent = findViewById(R.id.game_parent);
 		debug = findViewById(R.id.debug);
 
 		gameParent.addView(initializeForView(game, cfg));
+		
+		Display display = getDisplay();
 
+		sceneTreeWindow = new FloatWindow(this);
+		sceneTreeWindow.title("Scene Tree");
+		sceneTreeWindow.addIntoView(rootLayout);
+		sceneTreeWindow.position(
+			0, 
+			display.getHeight() - sceneTreeWindow.height()
+		);
+		
+		inspectorWindow = new FloatWindow(this);
+		inspectorWindow.title("Inspector");
+		inspectorWindow.addIntoView(rootLayout);
+		inspectorWindow.position(
+			display.getWidth() - inspectorWindow.width(),
+			display.getHeight() - inspectorWindow.height()
+		);
     }
+
+	@Override
+	public void openSceneTree() {
+		runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					sceneTreeWindow.openWindow();
+				}
+			});
+	}
+	
+	@Override
+	public void openInspector() {
+		runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					inspectorWindow.openWindow();
+				}
+			});
+	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -72,5 +116,10 @@ public class MainActivity extends AndroidApplication implements AndroidInterface
 	@Override
 	public boolean isOpennedEditor() {
 		return isOpenedEditor;
+	}
+	
+	@Override
+	public boolean isEditorMode() {
+		return sceneTreeWindow.isOpenned() || inspectorWindow.isOpenned();
 	}
 }
