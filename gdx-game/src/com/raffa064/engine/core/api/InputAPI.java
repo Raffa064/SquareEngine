@@ -382,6 +382,16 @@ public class InputAPI extends API {
 		super(app);
 	}
 
+	@Override
+	public APIState createState() {
+		return buildState();
+	}
+
+
+	@Override
+	public void useState(APIState values) {
+	}
+	
 	private Vector3 getTouchCoords(int cursor) {
 		Vector3 point = new Vector3(Gdx.input.getX(cursor), Gdx.graphics.getHeight() - Gdx.input.getY(cursor), 0);
 		return app.Scene.getCamera().unproject(point);

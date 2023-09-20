@@ -7,6 +7,16 @@ public class LoggerAPI extends API {
 		super(app);
 	}
 	
+	@Override
+	public APIState createState() {
+		return buildState();
+	}
+
+
+	@Override
+	public void useState(APIState values) {
+	}
+	
 	public void log(Object... params) {
 		for (Object p : params) {
 			System.out.print(p);

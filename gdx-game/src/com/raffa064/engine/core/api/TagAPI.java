@@ -5,10 +5,23 @@ import com.raffa064.engine.core.GameObject;
 import java.util.HashMap;
 
 public class TagAPI extends API {
-	private HashMap<String, GameObject> tagMap = new HashMap<>();
+	private HashMap<String, GameObject> tagMap;
 	
 	public TagAPI(App app) {
 		super(app);
+	}
+	
+	@Override
+	public APIState createState() {
+		return buildState(
+			tagMap = new HashMap<>()
+		);
+	}
+
+
+	@Override
+	public void useState(APIState values) {
+		tagMap = values.next();
 	}
 	
 	public boolean use(GameObject obj, String tag) {

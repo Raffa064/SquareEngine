@@ -76,7 +76,7 @@ public class DebugGame extends Game {
 		}
 
 		try {
-			if (!android.isEditorMode() && app != null) {
+			if (app != null) {
 				app.render(Gdx.graphics.getDeltaTime());
 			}
 
@@ -117,13 +117,10 @@ public class DebugGame extends Game {
 	}
 
 	private void debugComands() {
-		InputAPI Input = app.Input;
-		SceneAPI Scene = app.Scene;
-
-		boolean editorGesture = Input.deltaY(0) > 50 && Input.deltaY(1) > 50 && Input.touches() == 2;
-		boolean sceneTreeGesture = Input.x(0) < Scene.width() / 2 && Input.x(1) < Scene.width() / 2 && Input.deltaX(0) > 10 && Input.deltaX(1) > 10 && Input.touches() == 2;
-		boolean inspectorGesture = Input.x(0) > Scene.width() / 2 && Input.x(1) > Scene.width() / 2 && Input.deltaX(0) < -10 && Input.deltaX(1) < -10 && Input.touches() == 2;
-
+		boolean editorGesture = Gdx.input.getDeltaY(0) > 50 && Gdx.input.getDeltaY(1) > 50 && Gdx.input.isTouched(0) && Gdx.input.isTouched(1);
+		boolean sceneTreeGesture = Gdx.input.getX(0) < Gdx.graphics.getWidth() / 2 && Gdx.input.getX(1) < Gdx.graphics.getWidth() / 2 && Gdx.input.getDeltaX(0) > 10 && Gdx.input.getDeltaX(1) > 10 && Gdx.input.isTouched(0) && Gdx.input.isTouched(1);
+		boolean inspectorGesture = Gdx.input.getX(0) > Gdx.graphics.getWidth() / 2 && Gdx.input.getX(1) > Gdx.graphics.getWidth() / 2 && Gdx.input.getDeltaX(0) < -10 && Gdx.input.getDeltaX(1) < -10 && Gdx.input.isTouched(0) && Gdx.input.isTouched(1);
+		
 		if (!android.isOpennedEditor() && editorGesture) {
 			android.openEditor();
 		}

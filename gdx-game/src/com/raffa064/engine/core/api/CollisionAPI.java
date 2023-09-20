@@ -4,17 +4,27 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
-import com.raffa064.engine.core.collision.QuadTree;
 import com.raffa064.engine.core.components.Transform2D;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CollisionAPI extends API {
-	private List<QuadTree> quadtrees = new ArrayList<>();
-    private List<Areas> areasList = new ArrayList<>();
+    private List<Areas> areasList;
 	
 	public CollisionAPI(App app) {
 		super(app);
+	}
+
+	@Override
+	public APIState createState() {
+		return buildState(
+			areasList = new ArrayList<>()
+		);
+	}
+
+	@Override
+	public void useState(APIState values) {
+		areasList = values.next();
 	}
 	
 	public Areas createAreas(GameObject obj, List<String> layer, List<String> mask, List<Rectangle> rects) {

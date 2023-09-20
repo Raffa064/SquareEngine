@@ -26,6 +26,7 @@ import com.raffa064.engine.core.api.CollisionAPI;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.raffa064.engine.core.api.InputAPI;
+import com.raffa064.engine.core.api.API;
 
 public class App {
 	public float viewportWidth = 1024;
@@ -33,12 +34,13 @@ public class App {
 	public boolean keepWidth = true;
 
 	public FileHandle projectFolder;
-	public Scene currentScene;
+	public Scene currentScene, nextScene;
 	public List<Native> apiInjectionList = new ArrayList<>();
 	public JSONLoader jsonLoader;
 	public HashMap<String, String> sceneFiles = new HashMap<>();
 	public ScriptEngine scriptEngine;
 
+	public List<API> apiList = new ArrayList<>();
 	public InputAPI Input;
 	public CollisionAPI Collision;
 	public GroupAPI Group;
@@ -52,14 +54,26 @@ public class App {
 		return Gdx.files.absolute(projectFolder.path() + "/" + path);
 	}
 
-	public void setScene(Scene scene) {
-		this.currentScene = scene;
+	public void setScene(Scene scene, boolean nextFrame) {
+		if (nextFrame) {
+			nextScene = scene;
+			return;
+		}
+		
+		currentScene = scene;
+		
 		scene.setApp(this);
 		scene.init();
 
 		scriptEngine
 			.inject("batch", scene.batch)
 			.inject("shape", scene.shape);
+
+		Scene.history.add(scene);
+	}
+	
+	public void setScene(Scene scene) {
+		setScene(scene, false);
 	}
 
 	public void init() {
@@ -158,9 +172,8 @@ public class App {
 		keepWidth = viewport.getBoolean("keepWidth");
 
 		String mainScene = config.getString("mainScene");
-		Scene loadScene = loadScene(mainScene);
-
-		setScene(loadScene);
+		Scene scene = loadScene(mainScene);
+		setScene(scene);
 	}
 
     public void render(float delta) {
@@ -172,6 +185,11 @@ public class App {
 		Input.update();
 
 		currentScene.process(delta);
+		
+		if (nextScene != null) {
+			setScene(nextScene);
+			nextScene = null;
+		}
 	}
 
 	public void resize(int width, int height) {

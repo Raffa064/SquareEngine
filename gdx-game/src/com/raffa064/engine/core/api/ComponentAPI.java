@@ -21,6 +21,16 @@ public class ComponentAPI extends API {
 			Collider.class
 		);		
 	}
+
+	@Override
+	public APIState createState() {
+		return buildState();
+	}
+
+
+	@Override
+	public void useState(APIState values) {
+	}
 	
 	public void loadNative(Class... classes) {
 		for (Class componentClass : classes) {

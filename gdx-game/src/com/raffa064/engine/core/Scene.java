@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.raffa064.engine.core.GameObject;
+import com.raffa064.engine.core.api.API;
+import com.raffa064.engine.core.api.API.APIState;
 import java.util.HashMap;
 
 public class Scene extends GameObject {
@@ -13,8 +15,25 @@ public class Scene extends GameObject {
 	public OrthographicCamera camera;
 	public SpriteBatch batch;
 	public ShapeRenderer shape;
+	public HashMap<API, APIState> states;
 	
 	public Scene() {}
+	
+	public void loadSceneState() {
+		if (states == null) {
+			states = new HashMap<>();
+			
+			for (API api : app.apiList) {
+				states.put(api, api.createState().first());
+			}
+			
+			return;
+		}
+		
+		for (API api : app.apiList) {
+			api.useState(states.get(api).first());
+		}
+	}
 
 	@Override
 	public int getZIndex() {
@@ -25,10 +44,14 @@ public class Scene extends GameObject {
 	public void setZIndex(int zIndex) {}
 	
 	public void init() {
-		setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		batch = new SpriteBatch();
-		shape = new ShapeRenderer();
-		ready();
+		loadSceneState();
+		
+		if (!isReady) {
+			setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			batch = new SpriteBatch();
+			shape = new ShapeRenderer();
+			ready();
+		}
 	}
 
 	public void setupCamera(float screenWidth, float screenHeight) {

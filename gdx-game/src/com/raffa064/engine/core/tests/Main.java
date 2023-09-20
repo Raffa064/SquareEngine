@@ -3,14 +3,16 @@ package com.raffa064.engine.core.tests;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
 import com.raffa064.engine.core.JSONLoader;
-import com.raffa064.engine.core.ScriptEngine;
 import com.raffa064.engine.core.Scene;
+import com.raffa064.engine.core.ScriptEngine;
+import com.raffa064.engine.core.api.ComponentAPI;
+import com.raffa064.engine.core.api.SceneAPI;
+import com.raffa064.engine.core.api.SceneAPI.HistoryList;
 import com.raffa064.engine.core.components.Transform2D;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.raffa064.engine.core.api.ComponentAPI;
 
 public class Main {
 	public static void main(String[] args) throws Exception {

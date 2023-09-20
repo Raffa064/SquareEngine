@@ -34,3 +34,5 @@ x Add input release
 • Configure windows size and position to be separated for landscape and portrait
 • Save window positions (.editor)
 • implement setScene
+• (Scene.init) Add condition to create state only if the current scene haven't a state
+• Organize App functions

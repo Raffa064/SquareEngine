@@ -19,6 +19,16 @@ public class AssetsAPI extends API {
 		super(app);
 	}
 
+	@Override
+	public APIState createState() {
+		return buildState();
+	}
+	
+
+	@Override
+	public void useState(APIState values) {
+	}
+
 	public Texture texture(String path) {
 		if (assets.containsKey(path)) {
 			return (Texture) assets.get(path);

@@ -15,7 +15,7 @@ public class GameObject {
 	public GameObject parent;
 	private boolean queuedFree;
 	private int zIndex = 0;
-	private boolean isReady;
+	protected boolean isReady;
 	
 	private String tag;
 	private List<String> groups = new ArrayList<>();

@@ -1,18 +1,58 @@
 package com.raffa064.engine.core.api;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.GameObject;
+import com.raffa064.engine.core.Scene;
+import java.util.List;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
-import com.badlogic.gdx.Gdx;
-import com.raffa064.engine.core.Scene;
+import java.util.ArrayList;
 
 public class SceneAPI extends API {
+	public HistoryList<Scene> history = new HistoryList<>(); // Populated by App.setScene()
+	
 	public SceneAPI(App app) {
 		super(app);
+	}
+	
+	@Override
+	public APIState createState() {
+		return buildState();
+	}
+
+	@Override
+	public void useState(APIState values) {
+	}
+	
+	public void setScene(String sceneName) throws Exception {
+		Scene scene = app.loadScene(sceneName);
+		app.setScene(scene, true);
+	}
+
+	public boolean backScene() {
+		Scene back = history.back();
+		
+		if (back != null) {
+			app.setScene(back, true);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean forwardScene() {
+		Scene forward = history.forward();
+
+		if (forward != null) {
+			app.setScene(forward, true);
+			return true;
+		}
+
+		return false;
 	}
 	
 	public GameObject prefabObject(String path) {
@@ -113,5 +153,39 @@ public class SceneAPI extends API {
 	
 	public GameObject findObject(String name) {
 		return findObject(name, app.currentScene);
+	}
+	
+	public static class HistoryList<T> {
+		public List<T> history = new ArrayList<>();
+		public int index;
+		
+		public void add(T obj) {
+			if (history.contains(obj)) return;
+			
+			if (index == history.size() - 1 || history.isEmpty()) {
+				history.add(obj);
+				index = history.size() - 1;
+			}
+			
+			while (index != history.size() - 1) {
+				history.remove(history.size()-1);
+			}
+		}
+
+		public T back() {
+			if (index > 0) {
+				return history.get(--index);	
+			}
+			
+			return null;
+		}
+
+		public T forward() {
+			if (index < history.size() - 1) {
+				return history.get(++index);	
+			}
+
+			return null;
+		}
 	}
 }

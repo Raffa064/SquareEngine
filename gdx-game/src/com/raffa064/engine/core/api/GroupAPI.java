@@ -6,11 +6,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-public class GroupAPI extends API{
-	private HashMap<String, List<GameObject>> groupMap = new HashMap<>();
+public class GroupAPI extends API {
+	private HashMap<String, List<GameObject>> groupMap;
 
 	public GroupAPI(App app) {
 		super(app);
+	}
+
+	@Override
+	public APIState createState() {
+		return buildState(
+			groupMap = new HashMap<>()
+		);
+	}
+
+	@Override
+	public void useState(APIState values) {
+		groupMap = values.next();
 	}
 
 	public void add(GameObject obj, String group) {
