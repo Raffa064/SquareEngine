@@ -50,10 +50,10 @@ function defineModes() {
 
             { regex: /[,\.;]+/, token: "operator-2" },
 
-            { regex: /true|false|null|undefined|VECTOR2|COLOR|STRING|FLOAT|INTEGER|GAME_OBJECT|MathUtils|Vector2|GlyphLayout|Rectangle|Color|Assets|Component|Logger|Scene|Group|Tag|Collision|Input/, token: "atom" },
+            { regex: /true|false|null|undefined|VECTOR2|COLOR|STRING|FLOAT|INTEGER|GAME_OBJECT|MathUtils|Vector2|GlyphLayout|Rectangle|Color|Assets|Component|Logger|Scene|Group|Tag|Collision|Input|Debug/, token: "atom" },
 
             {
-                regex: /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i,
+                regex: /\b((0x[A-Fa-f0-9]+)|(0b[01]+)|([0-9\.]+))\b/gi,
                 token: "number"
 			},
 

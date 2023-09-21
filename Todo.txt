@@ -27,6 +27,8 @@ x Apply by axis rotation (relative)
 x Use global transform into collisions boxes
 x Save editor scroll
 x Add input release
+x (Scene.init) Add condition to create state only if the current scene haven't a state
+x Organize App functions
 • Implement audio
 • Implement open project
 • Make animations easy to use
@@ -34,5 +36,4 @@ x Add input release
 • Configure windows size and position to be separated for landscape and portrait
 • Save window positions (.editor)
 • implement setScene
-• (Scene.init) Add condition to create state only if the current scene haven't a state
-• Organize App functions
+• Implement LoggerAPI/DebugAPI to show messages on screen/interrupt execution

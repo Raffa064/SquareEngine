@@ -6,13 +6,15 @@ import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.api.AssetsAPI;
 import com.raffa064.engine.core.api.CollisionAPI;
 import com.raffa064.engine.core.api.ComponentAPI;
+import com.raffa064.engine.core.api.DebugAPI;
 import com.raffa064.engine.core.api.GroupAPI;
 import com.raffa064.engine.core.api.InputAPI;
 import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
 
-public abstract class Native extends Component {
+public abstract class Native extends Component  {
+	public DebugAPI Debug;
 	public InputAPI Input;
 	public CollisionAPI Collision;
 	public GroupAPI Group;
@@ -21,7 +23,6 @@ public abstract class Native extends Component {
 	public ComponentAPI Component;
 	public AssetsAPI Assets;
 	public LoggerAPI Logger;
-	
 	public SpriteBatch batch;
 	public ShapeRenderer shape;
 	

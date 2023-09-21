@@ -34,7 +34,7 @@ public class AssetsAPI extends API {
 			return (Texture) assets.get(path);
 		}
 
-		Texture texture = new Texture(app.relative(path));
+		Texture texture = new Texture(app.path(path));
 		assets.put(path, texture);
 
 		return texture;
@@ -46,7 +46,7 @@ public class AssetsAPI extends API {
 			return content;
 		}
 
-		String content = app.relative(path).readString();
+		String content = app.path(path).readString();
 		assets.put(path, content);
 
 		return content;
@@ -169,7 +169,7 @@ public class AssetsAPI extends API {
 			return (FreeTypeFontGenerator) assets.get(path);
 		}
 
-		FileHandle relative = app.relative(path);
+		FileHandle relative = app.path(path);
 
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(relative);
 

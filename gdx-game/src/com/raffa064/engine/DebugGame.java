@@ -29,7 +29,7 @@ public class DebugGame extends Game {
 	public void reload(String path) {
 		try {
 			App app = new App();
-			app.loadProject(Gdx.files.absolute(path));
+			app.loadProject("dino", false);
 
 			if (this.app != null) {
 				this.app.dispose();

@@ -6,34 +6,36 @@ import com.raffa064.engine.core.JSONLoader;
 import com.raffa064.engine.core.Scene;
 import com.raffa064.engine.core.ScriptEngine;
 import com.raffa064.engine.core.api.ComponentAPI;
-import com.raffa064.engine.core.api.SceneAPI;
-import com.raffa064.engine.core.api.SceneAPI.HistoryList;
 import com.raffa064.engine.core.components.Transform2D;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.ArrayList;
+import com.raffa064.engine.core.api.API;
+import com.raffa064.engine.core.api.API.APIState;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
 	}
-	
+
 	private static void test_name_counter() {
 		String name = "test";
-		
+
 		Matcher matcher = Pattern.compile("\\([0-9]+\\)").matcher(name);
 
 		if (matcher.find()) {
 			int start = matcher.start();
 			int end = matcher.end();
 
-			int counter = Integer.parseInt(name.substring(start+1, end-1)) + 1;
+			int counter = Integer.parseInt(name.substring(start + 1, end - 1)) + 1;
 			name = name.substring(0, start) + "(" + counter + ")" + name.substring(end, name.length());
 		} else {
 			name = name + " (1)";
 		}
 
-		System.out.println("COUNTER: "+name);
+		System.out.println("COUNTER: " + name);
 	}
 
 	private static void test_transpiler() {
@@ -41,11 +43,11 @@ public class Main {
 		String script = readFile("/storage/emulated/0/AppProjects/GameEngine/gdx-game-android/assets/project/MoveComponent.js"); //"/storage/emulated/0/AppProjects/GameEngine/gdx-game/src/com/raffa064/engine/core/tests/teste.js");
 		String transpile = engine.transpile(script);
 		System.out.println(transpile);
-		
+
 		try {
 			engine.compile(script);
 			System.out.println("Sucess!");
-		} catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println("Transpiler error, or invalid test source");
 		}
 	}

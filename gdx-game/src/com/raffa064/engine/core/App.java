@@ -4,35 +4,34 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.raffa064.engine.core.Scene;
+import com.raffa064.engine.core.api.API;
 import com.raffa064.engine.core.api.AssetsAPI;
+import com.raffa064.engine.core.api.CollisionAPI;
 import com.raffa064.engine.core.api.ComponentAPI;
+import com.raffa064.engine.core.api.DebugAPI;
 import com.raffa064.engine.core.api.GroupAPI;
+import com.raffa064.engine.core.api.InputAPI;
 import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
 import com.raffa064.engine.core.components.Native;
-import com.raffa064.engine.core.Scene;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.math.Rectangle;
-import com.raffa064.engine.core.api.CollisionAPI;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.raffa064.engine.core.api.InputAPI;
-import com.raffa064.engine.core.api.API;
 
 public class App {
 	public float viewportWidth = 1024;
 	public float viewportHeight = 600;
 	public boolean keepWidth = true;
 
+	public boolean absolutePath; // switch between absolute/internal project folder
 	public FileHandle projectFolder;
 	public Scene currentScene, nextScene;
 	public List<Native> apiInjectionList = new ArrayList<>();
@@ -41,6 +40,7 @@ public class App {
 	public ScriptEngine scriptEngine;
 
 	public List<API> apiList = new ArrayList<>();
+	public DebugAPI Debug;
 	public InputAPI Input;
 	public CollisionAPI Collision;
 	public GroupAPI Group;
@@ -49,34 +49,26 @@ public class App {
 	public ComponentAPI Component;
 	public AssetsAPI Assets;
 	public LoggerAPI Logger;
+	
+	public void loadProject(FileHandle folder, boolean absolutePath) throws Exception {
+		projectFolder = folder;
 
-	public FileHandle relative(String path) {
-		return Gdx.files.absolute(projectFolder.path() + "/" + path);
-	}
-
-	public void setScene(Scene scene, boolean nextFrame) {
-		if (nextFrame) {
-			nextScene = scene;
-			return;
-		}
-		
-		currentScene = scene;
-		
-		scene.setApp(this);
-		scene.init();
-
-		scriptEngine
-			.inject("batch", scene.batch)
-			.inject("shape", scene.shape);
-
-		Scene.history.add(scene);
+		init();
+		loadProjectFiles(folder, absolutePath);
+		loadConfigs();
 	}
 	
-	public void setScene(Scene scene) {
-		setScene(scene, false);
+	public void loadProject(String projectPath, boolean absolutePath) throws Exception {
+		FileHandle folder = absolutePath? 
+			Gdx.files.absolute(projectPath) :
+			Gdx.files.internal(projectPath);
+			
+		loadProject(folder, absolutePath);
 	}
-
+	
 	public void init() {
+		apiList.clear();
+		Debug = new DebugAPI(this);
 		Input = new InputAPI(this);
 		Collision = new CollisionAPI(this);
 		Group = new GroupAPI(this);
@@ -107,6 +99,7 @@ public class App {
 			.inject("GAME_OBJECT", "GAME_OBJECT");
 
 		scriptEngine
+			.inject("Debug", Debug)
 			.inject("Input", Input)
 			.inject("Collision", Collision)
 			.inject("Group", Group)
@@ -116,38 +109,13 @@ public class App {
 			.inject("Assets", Assets)
 			.inject("Logger", Logger);
 	}
-
-	public void injectDependencies(Native component) {
-		component.Input = Input;
-		component.Collision = Collision;
-		component.Group = Group;
-		component.Tag = Tag;
-		component.Scene = Scene;
-		component.Component = Component;
-		component.Assets = Assets;
-		component.Logger = Logger;
-
-		component.batch = currentScene.batch;
-		component.shape = currentScene.shape;
-	}
-
-	public Scene loadScene(String name) throws Exception {
-		Scene scn = jsonLoader.sceneFromJson(sceneFiles.get(name));
-		return scn;
-	}
-
-	public void loadProject(FileHandle folder) throws Exception {
-		projectFolder = folder;
-
-		init();
-		loadProjectFiles(folder);
-		loadConfigs();
-	}
-
-	private void loadProjectFiles(FileHandle folder) {
+	
+	private void loadProjectFiles(FileHandle folder, boolean absolutePath) {
+		this.absolutePath = absolutePath;
+		
 		for (FileHandle file : folder.list()) {
 			if (file.isDirectory()) {
-				loadProjectFiles(file);
+				loadProjectFiles(file, absolutePath);
 				continue;
 			} 
 
@@ -174,6 +142,56 @@ public class App {
 		String mainScene = config.getString("mainScene");
 		Scene scene = loadScene(mainScene);
 		setScene(scene);
+	}
+	
+	public FileHandle path(String path) {
+		String inProjectPath = projectFolder.path() + "/" + path;
+		
+		return absolutePath? 
+			Gdx.files.absolute(inProjectPath) :
+			Gdx.files.internal(inProjectPath);
+	}
+	
+	public Scene loadScene(String name) throws Exception {
+		Scene scn = jsonLoader.sceneFromJson(sceneFiles.get(name));
+		return scn;
+	}
+	
+	public void setScene(Scene scene, boolean nextFrame) {
+		if (nextFrame) {
+			nextScene = scene;
+			return;
+		}
+
+		currentScene = scene;
+
+		scene.setApp(this);
+		scene.init();
+
+		scriptEngine
+			.inject("batch", scene.batch)
+			.inject("shape", scene.shape);
+
+		Scene.history.add(scene);
+	}
+
+	public void setScene(Scene scene) {
+		setScene(scene, false);
+	}
+	
+	public void injectDependencies(Native component) {
+		component.Debug = Debug;
+		component.Input = Input;
+		component.Collision = Collision;
+		component.Group = Group;
+		component.Tag = Tag;
+		component.Scene = Scene;
+		component.Component = Component;
+		component.Assets = Assets;
+		component.Logger = Logger;
+
+		component.batch = currentScene.batch;
+		component.shape = currentScene.shape;
 	}
 
     public void render(float delta) {
