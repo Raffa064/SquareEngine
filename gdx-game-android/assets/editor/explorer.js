@@ -116,7 +116,7 @@ function loadFileList(Explorer, explorerList, path, state = []) {
             const fileAddChild = document.createElement('button')
             const fileChildren = document.createElement('ul')
 
-            fileAddChild.innerText = '+'
+            fileAddChild.innerText = 'new'
             fileAddChild.onclick = () => {
                 const updateHandler = (name) => {
                     if (name.endsWith('/')) {

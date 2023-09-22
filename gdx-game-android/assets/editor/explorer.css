@@ -9,7 +9,7 @@
 
 #explorer {
     width: 0px;
-    height: calc(100vh /*- 40px */ - 20px);
+    height: calc(100vh /*- 40px */ - var(--info-height));
     min-width: 15px;
     max-width: 80%;
     padding-right: 10px;
@@ -25,7 +25,7 @@
     top: 0;
     width: 15px;
     height: 100%;
-    background: #333;
+    background: #242424; /*#333;*/
 }
 
 .resizer::after {
@@ -41,7 +41,7 @@
 }
 
 .resizer.active {
-    background: #393939;
+    background: #282828; /*#393939;*/
 }
 
 .resizer.active::after {
@@ -59,11 +59,15 @@
 
 .folder {
     padding-block: 5px;
-    color: #afa;
 }
 
 .folder.fold {
     color: #ddd;
+}
+
+.folder>.name {
+    color: #afa;
+	font-weight: bold;
 }
 
 .folder>.name::before {
@@ -74,16 +78,22 @@
     content: '📁 ';
 }
 
+.folder>.name::after {
+    content: '/';
+}
+
+.folder.fold > button {
+  display: none;
+}
+
 .folder button {
+    background: #282828;
+    color: #ffffff;
     padding-inline: 5px;
     padding-block: 2px;
     margin-left: 8px;
-    background: #292929;
-    color: #aaa;
     font-size: 1rem;
-	font-style: bold;
-    border: 1px solid #333;
-	border-radius: 4px;
+    border-radius: 4px;
 }
 
 .folder button:active {
@@ -114,6 +124,7 @@
 .file .name {
     display: block;
 	color: #aaa;
+	font-weight: normal;
     padding-block: 5px;
 }
 

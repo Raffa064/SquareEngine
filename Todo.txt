@@ -29,11 +29,13 @@ x Save editor scroll
 x Add input release
 x (Scene.init) Add condition to create state only if the current scene haven't a state
 x Organize App functions
+x Configure windows size and position to be separated for landscape and portrait
+x Save window positions (.editor)
+x implement setScene
+x implement scene history
 • Implement audio
 • Implement open project
 • Make animations easy to use
 • Add nodes list debug
-• Configure windows size and position to be separated for landscape and portrait
-• Save window positions (.editor)
-• implement setScene
 • Implement LoggerAPI/DebugAPI to show messages on screen/interrupt execution
+• Fix explorer createItem duplication, and duplication crash

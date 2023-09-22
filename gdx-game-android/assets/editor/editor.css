@@ -1,3 +1,7 @@
+:root {
+  --info-height: 30px;
+}
+
 * {
     padding: 0;
     margin: 0;
@@ -85,9 +89,9 @@ header div.option:hover div button + button {
   align-items: center;
   width: 100vw;
   max-width: 100vw;
-  height: 20px;
-  color: #aaa;
-  background: #1e1e1e;
+  height: var(--info-height);
+  color: #999;
+  background: #222;/*#1e1e1e;*/
 }
 
 #info span {
@@ -95,6 +99,7 @@ header div.option:hover div button + button {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  color: #aaa;
 }
 
 main {
@@ -106,7 +111,7 @@ main {
 
 .CodeMirror {
     flex: 1;
-    height: calc(100vh /* - 40px */ - 20px);
+    height: calc(100vh /* - 40px */ - var(--info-height));
 }
 
 .CodeMirror * {

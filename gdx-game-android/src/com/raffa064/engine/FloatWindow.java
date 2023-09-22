@@ -1,23 +1,21 @@
 package com.raffa064.engine;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import com.raffa064.engine.R;
-import android.widget.ImageButton;
-import android.webkit.WebView;
-import android.view.View.OnTouchListener;
-import android.view.MotionEvent;
-import android.view.Display;
-import android.view.View.OnClickListener;
-import android.animation.Animator;
-import android.view.animation.Animation;
-import android.webkit.WebSettings;
-import android.webkit.WebViewClient;
 
 public class FloatWindow {
 	private Activity activity;
@@ -29,11 +27,24 @@ public class FloatWindow {
 	private WebView windowWebView;
 	private View windowResizerRight;
 	private View windowResizerBottom;
+	private OnChangeWindowListener windowChangeListener;
 
 	public FloatWindow(Activity activity) {
 		this.activity = activity;
 
 		inflate(activity.getLayoutInflater(), 400, 500);
+	}
+
+	public WebView webview() {
+		return windowWebView;
+	}
+
+	public void setWindowChangeListener(OnChangeWindowListener windowChangeListener) {
+		this.windowChangeListener = windowChangeListener;
+	}
+
+	public OnChangeWindowListener getWindowChangeListener() {
+		return windowChangeListener;
 	}
 
 	private void inflate(LayoutInflater inflater, int width, int height) {
@@ -44,23 +55,58 @@ public class FloatWindow {
 		windowWebView = window.findViewById(R.id.float_window_webview);	
 		windowResizerRight = window.findViewById(R.id.float_window_resizer_right);	
 		windowResizerBottom = window.findViewById(R.id.float_window_resizer_bottom);
-		
+
 		window.setVisibility(View.GONE);
-		
+
 		windowParams = new LayoutParams(width, height);
 		window.setLayoutParams(windowParams);
-		
-		windowTopBar.setOnTouchListener(new HoverListener(window));
-		windowResizerRight.setOnTouchListener(new ResizerListener(window, ResizerListener.MODE_HORIZONTAL));
-		windowResizerBottom.setOnTouchListener(new ResizerListener(window, ResizerListener.MODE_VERTICAL));
-		
+
+		windowTopBar.setOnTouchListener(new HoverListener(window) {
+				@Override
+				public boolean onMove(float x, float y, float dragX, float dragY, int touch) {
+					boolean onMove = super.onMove(x, y, dragX, dragY, touch);
+					
+					if (windowChangeListener != null) {
+						windowChangeListener.move(x(), y());
+					}
+					
+					return onMove;
+				}
+			});
+			
+		windowResizerRight.setOnTouchListener(new ResizerListener(window, ResizerListener.MODE_HORIZONTAL) {
+				@Override
+				public boolean onMove(float x, float y, float dragX, float dragY, int touch) {
+					boolean onMove = super.onMove(x, y, dragX, dragY, touch);
+
+					if (windowChangeListener != null) {
+						windowChangeListener.resize(width(), height());
+					}
+
+					return onMove;
+				}
+			});
+			
+		windowResizerBottom.setOnTouchListener(new ResizerListener(window, ResizerListener.MODE_VERTICAL) {
+				@Override
+				public boolean onMove(float x, float y, float dragX, float dragY, int touch) {
+					boolean onMove = super.onMove(x, y, dragX, dragY, touch);
+
+					if (windowChangeListener != null) {
+						windowChangeListener.resize(width(), height());
+					}
+
+					return onMove;
+				}
+			});
+
 		windowClose.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					closeWindow();
 				}			
-		});
-		
+			});
+
 		// Configurar as configurações do WebView
 		WebSettings webSettings = windowWebView.getSettings();
 		webSettings.setUseWideViewPort(true);
@@ -68,21 +114,30 @@ public class FloatWindow {
 
 		// Configurar o cliente do WebView
 		windowWebView.setWebViewClient(new WebViewClient());
-
 		windowWebView.setAddStatesFromChildren(true);
-		
-		windowWebView.loadUrl("file:///android_asset/scene-tree/scene-tree.html");
+	}
+
+	public void load(String url) {
+		windowWebView.loadUrl(url);
 	} 
 
 	public void addIntoView(ViewGroup view) {
 		view.addView(window);	
 	}
-	
+
 	public void position(int x, int y) {
 		windowParams.setMargins(x, y, 0, 0);
 		window.setLayoutParams(windowParams);
 	}
-	
+
+	public int x() {
+		return windowParams.leftMargin;	
+	}
+
+	public int y() {
+		return windowParams.topMargin;	
+	}
+
 	public int width() {
 		return windowParams.width;
 	}
@@ -144,7 +199,7 @@ public class FloatWindow {
 			})
 			.start();
 	}
-	
+
 	public void toggleWindow() {
 		if (window.getVisibility() == View.GONE) {
 			openWindow();
@@ -152,21 +207,21 @@ public class FloatWindow {
 			closeWindow();
 		}
 	}
-	
+
 	public boolean isOpenned() {
 		return window.getVisibility() == View.VISIBLE;
 	}
-	
+
 	public static abstract class CustomTouchListener implements OnTouchListener {
 		private float offsetX, offsetY;
-		
+
 		@Override
 		public boolean onTouch(View view, MotionEvent event) {
 			switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					offsetX = event.getRawX();
 					offsetY = event.getRawY();
-					
+
 					return onUp(event.getRawX(), event.getRawY(), event.getActionIndex());
 				case MotionEvent.ACTION_MOVE:
 					float dragX = event.getRawX() - offsetX;
@@ -176,12 +231,12 @@ public class FloatWindow {
 
 					offsetX = event.getRawX();
 					offsetY = event.getRawY();
-					
+
 					return move;
 				case MotionEvent.ACTION_UP:
 					return onUp(event.getRawX(), event.getRawY(), event.getActionIndex());
 			}
-			
+
 			return false;
 		}
 
@@ -193,12 +248,12 @@ public class FloatWindow {
 	public static class HoverListener extends CustomTouchListener {
 		private View view;
 		private LayoutParams params;
-		
+
 		public HoverListener(View view) {
 			this.view = view;
 			this.params = (LayoutParams) view.getLayoutParams();
 		}
-		
+
 		@Override
 		public boolean onDown(float x, float y, int touch) {
 			return true;
@@ -217,24 +272,24 @@ public class FloatWindow {
 
 			px = Math.max(0, Math.min(screenWidth - params.width, px));
 			py = Math.max(0, Math.min(screenHeight - params.height, py));
-			
+
 			params.setMargins(px, py, 0, 0);
-			
+
 			view.setLayoutParams(params);
-			
+
 			return true;
 		}
-		
+
 		@Override
 		public boolean onUp(float x, float y, int touch) {
 			return true;
 		}
 	}
-	
+
 	public static class ResizerListener extends CustomTouchListener {
 		public static final int MODE_HORIZONTAL = 1;
 		public static final int MODE_VERTICAL = 2;
-		
+
 		private View view;
 		private LayoutParams params;
 		private int mode;
@@ -252,10 +307,10 @@ public class FloatWindow {
 
 		@Override
 		public boolean onMove(float x, float y, float dragX, float dragY, int touch) {
-			
+
 			params.width += dragX * (mode & 0b1);
 			params.height += dragY * ((mode >> 1) & 0b1);
-			
+
 			int screenWidth = ((View) view.getParent()).getWidth();
 			int screenHeight = ((View) view.getParent()).getHeight();
 
@@ -271,5 +326,11 @@ public class FloatWindow {
 		public boolean onUp(float x, float y, int touch) {
 			return true;
 		}
+	}
+
+	public static interface OnChangeWindowListener {
+		public void move(int x, int y);
+
+		public void resize(int w, int h);
 	}
 }

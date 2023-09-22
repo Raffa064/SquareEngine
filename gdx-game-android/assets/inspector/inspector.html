@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<style>
+        * {
+            padding: 0;
+            margin: 0;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+        
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #222;
+            color: #aaa;
+            padding: 10px;
+        }
+        
+        header {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 1.2rem;
+            flex: 1;
+        }
+        
+        button {
+            background: #282828;
+            padding: 10px;
+            border-radius: 4px;
+            color: #ffffff;
+        }
+        
+        input {
+            width: 100%;
+            padding: 5px;
+            background: transparent;
+            color: #aaa;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-block: 5px;
+        }
+        
+        ul ul {
+            padding-left: 1rem;
+        }
+        
+        li.selected {
+           border: 2px solid #08f;
+        }
+        
+        li.selected > span {
+            color: #08f;
+        }
+        
+        li.selected > span:after {
+            content: 'on inspection';
+            float: right;
+        }
+        
+        li span {
+            display: block;
+            padding: 5px;
+            padding-left: 1.5rem;
+            background: #282828;
+            position: relative;
+        }
+        
+        li span::before {
+            content: '';
+            position: absolute;
+            left: .75rem;
+            top: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            display: inline-block;
+            width: .7rem;
+            height: .7rem;
+            margin-right: 5px;
+            background: transparent;
+            border: 2px solid currentColor;
+            border-radius: 2px;
+            rotate: 6deg;
+        }
+        
+        li span:hover {
+            background: #323232;
+        }
+        
+        li span[contenteditable="true"] {
+            border: 1px solid gray;
+            background: #353535;
+        }
+</style>
+  </head>
+
+  <body>
+    <header>
+	  <h1>Main</h1>
+	  <button>Open scene</button>
+    </header>
+    <input placeholder="filter objects..."/>
+    <ul>
+	  <li>
+		<span>MainLoader</span>
+		<ul>
+		  <li>
+			<span>Background image</span>
+		  </li>
+		  <li>
+			<span>Score display</span>
+		  </li>
+		  <li>
+			<span>Joystick</span>
+		  </li>
+		  <li>
+			<span>Level display</span>
+		  </li>
+		</ul>
+	  </li>
+	  <li>
+		<span>Player</span>
+		<ul>
+		  <li>
+			<span contenteditable="true">Life bar</span>
+		  </li>                
+		  <li>
+			<span>Gun</span>
+			<ul>
+			  <li>
+				<span>BulletAmount</span>
+			  </li>
+			</ul>
+		  </li>                
+		  <li>
+			<span>Saw</span>
+		  </li>
+		</ul>
+	  </li>
+    </ul>
+
+<script>
+  	function select() {
+		document.querySelectorAll('.selected').forEach(s => s.classList.remove('selected'))
+	
+		var a = false
+        document.querySelectorAll('li').forEach(li => {
+            if (!a) {
+                if (Math.random() < .2) {
+                    a = true
+                    li.classList.add('selected')
+                }
+            }
+        })
+	}
+</script>
+  </body>
+
+</html>

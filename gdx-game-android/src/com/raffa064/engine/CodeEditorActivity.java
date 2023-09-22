@@ -19,8 +19,10 @@ import java.util.Comparator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 public class CodeEditorActivity extends Activity {
+	private EditorApplication application;
+	private AndroidJSI androidJSI;	
+	
 	private WebView webView;
 
 	@Override
@@ -38,12 +40,18 @@ public class CodeEditorActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		application = (EditorApplication) getApplication();
+		androidJSI = application.getAndroidJSI();
 
+		checkPermissions();
+	}
+
+	private void checkPermissions() {
 		if (getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
 			getApplicationContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 			init();
 		} else {
-			// Solicite permissões de leitura e escrita
 			requestPermissions(
 				new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				123
@@ -77,21 +85,16 @@ public class CodeEditorActivity extends Activity {
 		
 		setContentView(webView);
 
-		// Configurar as configurações do WebView
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setUseWideViewPort(true);
-		webSettings.setJavaScriptEnabled(true);  // Habilitar JavaScript, se necessário
+		webSettings.setJavaScriptEnabled(true);  
 
-		// Configurar o cliente do WebView
 		webView.setWebViewClient(new WebViewClient());
-
 		webView.setAddStatesFromChildren(true);
+		
+		androidJSI.setFolderPath(getIntent().getExtras().getString("project"));
+		webView.addJavascriptInterface(androidJSI, "app");
 
-		JSI_Android android = new JSI_Android();
-		android.setFolderPath(getIntent().getExtras().getString("project"));
-		webView.addJavascriptInterface(android, "app");
-
-		// Carregar o arquivo HTML da pasta "assets"
 		webView.loadUrl("file:///android_asset/editor/editor.html");
 	}
 
