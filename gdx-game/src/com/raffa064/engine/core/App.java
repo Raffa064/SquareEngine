@@ -49,7 +49,7 @@ public class App {
 	public ComponentAPI Component;
 	public AssetsAPI Assets;
 	public LoggerAPI Logger;
-	
+
 	public void loadProject(FileHandle folder, boolean absolutePath) throws Exception {
 		projectFolder = folder;
 

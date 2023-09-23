@@ -8,6 +8,7 @@ import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.Scene;
 import com.raffa064.engine.core.api.InputAPI;
 import com.raffa064.engine.core.api.SceneAPI;
+import com.raffa064.engine.core.SquareLib;
 
 public class DebugGame extends Game {
 	private AndroidInterface android;
@@ -17,6 +18,8 @@ public class DebugGame extends Game {
 
 	private String reloadErr, renderErr, resizeErr;
 	private boolean unstable;
+	
+	private SquareLib lib = new SquareLib();
 
 	public DebugGame(AndroidInterface android) {
 		this.android = android;
@@ -61,6 +64,7 @@ public class DebugGame extends Game {
 
 	@Override
 	public void render() {
+		android.setDebugText("1+2="+lib.soma(1, 2));
 		if (projectPath != null) {
 			unstable = false;
 			clearErrors();
