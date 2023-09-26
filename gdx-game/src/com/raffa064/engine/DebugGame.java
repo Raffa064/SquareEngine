@@ -2,13 +2,13 @@ package com.raffa064.engine;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.raffa064.engine.core.App;
-import com.raffa064.engine.core.Scene;
-import com.raffa064.engine.core.api.InputAPI;
-import com.raffa064.engine.core.api.SceneAPI;
+import com.raffa064.engine.core.GameObject;
 import com.raffa064.engine.core.SquareLib;
+import com.raffa064.engine.core.components.Collider;
+import com.raffa064.engine.core.components.Image;
+import com.raffa064.engine.core.components.Transform2D;
 
 public class DebugGame extends Game {
 	private AndroidInterface android;
@@ -33,7 +33,7 @@ public class DebugGame extends Game {
 		try {
 			App app = new App();
 			app.loadProject(path, true);
-
+			
 			if (this.app != null) {
 				this.app.dispose();
 			}
@@ -64,7 +64,6 @@ public class DebugGame extends Game {
 
 	@Override
 	public void render() {
-		android.setDebugText("1+2="+lib.soma(1, 2));
 		if (projectPath != null) {
 			unstable = false;
 			clearErrors();
@@ -82,12 +81,6 @@ public class DebugGame extends Game {
 		try {
 			if (app != null) {
 				app.render(Gdx.graphics.getDeltaTime());
-			}
-
-			if (android.isEditorMode()) {
-				android.setDebugText("[ Editor mode ]");
-			} else {
-				android.setDebugText("");
 			}
 		} catch (Exception e) {
 			Gdx.gl.glClearColor(1, 0, 0, 0);

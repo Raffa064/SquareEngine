@@ -203,6 +203,8 @@ public class App {
 		Input.update();
 
 		currentScene.process(delta);
+		Collision.stepPhysics(delta);
+		Collision.renderDebug();
 		
 		if (nextScene != null) {
 			setScene(nextScene);

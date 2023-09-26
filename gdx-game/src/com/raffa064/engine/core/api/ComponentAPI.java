@@ -2,10 +2,12 @@ package com.raffa064.engine.core.api;
 
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.ScriptEngine;
-import com.raffa064.engine.core.components.Collider;
+import com.raffa064.engine.core.components.DynamicBody;
 import com.raffa064.engine.core.components.Image;
+import com.raffa064.engine.core.components.KinematicBody;
 import com.raffa064.engine.core.components.Native;
 import com.raffa064.engine.core.components.Script;
+import com.raffa064.engine.core.components.StaticBody;
 import com.raffa064.engine.core.components.Transform2D;
 import java.util.HashMap;
 
@@ -18,7 +20,9 @@ public class ComponentAPI extends API {
 		loadNative(
 			Transform2D.class,
 			Image.class,
-			Collider.class
+			StaticBody.class,
+			DynamicBody.class,
+			KinematicBody.class
 		);		
 	}
 

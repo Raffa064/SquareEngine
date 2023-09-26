@@ -188,4 +188,33 @@ public class SceneAPI extends API {
 			return null;
 		}
 	}
+	
+	public String tree(GameObject obj, String log, int level, int[] components) {
+		for (int i = 0; i < level; i++) {
+			log += ' ';
+		}
+
+		log += obj.getName() + '\n';
+		components[0] += obj.getComponents().size();
+
+		List<GameObject> children = obj.getChildren();
+		for (int i = 0; i < children.size(); i++) {
+			GameObject child = children.get(i);
+			log = tree(child, log, level+1, components);
+		}
+
+		if (level == 1) {
+			log += "Component Amount: " + components[1];
+		}
+
+		return log;
+	}
+	
+	public String tree(GameObject obj) {
+		return tree(obj, "", 1, new int[2]);
+	}
+	
+	public String tree() {
+		return tree(app.currentScene);
+	}
 }

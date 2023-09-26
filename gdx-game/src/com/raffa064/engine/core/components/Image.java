@@ -2,8 +2,9 @@ package com.raffa064.engine.core.components;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix3;
+import com.badlogic.gdx.math.Vector2;
 
 public class Image extends Native {
 	public String texturePath;
@@ -76,18 +77,24 @@ public class Image extends Native {
 		
 		Color batchColor = batch.getColor();
 		
+		Matrix3 transformed = transform.transformed();
+		
+		Vector2 pos = transformed.getTranslation(new Vector2());
+		Vector2 scale = transformed.getScale(new Vector2());
+		float rotation = transformed.getRotation();
+		
 		batch.setColor(color);
 		batch.draw(
 			region, 
-			transform.global_pos.x - halfWidth,
-			transform.global_pos.y - halfHeight,
+			pos.x - halfWidth,
+			pos.y - halfHeight,
 			halfWidth,
 			halfHeight,
 			width,
 			height,
-			transform.global_scale.x,
-			transform.global_scale.y,
-			transform.global_rotation
+			scale.x,
+			scale.y,
+			rotation
 		);
 		
 		batch.setColor(batchColor);

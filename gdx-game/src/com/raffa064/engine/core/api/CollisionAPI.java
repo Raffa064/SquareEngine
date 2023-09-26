@@ -1,139 +1,68 @@
 package com.raffa064.engine.core.api;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.World;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
-import com.raffa064.engine.core.components.Transform2D;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CollisionAPI extends API {
-    private List<Areas> areasList;
-	
+	public World world;
+	public Box2DDebugRenderer b2ddr = new Box2DDebugRenderer();
+
 	public CollisionAPI(App app) {
 		super(app);
 	}
 
 	@Override
-	public APIState createState() {
+	public API.APIState createState() {
+		world = new World(new Vector2(0, -.98f), false);
+		world.setContactListener(new ContactListener() {
+				@Override
+				public void beginContact(Contact contact) {
+					Body bodyA = contact.getFixtureA().getBody();
+					Body bodyB = contact.getFixtureB().getBody();
+
+					GameObject objA = (GameObject) bodyA.getUserData();
+					GameObject objB = (GameObject) bodyB.getUserData();
+
+					objA.startCollision(objB);
+					objA.endCollision(objA);
+				}
+
+				@Override
+				public void endContact(Contact p1) {
+				}
+
+				@Override
+				public void preSolve(Contact p1, Manifold p2) {
+				}
+
+				@Override
+				public void postSolve(Contact p1, ContactImpulse p2) {
+				}
+			});
+
 		return buildState(
-			areasList = new ArrayList<>()
+			world
 		);
 	}
 
 	@Override
-	public void useState(APIState values) {
-		areasList = values.next();
+	public void useState(API.APIState state) {
+		world = state.next();
 	}
-	
-	public Areas createAreas(GameObject obj, List<String> layer, List<String> mask, List<Rectangle> rects) {
-		Areas areas = new Areas(obj, layer, mask, rects);
-		
-		areasList.add(areas);
-		
-		return areas;
-	}
-	
-	public Areas createAreas(GameObject obj) {
-		List<String> layer = new ArrayList<String>();
-		List<String> mask = new ArrayList<String>();
-		List<Rectangle> rects = new ArrayList<Rectangle>();
-		
-		return createAreas(obj, layer, mask, rects);
-	}
-	
-	public List<Areas> getCollided(Areas A) {
-		List<Areas> collidedAreas = new ArrayList<>();
-		for (Areas B : areasList) {
-			if (B == A) continue;
-			
-			if (A.masks(B)) {
-				if (A.collides(B)) {
-					collidedAreas.add(B);
-				}
-			}
-		}
-		
-		return collidedAreas;
-	}
-	
-	public List<GameObject> getCollidedObjects(Areas A) {
-		List<GameObject> collidedObjects = new ArrayList<>();
-		for (Areas B : areasList) {
-			if (B == A) continue;
 
-			if (A.masks(B)) {
-				if (A.collides(B)) {
-					collidedObjects.add(B.obj);
-				}
-			}
-		}
-
-		return collidedObjects;
+	public void stepPhysics(float delta) {
+		world.step(delta, 6, 2);
 	}
-	
-	public void removeArea(Areas areas) {
-		areasList.remove(areas);
-	}
-	
-	public static class Areas {
-		public GameObject obj;
-		public List<String> layer = new ArrayList<>();
-		public List<String> mask = new ArrayList<>();
-		public List<Rectangle> rects = new ArrayList<>();
-		public Vector2 pos, scale;
 
-		public Areas(GameObject obj, List<String> layer, List<String> mask, List<Rectangle> rects) {
-			this.obj = obj;
-			this.layer = layer;
-			this.mask = mask;
-			this.rects = rects;
-			
-			Transform2D transform = (Transform2D) obj.get("Transform2D");
-			if (transform != null) {
-				pos = transform.global_pos;
-				scale = transform.global_scale;
-				return;
-			}
-		}
-		
-		public boolean masks(Areas areas) {
-			for (String layer : areas.layer) {
-				if (mask.contains(layer)) {
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
-		public void transformRect(Rectangle rect, Rectangle out) {
-			float width = rect.width * scale.x;
-			float height = rect.height * scale.y;
-			
-			out.x = pos.x - width / 2;
-			out.y = pos.y - height / 2;
-			out.width = width;
-			out.height = height;
-		}
-		
-		public boolean collides(Areas areas) {
-			Rectangle A = new Rectangle();
-			Rectangle B = new Rectangle();
-			
-			for (Rectangle r1 : rects) {
-				for (Rectangle r2 : areas.rects) {
-					transformRect(r1, A);
-					areas.transformRect(r2, B);
-					
-					if (A.overlaps(B)) {
-						return true;
-					}
-				}
-			}
-
-			return false;
-		}
+	public void renderDebug() {
+		b2ddr.render(world, app.Scene.getCamera().combined);
 	}
 }

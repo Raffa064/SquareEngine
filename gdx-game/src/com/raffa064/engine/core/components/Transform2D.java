@@ -4,15 +4,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.GameObject;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix3;
 
 public class Transform2D extends Native {
 	public final Vector2 pos = new Vector2();
 	public final Vector2 scale = new Vector2(1, 1);
 	public float rotation;
-
-	public final Vector2 global_pos = new Vector2();
-	public final Vector2 global_scale = new Vector2();
-	public float global_rotation;
+	
+	private Transform2D parentTransform;
 
 	public Transform2D() {
 		super("Transform2D");
@@ -23,37 +22,28 @@ public class Transform2D extends Native {
 			"rotation", FLOAT
 		);
 	}
+	
+	public Matrix3 transformed() {
+		Matrix3 mat = new Matrix3();
 
-	public void updateGlobals() {
-		global_pos.set(pos);
-		global_scale.set(scale);
-		global_rotation = rotation;
-
-		Object component = obj.parent.get("Transform2D");
-
-		if (component instanceof Transform2D) {
-			Transform2D pTransfom = (Transform2D) component;
-			
-			float mg = pos.len();
-			
-			global_pos.set(
-				pTransfom.global_pos.x + MathUtils.cosDeg(pTransfom.global_rotation) * mg * pTransfom.global_scale.x,
-				pTransfom.global_pos.y + MathUtils.sinDeg(pTransfom.global_rotation) * mg * pTransfom.global_scale.y
-			);
-			
-			global_scale.scl(pTransfom.global_scale);
-			global_rotation += pTransfom.global_rotation;
-				
-		}
+		mat.translate(pos);
+		mat.scale(scale);
+		mat.rotate(rotation);
+		
+		if (parentTransform != null) {
+			mat.mul(parentTransform.transformed());
+		} 
+		
+		return mat;
 	}
 
 	@Override
 	public void ready() {
+		parentTransform = (Transform2D) obj.parent.get("Transform2D");
 	}
 
 	@Override
 	public void process(float delta) {
-		updateGlobals();
 	}
 
 	@Override

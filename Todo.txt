@@ -1,4 +1,10 @@
-Things to do:
+Todo list:
+• Make collider shape editable
+• Implement open project
+• Make animations easy to use
+• Add nodes list debug
+• Implement LoggerAPI/DebugAPI to show messages on screen/interrupt execution
+• Fix explorer createItem duplication, and duplication crash
 x Replace for-in into normal for
 x Create and use z-Index while addChild is called
 x Find a way to remove .js() from scripts
@@ -15,7 +21,7 @@ x Rename file button on explorer
 x Delete file on hold
 x Fit #info into screen width
 x Fix editableFile to use initial extension icon...
-x Fix openEditor to open only one editor 
+x Fix openEditor to open only one editor
 x Make "rename file" to be case sentitive
 x Separate CodeEditorActivity classes into other files
 x Move Scene class from components folder to another folder
@@ -33,9 +39,3 @@ x Configure windows size and position to be separated for landscape and portrait
 x Save window positions (.editor)
 x implement setScene
 x implement scene history
-• Implement audio
-• Implement open project
-• Make animations easy to use
-• Add nodes list debug
-• Implement LoggerAPI/DebugAPI to show messages on screen/interrupt execution
-• Fix explorer createItem duplication, and duplication crash

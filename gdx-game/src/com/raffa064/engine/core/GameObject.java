@@ -196,6 +196,10 @@ public class GameObject {
 		}
 	}
 
+	public void startCollision(GameObject other) {}
+	
+	public void endCollision(GameObject other) {}
+
 	public void exit() {
 		for (int i = 0; i < componentList.size(); i++) {
 			Component component = componentList.get(i);

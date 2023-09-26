@@ -1,57 +1,86 @@
 package com.raffa064.engine.core.components;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.raffa064.engine.core.api.CollisionAPI.Areas;
-import java.util.List;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.MassData;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.raffa064.engine.core.GameObject;
 
 public class Collider extends Native {
 	public Transform2D transform;
-	public Areas areas;
 	
-    public Collider() {
-		super("Collider");
+	public World world;
+	public Body body;
+	public PolygonShape shape;
+	public Fixture fixture;
+	public BodyType type;
+	
+	public float mass;
+	public boolean active;
+	public boolean allowSleep;
+	public float density;
+    public short categoryBits;
+    public short maskBits;
+    public float friction;
+    public boolean isSensor;
+    public float restitution;
+
+	public Collider(String name, BodyType type) {
+		super(name);
+		this.type = type;
 	}   
 	
 	@Override
 	public void ready() {
-		areas = Collision.createAreas(obj);
+		transform = (Transform2D) obj.get("Transform2D");
+		world = Collision.world;
+		
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.active = active;
+		bodyDef.allowSleep = allowSleep;
+		bodyDef.type = type;
+		bodyDef.position.set(transform.pos);
+		
+		body = world.createBody(bodyDef);
+		body.setUserData(obj);
+		
+		MassData massData = new MassData();
+		massData.mass = mass;
+		body.setMassData(massData);
+		
+		shape = new PolygonShape();
+		// TODO: shape editor...
+		shape.setAsBox(100, 100);
+		
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = shape;
+		fixtureDef.density = density;
+		fixtureDef.filter.categoryBits = categoryBits;
+		fixtureDef.filter.maskBits = maskBits;
+		fixtureDef.friction = friction;
+		fixtureDef.isSensor = isSensor;
+		fixtureDef.restitution = restitution;
+	
+		fixture = body.createFixture(fixtureDef);
 	}
 
 	@Override
 	public void process(float delta) {
-		if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.C)) {
-			batch.flush();
-			
-			Rectangle transformed = new Rectangle();
-			for (Rectangle rect : areas.rects) {
-				areas.transformRect(rect, transformed);
-				
-				shape.setColor(Color.RED);
-				shape.rect(transformed.x, transformed.y, transformed.width, transformed.height);
-			}
-		}
-	}
-	
-	public void moveAndCollide(Vector2 velocity) {
-		transform.pos.add(velocity);
-		
-		List<Areas> collided = Collision.getCollided(areas);
-		Rectangle rect = new Rectangle();
-		for (Areas other : collided) {
-			for (Rectangle r : other.rects) {
-				other.transformRect(r, rect);
-				
-				//calculta colisao
-			}
-		}
+		fixture.getShape().setRadius(2);
+		transform.pos.set(body.getPosition());
 	}
 
 	@Override
 	public void exit() {
-		Collision.removeArea(areas);
+		world.destroyBody(body);
+		shape.dispose();
 	}
 }
