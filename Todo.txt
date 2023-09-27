@@ -1,41 +1,41 @@
-Todo list:
+• Add collision event handlers
 • Make collider shape editable
 • Implement open project
 • Make animations easy to use
 • Add nodes list debug
 • Implement LoggerAPI/DebugAPI to show messages on screen/interrupt execution
 • Fix explorer createItem duplication, and duplication crash
-x Replace for-in into normal for
-x Create and use z-Index while addChild is called
-x Find a way to remove .js() from scripts
-x Make group and tag system
-x Prenvent child with same name
-x Call ready/exit on object children
-x Fix editor history
-x Replace file template to elements in app.js
-x Create File/Folder button on explorer
-x Add FPS counter
-x IMPORTANT: Dispose assets on reload app
-x Reload last openned file
-x Rename file button on explorer
-x Delete file on hold
-x Fit #info into screen width
-x Fix editableFile to use initial extension icon...
-x Fix openEditor to open only one editor
-x Make "rename file" to be case sentitive
-x Separate CodeEditorActivity classes into other files
-x Move Scene class from components folder to another folder
-x Fix: First object can't be deleted
-x Auto open created files
-x Implement animation
-x Relative transform
-x Apply by axis rotation (relative)
-x Use global transform into collisions boxes
-x Save editor scroll
-x Add input release
-x (Scene.init) Add condition to create state only if the current scene haven't a state
-x Organize App functions
-x Configure windows size and position to be separated for landscape and portrait
-x Save window positions (.editor)
-x implement setScene
-x implement scene history
+× Replace for-in into normal for
+× Create and use z-Index while addChild is called
+× Find a way to remove .js() from scripts
+× Make group and tag system
+× Prenvent child with same name
+× Call ready/exit on object children
+× Fix editor history
+× Replace file template to elements in app.js
+× Create File/Folder button on explorer
+× Add FPS counter
+× IMPORTANT: Dispose assets on reload app
+× Reload last openned file
+× Rename file button on explorer
+× Delete file on hold
+× Fit #info into screen width
+× Fix editableFile to use initial extension icon...
+× Fix openEditor to open only one editor
+× Make "rename file" to be case sentitive
+× Separate CodeEditorActivity classes into other files
+× Move Scene class from components folder to another folder
+× Fix: First object can't be deleted
+× Auto open created files
+× Implement animation
+× Relative transform
+× Apply by axis rotation (relative)
+× Use global transform into collisions boxes
+× Save editor scroll
+× Add input release
+× (Scene.init) Add condition to create state only if the current scene haven't a state
+× Organize App functions
+× Configure windows size and position to be separated for landscape and portrait
+× Save window positions (.editor)
+× implement setScene
+× implement scene history

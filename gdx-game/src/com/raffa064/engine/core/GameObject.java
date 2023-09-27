@@ -145,6 +145,15 @@ public class GameObject {
 		return null;
 	}
 
+	public boolean has(String name) {
+		for (Component component : componentList) {
+			if (component.name.equals(name)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 	public void queueFree() {
 		queuedFree = true;

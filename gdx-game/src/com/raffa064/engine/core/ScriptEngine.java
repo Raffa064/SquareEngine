@@ -90,7 +90,7 @@ public class ScriptEngine {
 		}
 
 		for (String clazz : classList) {
-			js64 = "function " + clazz + "() {%"+clazz+"%};\n\n"+clazz+".prototype.name = '"+clazz+"'\n"+clazz+".prototype.exports = {}\n"  + js64;
+			js64 = "function " + clazz + "() {%"+clazz+"%};\n\n"+clazz+".prototype.name = '"+clazz+"'\n"+clazz+".prototype.exports = {}\nconst _"+clazz+" = '"+clazz+"'\n"  + js64;
 		}
 		
 		js64 = transpile_exportSintax(js64);

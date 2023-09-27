@@ -15,15 +15,7 @@ public class ComponentAPI extends API {
 	private HashMap<String, Class> nativeComponents = new HashMap<>();
 
 	public ComponentAPI(App app) {
-		super(app);
-		
-		loadNative(
-			Transform2D.class,
-			Image.class,
-			StaticBody.class,
-			DynamicBody.class,
-			KinematicBody.class
-		);		
+		super(app);		
 	}
 
 	@Override
@@ -38,6 +30,7 @@ public class ComponentAPI extends API {
 	
 	public void loadNative(Class... classes) {
 		for (Class componentClass : classes) {
+			app.scriptEngine.inject("_"+componentClass.getSimpleName(), componentClass.getSimpleName()); //Inject class name into script scope
 			nativeComponents.put(componentClass.getSimpleName(), componentClass);
 		}
 	}

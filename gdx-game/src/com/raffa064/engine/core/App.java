@@ -20,7 +20,12 @@ import com.raffa064.engine.core.api.InputAPI;
 import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
+import com.raffa064.engine.core.components.DynamicBody;
+import com.raffa064.engine.core.components.Image;
+import com.raffa064.engine.core.components.KinematicBody;
 import com.raffa064.engine.core.components.Native;
+import com.raffa064.engine.core.components.StaticBody;
+import com.raffa064.engine.core.components.Transform2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +73,8 @@ public class App {
 	
 	public void init() {
 		apiList.clear();
+
+		// APIs
 		Debug = new DebugAPI(this);
 		Input = new InputAPI(this);
 		Collision = new CollisionAPI(this);
@@ -77,10 +84,15 @@ public class App {
 		Component = new ComponentAPI(this);
 		Assets = new AssetsAPI(this);
 		Logger = new LoggerAPI(this);
-
+		
 		jsonLoader = new JSONLoader(this);
+		
 		scriptEngine = new ScriptEngine();
+		setupScriptEngine();	
+	}
 
+	private void setupScriptEngine() {
+		// Injecting classes into script scope
 		scriptEngine
 			.injectClass(Color.class)
 			.injectClass(Vector2.class)
@@ -89,6 +101,7 @@ public class App {
 			.injectClass(Rectangle.class)
 			.injectClass(ShapeType.class);
 
+		// Injecting "export type" costants
 		scriptEngine
 			.inject("COLOR", "COLOR")
 			.inject("STRING", "STRING")
@@ -98,6 +111,7 @@ public class App {
 			.inject("TEXTURE", "TEXTURE")
 			.inject("GAME_OBJECT", "GAME_OBJECT");
 
+		// Injecting APIs
 		scriptEngine
 			.inject("Debug", Debug)
 			.inject("Input", Input)
@@ -108,6 +122,15 @@ public class App {
 			.inject("Component", Component.js())
 			.inject("Assets", Assets)
 			.inject("Logger", Logger);
+			
+		// Injecting native components
+		Component.loadNative(
+			Transform2D.class,
+			Image.class,
+			StaticBody.class,
+			DynamicBody.class,
+			KinematicBody.class
+		);
 	}
 	
 	private void loadProjectFiles(FileHandle folder, boolean absolutePath) {
