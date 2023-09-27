@@ -14,6 +14,7 @@ import com.raffa064.engine.core.api.API;
 import com.raffa064.engine.core.api.AssetsAPI;
 import com.raffa064.engine.core.api.CollisionAPI;
 import com.raffa064.engine.core.api.ComponentAPI;
+import com.raffa064.engine.core.api.ComponentList;
 import com.raffa064.engine.core.api.DebugAPI;
 import com.raffa064.engine.core.api.GroupAPI;
 import com.raffa064.engine.core.api.InputAPI;
@@ -124,13 +125,7 @@ public class App {
 			.inject("Logger", Logger);
 			
 		// Injecting native components
-		Component.loadNative(
-			Transform2D.class,
-			Image.class,
-			StaticBody.class,
-			DynamicBody.class,
-			KinematicBody.class
-		);
+		Component.loadComponentList(StandardComponents.class);
 	}
 	
 	private void loadProjectFiles(FileHandle folder, boolean absolutePath) {

@@ -12,6 +12,8 @@ import com.raffa064.engine.core.api.InputAPI;
 import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 public abstract class Native extends Component  {
 	public DebugAPI Debug;

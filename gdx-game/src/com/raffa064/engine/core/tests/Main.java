@@ -6,18 +6,24 @@ import com.raffa064.engine.core.JSONLoader;
 import com.raffa064.engine.core.Scene;
 import com.raffa064.engine.core.ScriptEngine;
 import com.raffa064.engine.core.api.ComponentAPI;
+import com.raffa064.engine.core.components.Native;
 import com.raffa064.engine.core.components.Transform2D;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.ArrayList;
-import com.raffa064.engine.core.api.API;
-import com.raffa064.engine.core.api.API.APIState;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.ReflectionPool;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.annotation.Annotation;
+import com.raffa064.engine.core.StandardComponents;
+import com.raffa064.engine.core.api.ComponentList;
 
 public class Main {
+	
 	public static void main(String[] args) throws Exception {
+		ComponentAPI api = new ComponentAPI(null);
+		api.loadComponentList(StandardComponents.class);
 	}
 
 	private static void test_name_counter() {

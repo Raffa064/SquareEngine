@@ -12,9 +12,11 @@ import com.raffa064.engine.core.api.API.APIState;
 public abstract class API {
     protected App app;
 
-	public API(App app) {
-		this.app = app;
-		app.apiList.add(this);
+	public API(App app) {		
+		if (app != null) {
+			this.app = app;
+			app.apiList.add(this);
+		}
 		
 		createState();
 	}

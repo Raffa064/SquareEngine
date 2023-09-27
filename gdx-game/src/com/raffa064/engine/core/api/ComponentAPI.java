@@ -2,14 +2,12 @@ package com.raffa064.engine.core.api;
 
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.ScriptEngine;
-import com.raffa064.engine.core.components.DynamicBody;
-import com.raffa064.engine.core.components.Image;
-import com.raffa064.engine.core.components.KinematicBody;
 import com.raffa064.engine.core.components.Native;
 import com.raffa064.engine.core.components.Script;
-import com.raffa064.engine.core.components.StaticBody;
-import com.raffa064.engine.core.components.Transform2D;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ComponentAPI extends API {
 	private HashMap<String, Class> nativeComponents = new HashMap<>();
@@ -32,6 +30,17 @@ public class ComponentAPI extends API {
 		for (Class componentClass : classes) {
 			app.scriptEngine.inject("_"+componentClass.getSimpleName(), componentClass.getSimpleName()); //Inject class name into script scope
 			nativeComponents.put(componentClass.getSimpleName(), componentClass);
+		}
+	}
+
+	public void loadComponentList(Class<? extends ComponentList> from) {
+		Field[] declaredFields = from.getFields();
+
+		for (Field f : declaredFields) {
+			if (Native.class.isAssignableFrom(f.getType())) {
+				System.out.println("Injecting "+f.getType().getSimpleName()+" as native component");
+//				loadNative(f.getType());
+			}
 		}
 	}
 	
