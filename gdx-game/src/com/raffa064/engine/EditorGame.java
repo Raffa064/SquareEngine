@@ -4,11 +4,13 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.raffa064.engine.core.App;
+import com.raffa064.engine.core.ScriptEngine.ErrorListener;
 import java.io.File;
 
 import static com.raffa064.engine.EditorCore.*;
+import org.mozilla.javascript.EvaluatorException;
 
-public class EditorGame extends Game implements Module {
+public class EditorGame extends Game implements Module, ErrorListener {
 	private EditorCore editor;
 	private App app;
 	private boolean reloadRequest;
@@ -24,6 +26,7 @@ public class EditorGame extends Game implements Module {
 			App newApp = new App();
 			File projectDir = (File) editor.get(GET_PROJECT_DIR);
 			newApp.loadProject(projectDir, true);
+			newApp.scriptEngine.setErrorListener(this);
 
 			if (app != null) {
 				app.dispose(); // Dispose old instance
@@ -44,19 +47,9 @@ public class EditorGame extends Game implements Module {
 	public boolean isStable() {
 		return app != null && isStable;
 	}
-
-	@Override
-	public Object onGet(int action, Object[] params) {
-		return null;
-	}
-
-	@Override
-	public void onEvent(int event, Object[] params) {
-		switch (event) {
-			case EVENT_RELOAD_PROJECT: 
-				reloadRequest = true; 
-				break;
-		}
+	
+	public String trimLineSource(String lineSource, int offset) {
+		return lineSource.substring(Math.max(0, offset - 10), Math.min(lineSource.length(), offset + 10));
 	}
 
 	@Override
@@ -122,5 +115,37 @@ public class EditorGame extends Game implements Module {
 				error("Error on dispose: %s", e);
 			}
 		}
+	}
+	
+	@Override
+	public Object onGet(int action, Object[] params) {
+		return null;
+	}
+
+	@Override
+	public void onEvent(int event, Object[] params) {
+		switch (event) {
+			case EVENT_RELOAD_PROJECT: 
+				reloadRequest = true; 
+				break;
+		}
+	}
+	
+	@Override
+	public void warning(String message, String source, int lineNumber, String lineSource, int lineOffset) {
+		error(String.format("Script Error (%s:%d): %s\n%s", source, lineNumber, message, trimLineSource(lineSource, lineOffset)), null);
+	}
+
+	@Override
+	public void error(String message, String source, int lineNumber, String lineSource, int lineOffset) {
+		error(String.format("Script Error (%s:%d): %s\n%s", source, lineNumber, message, trimLineSource(lineSource, lineOffset)), null);
+	}
+
+	@Override
+	public EvaluatorException runtimeError(String message, String source, int lineNumber, String lineSource, int lineOffset) {
+		String error = String.format("Script Error (%s:%d): %s\n%s", source, lineNumber, message, trimLineSource(lineSource, lineOffset));
+		error(error, null);
+		
+		return new EvaluatorException(error);
 	}
 }

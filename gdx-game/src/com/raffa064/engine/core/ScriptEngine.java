@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ErrorReporter;
+import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
-import java.lang.reflect.InvocationTargetException;
-import org.mozilla.javascript.ErrorReporter;
 
 public class ScriptEngine {
     public Context ctx;
@@ -27,8 +27,8 @@ public class ScriptEngine {
 		globalScope = ctx.initStandardObjects();
 	}
 	
-	public void setErrorReporter(ErrorReporter errorReporter) {
-		ctx.setErrorReporter(errorReporter);
+	public void setErrorListener(ErrorListener errorListener) {
+		ctx.setErrorReporter(errorListener);
 	}
 
 	public void compile(String script, String name) {
@@ -254,5 +254,16 @@ public class ScriptEngine {
 				}
 			}
 		} 
+	}
+	
+	public static interface ErrorListener extends ErrorReporter {
+		@Override
+		public abstract void warning(String message, String source, int lineNumber, String lineSource, int lineOffset);
+
+		@Override
+		public abstract void error(String message, String source, int lineNumber, String lineSource, int lineOffset);
+
+		@Override
+		public abstract EvaluatorException runtimeError(String message, String source, int lineNumber, String lineSource, int lineOffset);
 	}
 }

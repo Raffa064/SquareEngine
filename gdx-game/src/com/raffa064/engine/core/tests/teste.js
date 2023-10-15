@@ -31,4 +31,4 @@ export Teste::prop3 = STRING
 var instance = new Teste()
 instance.func()
 
-logger.log(instance.prop)
+logger.log("teste" - 2)
