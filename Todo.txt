@@ -1,3 +1,6 @@
+• Create project optimizer/obfuscator
+• Create json wrapper class
+• Add screen orientation to apk export
 • Finish const string
 • Add collision event handlers
 • Make collider shape editable

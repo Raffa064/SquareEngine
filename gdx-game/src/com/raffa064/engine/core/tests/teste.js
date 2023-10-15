@@ -1,13 +1,34 @@
-export Component::speed = FLOAT;
-
-Component::ready() {
-	$transform = $obj.get('Transform2D')
+Teste::func() {
+	$prop = "teste"
 }
 
-Component::process(delta) {
-	$transform.pos.x += $speed
-}
+export Outra::teste = FLOAT
 
-Component::exit() {
+Outra::process() {
 	
 }
+Outra::process1() {
+	
+}
+Outra::process2() {
+	
+}
+Outra::process3() {
+	
+}
+
+Outra::process4() {
+	
+}
+
+Outro::anything() {}
+
+export Teste::prop0 = STRING
+export Teste::prop1 = STRING
+export Teste::prop2 = STRING
+export Teste::prop3 = STRING
+
+var instance = new Teste()
+instance.func()
+
+logger.log(instance.prop)

@@ -10,6 +10,7 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import java.lang.reflect.InvocationTargetException;
+import org.mozilla.javascript.ErrorReporter;
 
 public class ScriptEngine {
     public Context ctx;
@@ -24,6 +25,10 @@ public class ScriptEngine {
 		ctx = Context.enter();
 		ctx.setOptimizationLevel(-1);
 		globalScope = ctx.initStandardObjects();
+	}
+	
+	public void setErrorReporter(ErrorReporter errorReporter) {
+		ctx.setErrorReporter(errorReporter);
 	}
 
 	public void compile(String script, String name) {
@@ -91,7 +96,7 @@ public class ScriptEngine {
 		}
 
 		for (String clazz : classList) {
-			js64 = "function " + clazz + "() {%"+clazz+"%};\n\n"+clazz+".prototype.name = '"+clazz+"'\n"+clazz+".prototype.exports = {}\nconst _"+clazz+" = '"+clazz+"'\n"  + js64;
+			js64 = "function " + clazz + "() {%"+clazz+"%}; "+clazz+".prototype.name = '"+clazz+"'; "+clazz+".prototype.exports = {}; const _"+clazz+" = '"+clazz+"'; "  + js64;
 		}
 		
 		js64 = transpile_exportSintax(js64);
@@ -117,7 +122,7 @@ public class ScriptEngine {
 			classProps.add(propType);
 			exportedProps.put(className, classProps);
 			
-			js64 = js64.substring(0, start) + className + ".prototype.exports." + propName + " = " + propType + js64.substring(end, js64.length());
+			js64 = js64.substring(0, start) + "// export " + className + "." + propName +  js64.substring(end, js64.length());
 		}
 		
 		js64 = transpile_defaultExportValues(js64, exportedProps);
@@ -162,10 +167,10 @@ public class ScriptEngine {
 					String propName = propList.get(i);
 					String propType = propList.get(i + 1);
 					
-					defaults += "\n    this."+propName+" = "+defaultValueTo(propType)+";";
+					defaults += "this."+propName+" = "+defaultValueTo(propType)+"; ";
 				}
 				
-				js64 = js64.substring(0, start) + defaults + "\n" + js64.substring(end, js64.length());
+				js64 = js64.substring(0, start) + defaults + js64.substring(end, js64.length());
 			}
 		}
 		

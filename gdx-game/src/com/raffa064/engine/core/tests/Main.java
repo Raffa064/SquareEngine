@@ -12,11 +12,24 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.raffa064.engine.core.api.LoggerAPI;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		ComponentAPI api = new ComponentAPI(null);
-		api.loadComponentList(StandardComponents.class);
+		test_transpiler2();
+	}
+	
+	private static void test_transpiler2() {
+		ScriptEngine engine = new ScriptEngine();
+		
+		engine.inject("logger", new LoggerAPI(null));
+		
+		String script = readFile("/storage/emulated/0/AppProjects/SquareEngine/gdx-game/src/com/raffa064/engine/core/tests/teste.js");
+		String transpiledScript = engine.transpile(script);
+		System.out.println(transpiledScript);
+		System.out.println(transpiledScript.split("\n").length + " <- " + script.split("\n").length);
+		
+		engine.compile(script);
 	}
 
 	private static void test_name_counter() {
