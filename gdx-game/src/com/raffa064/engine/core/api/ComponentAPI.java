@@ -39,7 +39,7 @@ public class ComponentAPI extends API {
 		for (Field f : declaredFields) {
 			if (Native.class.isAssignableFrom(f.getType())) {
 				System.out.println("Injecting "+f.getType().getSimpleName()+" as native component");
-//				loadNative(f.getType());
+				loadNative(f.getType());
 			}
 		}
 	}

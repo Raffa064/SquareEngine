@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 public class ScriptEngine {
     public Context ctx;
 	public ScriptableObject globalScope;
+	public int globalConstStringId = 0;
 
 	public ScriptEngine() {
 		init();

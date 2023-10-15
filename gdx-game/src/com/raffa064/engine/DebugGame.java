@@ -4,25 +4,21 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.raffa064.engine.core.App;
-import com.raffa064.engine.core.GameObject;
 import com.raffa064.engine.core.SquareLib;
-import com.raffa064.engine.core.components.Collider;
-import com.raffa064.engine.core.components.Image;
-import com.raffa064.engine.core.components.Transform2D;
 
-public class DebugGame extends Game {
-	private AndroidInterface android;
+public class DebugGame /*extends Game*/ {
+	/*private EditorInterface editor;
 
 	private String projectPath;
 	private App app;
 
 	private String reloadErr, renderErr, resizeErr;
 	private boolean unstable;
-	
-	private SquareLib lib = new SquareLib();
 
-	public DebugGame(AndroidInterface android) {
-		this.android = android;
+	private SquareLib lib = new SquareLib();
+	
+	public DebugGame(EditorInterface android) {
+		this.editor = android;
 	}
 
 	public void requestReload(String projectPath) {
@@ -33,7 +29,7 @@ public class DebugGame extends Game {
 		try {
 			App app = new App();
 			app.loadProject(path, true);
-			
+
 			if (this.app != null) {
 				this.app.dispose();
 			}
@@ -59,7 +55,14 @@ public class DebugGame extends Game {
 
 	@Override
 	public void create() {
-		reload(android.getProjectPath());
+		reload(editor.getProjectPath());
+	}
+
+	public void renderExporting() {
+		Gdx.gl.glClearColor(.2f, .2f, .2f, 1.f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+		editor.setDebugText("Exporting...");
 	}
 
 	@Override
@@ -69,6 +72,11 @@ public class DebugGame extends Game {
 			clearErrors();
 			reload(projectPath);
 			projectPath = null;
+		}
+
+		if (editor.isExporting()) {
+			renderExporting();
+			return;
 		}
 
 		debugComands();
@@ -102,7 +110,7 @@ public class DebugGame extends Game {
 
 		for (int i = 0; i < debug.length; i++) {
 			if (debug[i] != null) {
-				android.setDebugText(debug[i]);
+				editor.setDebugText(debug[i]);
 				break;
 			}
 		}
@@ -110,24 +118,30 @@ public class DebugGame extends Game {
 
 	private void clearErrors() {
 		reloadErr = renderErr = resizeErr = null;
-		android.setDebugText("");
+		editor.setDebugText("");
 	}
 
 	private void debugComands() {
 		boolean editorGesture = Gdx.input.getDeltaY(0) > 50 && Gdx.input.getDeltaY(1) > 50 && Gdx.input.isTouched(0) && Gdx.input.isTouched(1);
 		boolean sceneTreeGesture = Gdx.input.getX(0) < Gdx.graphics.getWidth() / 2 && Gdx.input.getX(1) < Gdx.graphics.getWidth() / 2 && Gdx.input.getDeltaX(0) > 10 && Gdx.input.getDeltaX(1) > 10 && Gdx.input.isTouched(0) && Gdx.input.isTouched(1);
 		boolean inspectorGesture = Gdx.input.getX(0) > Gdx.graphics.getWidth() / 2 && Gdx.input.getX(1) > Gdx.graphics.getWidth() / 2 && Gdx.input.getDeltaX(0) < -10 && Gdx.input.getDeltaX(1) < -10 && Gdx.input.isTouched(0) && Gdx.input.isTouched(1);
-		
-		if (!android.isOpennedEditor() && editorGesture) {
-			android.openEditor();
+
+		if (!editor.isOpennedEditor() && editorGesture) {
+			editor.openEditor();
 		}
 
 		if (sceneTreeGesture) {
-			android.openSceneTree();
+			editor.openSceneTree();
 		}
 
 		if (inspectorGesture) {
-			android.openInspector();
+			editor.openInspector();
+		}
+
+		if (app != null) {
+			if (app.Input.keyPressed(app.Input.F1)) {
+				editor.exportProject();
+			}
 		}
 	}
 
@@ -154,4 +168,5 @@ public class DebugGame extends Game {
 			}
 		}
 	}
+	*/
 }

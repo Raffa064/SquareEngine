@@ -14,19 +14,16 @@ import com.raffa064.engine.core.api.API;
 import com.raffa064.engine.core.api.AssetsAPI;
 import com.raffa064.engine.core.api.CollisionAPI;
 import com.raffa064.engine.core.api.ComponentAPI;
-import com.raffa064.engine.core.api.ComponentList;
 import com.raffa064.engine.core.api.DebugAPI;
 import com.raffa064.engine.core.api.GroupAPI;
 import com.raffa064.engine.core.api.InputAPI;
 import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
-import com.raffa064.engine.core.components.DynamicBody;
-import com.raffa064.engine.core.components.Image;
-import com.raffa064.engine.core.components.KinematicBody;
+import com.raffa064.engine.core.collision.Shape;
 import com.raffa064.engine.core.components.Native;
-import com.raffa064.engine.core.components.StaticBody;
-import com.raffa064.engine.core.components.Transform2D;
+import com.raffa064.engine.core.components.StandardComponents;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +69,16 @@ public class App {
 		loadProject(folder, absolutePath);
 	}
 	
+	public void loadProject(File projectDir, boolean absolutePath) throws Exception {
+		String path = projectDir.getAbsolutePath();
+		
+		FileHandle folder = absolutePath ?
+			Gdx.files.absolute(path) :
+			Gdx.files.internal(path);
+
+		loadProject(folder, absolutePath);
+	}
+	
 	public void init() {
 		apiList.clear();
 
@@ -100,7 +107,8 @@ public class App {
 			.injectClass(MathUtils.class)
 			.injectClass(GlyphLayout.class)
 			.injectClass(Rectangle.class)
-			.injectClass(ShapeType.class);
+			.injectClass(ShapeType.class)
+			.injectClass(Shape.class);
 
 		// Injecting "export type" costants
 		scriptEngine

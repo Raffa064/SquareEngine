@@ -7,10 +7,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.raffa064.engine.core.App;
+import com.raffa064.engine.core.collision.Shape;
 import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 public class AssetsAPI extends API {
     private HashMap<String, Object> assets = new HashMap<>();
@@ -38,6 +40,30 @@ public class AssetsAPI extends API {
 		assets.put(path, texture);
 
 		return texture;
+	}
+	
+	public Shape shape(String path) {
+		if (assets.containsKey(path)) {
+			return (Shape) assets.get(path);
+		}
+		
+		String json = readFile(path);
+		
+		try {
+			JSONArray array = new JSONArray(json);
+			float[] shape = new float[array.length()];
+			
+			for (int i = 0; i < shape.length; i++) {
+				shape[i] = array.get(i);
+			}
+			
+			Shape shapeObj = new Shape(shape);
+			assets.put(path, shape);
+			
+			return shapeObj;
+		} catch (JSONException e) {
+			return null;
+		}
 	}
 
 	public String readFile(String path) {

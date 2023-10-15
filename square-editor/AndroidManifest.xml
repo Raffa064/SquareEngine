@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.raffa064.engine"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="21"/>
+
+    <!-- have full network access -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- modify or delete the contents of your shared storage -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!-- read the contents of your shared storage -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <!-- request install packages -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+
+	<!--android:requestLegacyExternalStorage="true"-->
+    <application
+        android:name=".EditorApplication"
+        android:usesCleartextTraffic="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name">
+
+        <activity
+            android:name=".EditorActivity"
+            android:label="@string/app_name"
+            android:icon="@drawable/ic_launcher"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
+
+            <intent-filter>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".CodeActivity"
+            android:label="@string/app_name"
+            android:icon="@drawable/ic_launcher"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustResize">
+
+        </activity>
+
+		<provider
+			android:name="androidx.core.content.FileProvider"
+			android:authorities="com.raffa064.engine.provider"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/file_provider_paths" />
+		</provider>
+		
+    </application>
+
+    <meta-data
+        android:name="android.max_aspect"
+        android:value="4.0"/>
+
+</manifest>

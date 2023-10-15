@@ -1,3 +1,4 @@
+• Finish const string
 • Add collision event handlers
 • Make collider shape editable
 • Implement open project
