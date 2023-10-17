@@ -67,7 +67,7 @@ public class ApkExporter {
 		if (projectInfo.customKeytore != null) {
 			try {
 				File customKeystoreFile = new File(projectInfo.customKeytore);
-				JSONObject keystoreJson = new JSONObject(FileUtils.readFile(customKeystoreFile));
+				JSONObject keystoreJson = new JSONObject(FileUtils.readFileString(customKeystoreFile));
 
 				File keystore = new File(keystoreJson.getString("path"));
 
@@ -121,7 +121,7 @@ public class ApkExporter {
 
 		public void reloadData() throws Exception {
 			File cfgFile = new File(projectDir, "config.cfg");
-			JSONObject configs = new JSONObject(FileUtils.readFile(cfgFile));
+			JSONObject configs = new JSONObject(FileUtils.readFileString(cfgFile));
 
 			name = configs.getString("name");
 			packageName = configs.getString("package");
@@ -176,7 +176,13 @@ public class ApkExporter {
 				}
 
 				apk64.addToAssets(projectInfo.projectDir);
-
+				
+				File assets_projectDir = new File(apk64.getAssets(), "project");
+				ProjectOptimizer.optimizeScripts(assets_projectDir);
+				
+				int key = projectInfo.packageName.hashCode();
+				ProjectSafer.safe(assets_projectDir, key);
+				
 				apk64.finish();
 
 				FileUtils.deleteFiles(buildDir);
@@ -186,11 +192,11 @@ public class ApkExporter {
 				}
 			} catch (final Exception e) {
 				activity.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(activity, "Export error: " + e, Toast.LENGTH_LONG).show();
-						}
-					});
+					@Override
+					public void run() {
+						Toast.makeText(activity, "Export error: " + e, Toast.LENGTH_LONG).show();
+					}
+				});
 			}
 		}
 	}

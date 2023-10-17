@@ -6,17 +6,136 @@ import com.raffa064.engine.core.JSONLoader;
 import com.raffa064.engine.core.Scene;
 import com.raffa064.engine.core.ScriptEngine;
 import com.raffa064.engine.core.api.ComponentAPI;
-import com.raffa064.engine.core.components.StandardComponents;
+import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.components.commons2d.Transform2D;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.raffa064.engine.core.api.LoggerAPI;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import com.raffa064.engine.Encryptor;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		test_transpiler2();
+		String source = readFile("/storage/emulated/0/AppProjects/SquareEngine/gdx-game/src/com/raffa064/engine/core/tests/teste.js");
+		
+		int key = (int) (Math.random() * Integer.MAX_VALUE);
+		
+		String encrypt = Encryptor.encrypt(source, key);
+		String decrypt = Encryptor.decrypt(encrypt, key);
+
+		System.out.println(encrypt);
+		System.out.println();
+		System.out.println(decrypt);
+	}
+
+	private static void test() {
+		String source = readFile("/storage/emulated/0/AppProjects/SquareEngine/gdx-game/src/com/raffa064/engine/core/tests/teste.js");
+		
+		Strings strings = new Strings();
+		
+		source = removeInlineComments(source);
+		source = removeMultlineComments(source);
+		source = extractStrings(source, strings);
+
+		source = strings.toHeader() + source;
+		
+		System.out.println(source);
+		
+		ScriptEngine engine = new ScriptEngine();
+		engine.inject("logger", new LoggerAPI(null));
+		engine.compile(source);
+	}
+
+	private static String removeInlineComments(String source) {
+		Pattern compile = Pattern.compile("//.*\n"); 
+		Matcher matcher = compile.matcher(source);
+
+		while (matcher.find()) {
+			int start = matcher.start();
+			int end = matcher.end();
+
+			source = source.substring(0, start) + source.substring(end - 1, source.length());
+		}
+		
+		return source;
+	}
+
+	private static String removeMultlineComments(String source) {
+		Pattern compile = Pattern.compile("/\\*.*\\*/", Pattern.DOTALL); 
+		Matcher matcher = compile.matcher(source);
+
+		while (matcher.find()) {
+			int start = matcher.start();
+			int end = matcher.end();
+
+			source = source.substring(0, start) + source.substring(end, source.length());
+		}
+
+		return source;
+	}
+	
+	public static String extractStrings(String source, Strings strings) {
+		boolean isString = false;
+		int stringStart = 0;
+		char stringQuote = '\0';
+		
+		for (int i = 0; i < source.length(); i++) {
+			char lastCharAt = source.charAt(Math.max(0, i-1));
+			char charAt = source.charAt(i);
+			
+			if (charAt == '\'' || charAt == '"') {
+				if (isString) {
+					if (charAt == stringQuote && lastCharAt != '\\') {
+						isString = false;
+						
+						String str = source.substring(stringStart, i+1);
+						
+						String constStringName = strings.add(str);
+						
+						source = source.substring(0, stringStart) + constStringName + source.substring(i+1, source.length());
+						i = stringStart;
+					}
+				} else {
+					isString = true;
+					stringStart = i;
+					stringQuote = charAt;
+				}
+			}	
+		}
+
+		return source;
+	}
+	
+	public static class Strings {
+		private final String AUTO_CONST_STRING = "AUTO_CONST_STRING";
+		private HashMap<Integer, String> strings = new HashMap<>();
+		private int _id;
+		
+		public String add(String str) {
+			int id = _id++;
+			
+			strings.put(id, str);
+			
+			return AUTO_CONST_STRING + "_" + id;
+		}
+		
+		public String toHeader() {
+			String header = "";
+			
+			for (Map.Entry<Integer, String> entry : strings.entrySet()) {
+				int id = entry.getKey();
+				String str = entry.getValue();
+				
+				header += "const " + AUTO_CONST_STRING + "_" + id + " = " + str + "; \n";
+			}
+			
+			return header;
+		}
 	}
 	
 	private static void test_transpiler2() {
@@ -52,16 +171,11 @@ public class Main {
 
 	private static void test_transpiler() {
 		ScriptEngine engine = new ScriptEngine();
-		String script = readFile("/storage/emulated/0/AppProjects/GameEngine/gdx-game-android/assets/project/MoveComponent.js"); //"/storage/emulated/0/AppProjects/GameEngine/gdx-game/src/com/raffa064/engine/core/tests/teste.js");
+		String script = readFile("/storage/emulated/0/AppProjects/SquareEngine/gdx-game/src/com/raffa064/engine/core/tests/teste.js"); //"/storage/emulated/0/AppProjects/GameEngine/gdx-game/src/com/raffa064/engine/core/tests/teste.js");
 		String transpile = engine.transpile(script);
 		System.out.println(transpile);
 
-		try {
-			engine.compile(script);
-			System.out.println("Sucess!");
-		} catch (Exception e) {
-			System.out.println("Transpiler error, or invalid test source");
-		}
+		
 	}
 
 	private static void test_SceneLoader() throws Exception {

@@ -49,11 +49,10 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 		getActionBar().hide();
 		setContentView(R.layout.activity_main);
 
-		createProjectsDir();
+		createEngineDir();
 		openProject("project");
 		initializeViews();
 		initializeGame();
-		createFloatBubble();
 	}
 
 	@Override
@@ -80,7 +79,7 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 		error(message, new Exception());
 	}
 
- 	private void createProjectsDir() {
+ 	private void createEngineDir() {
 		SQUARE_ENGINE_DIR = new File(Environment.getExternalStorageDirectory(), "SquareEngine");
 
 		if (!SQUARE_ENGINE_DIR.exists()) {
@@ -105,6 +104,9 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 		editorGame = new EditorGame();
 		View gameView = initializeForView(editorGame);
 		gameParent.addView(gameView);
+		
+		createFloatBubble();
+		//createFloatWindows();
 	}
 
 	private void createFloatBubble() {

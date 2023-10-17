@@ -28,12 +28,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
+import com.raffa064.engine.Encryptor;
 
 public class App {
 	public float viewportWidth = 1024;
 	public float viewportHeight = 600;
 	public boolean keepWidth = true;
 
+	public int decodeKey;
 	public boolean absolutePath; // switch between absolute/internal project folder
 	public FileHandle projectFolder;
 	public Scene currentScene, nextScene;
@@ -41,6 +43,7 @@ public class App {
 	public JSONLoader jsonLoader;
 	public HashMap<String, String> sceneFiles = new HashMap<>();
 	public ScriptEngine scriptEngine;
+	public boolean autoTranspile = true;
 
 	public List<API> apiList = new ArrayList<>();
 	public DebugAPI Debug;
@@ -53,32 +56,41 @@ public class App {
 	public AssetsAPI Assets;
 	public LoggerAPI Logger;
 
+	public App() {}
+
+	public App(int decodeKey) {
+		this.decodeKey = decodeKey;
+		this.autoTranspile = false;
+	}
+
 	public void loadProject(FileHandle folder, boolean absolutePath) throws Exception {
 		projectFolder = folder;
 
+		this.absolutePath = absolutePath;
+
 		init();
-		loadProjectFiles(folder, absolutePath);
+		loadProjectFiles(folder);
 		loadConfigs();
 	}
-	
+
 	public void loadProject(String projectPath, boolean absolutePath) throws Exception {
-		FileHandle folder = absolutePath? 
+		FileHandle folder = absolutePath ? 
 			Gdx.files.absolute(projectPath) :
 			Gdx.files.internal(projectPath);
-			
+
 		loadProject(folder, absolutePath);
 	}
-	
+
 	public void loadProject(File projectDir, boolean absolutePath) throws Exception {
 		String path = projectDir.getAbsolutePath();
-		
+
 		FileHandle folder = absolutePath ?
 			Gdx.files.absolute(path) :
 			Gdx.files.internal(path);
 
 		loadProject(folder, absolutePath);
 	}
-	
+
 	public void init() {
 		apiList.clear();
 
@@ -92,14 +104,16 @@ public class App {
 		Component = new ComponentAPI(this);
 		Assets = new AssetsAPI(this);
 		Logger = new LoggerAPI(this);
-		
+
 		jsonLoader = new JSONLoader(this);
-		
+
 		scriptEngine = new ScriptEngine();
 		setupScriptEngine();	
 	}
 
 	private void setupScriptEngine() {
+		scriptEngine.setAutoTranspile(autoTranspile);
+
 		// Injecting classes into script scope
 		scriptEngine
 			.injectClass(Color.class)
@@ -120,7 +134,7 @@ public class App {
 			.inject("TEXTURE", "TEXTURE")
 			.inject("GAME_OBJECT", "GAME_OBJECT");
 
-		// Injecting APIs
+		// Injecting APIs 
 		scriptEngine
 			.inject("Debug", Debug)
 			.inject("Input", Input)
@@ -131,17 +145,15 @@ public class App {
 			.inject("Component", Component.js())
 			.inject("Assets", Assets)
 			.inject("Logger", Logger);
-			
+
 		// Injecting native components
 		Component.loadComponentList(StandardComponents.class);
 	}
-	
-	private void loadProjectFiles(FileHandle folder, boolean absolutePath) {
-		this.absolutePath = absolutePath;
-		
+
+	private void loadProjectFiles(FileHandle folder) {
 		for (FileHandle file : folder.list()) {
 			if (file.isDirectory()) {
-				loadProjectFiles(file, absolutePath);
+				loadProjectFiles(file);
 				continue;
 			} 
 
@@ -151,7 +163,13 @@ public class App {
 					sceneFiles.put(file.nameWithoutExtension(), file.readString());
 					break;
 				case "js":
-					Component.loadScript(file.name(), file.readString());
+					String code = file.readString();
+					
+					if (decodeKey != 0) {
+						code = Encryptor.decrypt(code, decodeKey);
+					}
+					
+					Component.loadScript(file.name(), code);
 					break;
 			}
 		}
@@ -169,20 +187,20 @@ public class App {
 		Scene scene = loadScene(mainScene);
 		setScene(scene);
 	}
-	
+
 	public FileHandle path(String path) {
 		String inProjectPath = projectFolder.path() + "/" + path;
-		
-		return absolutePath? 
+
+		return absolutePath ? 
 			Gdx.files.absolute(inProjectPath) :
 			Gdx.files.internal(inProjectPath);
 	}
-	
+
 	public Scene loadScene(String name) throws Exception {
 		Scene scn = jsonLoader.sceneFromJson(sceneFiles.get(name));
 		return scn;
 	}
-	
+
 	public void setScene(Scene scene, boolean nextFrame) {
 		if (nextFrame) {
 			nextScene = scene;
@@ -204,7 +222,7 @@ public class App {
 	public void setScene(Scene scene) {
 		setScene(scene, false);
 	}
-	
+
 	public void injectDependencies(Native component) {
 		component.Debug = Debug;
 		component.Input = Input;
@@ -225,13 +243,13 @@ public class App {
 
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		
+
 		Input.update();
 
 		currentScene.process(delta);
 		Collision.stepPhysics(delta);
 		Collision.renderDebug();
-		
+
 		if (nextScene != null) {
 			setScene(nextScene);
 			nextScene = null;
@@ -241,8 +259,9 @@ public class App {
 	public void resize(int width, int height) {
 		currentScene.setupCamera(width, height);
 	}
-	
+
 	public void dispose() {
 		Assets.dispose();
+		scriptEngine.exit();
 	}
 }

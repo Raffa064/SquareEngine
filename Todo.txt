@@ -1,4 +1,4 @@
-• Create project optimizer/obfuscator
+• Move CompiledScript from ScriptEngine
 • Create json wrapper class
 • Add screen orientation to apk export
 • Finish const string
@@ -9,6 +9,7 @@
 • Add nodes list debug
 • Implement LoggerAPI/DebugAPI to show messages on screen/interrupt execution
 • Fix explorer createItem duplication, and duplication crash
+x Create project optimizer/obfuscator
 × Replace for-in into normal for
 × Create and use z-Index while addChild is called
 × Find a way to remove .js() from scripts

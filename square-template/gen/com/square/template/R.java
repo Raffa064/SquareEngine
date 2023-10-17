@@ -16,17 +16,10 @@ public final class R {
     }
     public static final class id {
         public static final int debug=0x7f040002;
-        public static final int float_window_close=0x7f040005;
-        public static final int float_window_resizer_bottom=0x7f040008;
-        public static final int float_window_resizer_right=0x7f040007;
-        public static final int float_window_title=0x7f040004;
-        public static final int float_window_top_bar=0x7f040003;
-        public static final int float_window_webview=0x7f040006;
         public static final int game_parent=0x7f040001;
         public static final int root_layout=0x7f040000;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int float_window=0x7f030001;
     }
 }

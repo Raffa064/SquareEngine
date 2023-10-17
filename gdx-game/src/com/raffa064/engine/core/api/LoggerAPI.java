@@ -19,7 +19,7 @@ public class LoggerAPI extends API {
 	
 	public void log(Object... params) {
 		for (Object p : params) {
-			System.out.print(p);
+			System.out.print(p.getClass());
 		}
 		
 		System.out.println();

@@ -16,9 +16,18 @@ public class ScriptEngine {
     public Context ctx;
 	public ScriptableObject globalScope;
 	public int globalConstStringId = 0;
+	public boolean autoTranspile = true;
 
 	public ScriptEngine() {
 		init();
+	}
+
+	public void setAutoTranspile(boolean autoTranspile) {
+		this.autoTranspile = autoTranspile;
+	}
+
+	public boolean isAutoTranspile() {
+		return autoTranspile;
 	}
 
 	public void init() {
@@ -32,10 +41,18 @@ public class ScriptEngine {
 	}
 
 	public void compile(String script, String name) {
-		ctx.compileString(transpile(script), name, 1, null).exec(ctx, globalScope);
+		if (autoTranspile) {
+			script = transpile(script);
+		}
+		
+		ctx.compileString(script, name, 1, null).exec(ctx, globalScope);
 	}
 	
 	public void compile(String script) {
+		if (autoTranspile) {
+			script = transpile(script);
+		}
+		
 		compile(script, "compiled.js");
 	}
 
@@ -229,6 +246,10 @@ public class ScriptEngine {
 		}
 
 		return js64;
+	}
+	
+	public void exit() {
+		ctx.exit();
 	}
 	
 	public static class CompiledScript {
