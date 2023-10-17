@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
+import com.raffa064.engine.core.json.JSONUtils;
 
 public class ApkExporter {
 	public Activity activity;
@@ -69,15 +70,13 @@ public class ApkExporter {
 				File customKeystoreFile = new File(projectInfo.customKeytore);
 				JSONObject keystoreJson = new JSONObject(FileUtils.readFileString(customKeystoreFile));
 
-				File keystore = new File(keystoreJson.getString("path"));
+				File keystore = new File(JSONUtils.getString(keystoreJson, "path", ""));
 
 				if (keystore.exists()) {
 					keyStoreFile = keystore;
 					keyAlias = keystoreJson.getString("alias");
 					keyPassword = keystoreJson.getString("password");
 				}
-				
-				keystoreJson.get("path");
 			} catch (Exception e) {
 				throw new Exception("Invalid custom keystore");
 			}
@@ -121,13 +120,16 @@ public class ApkExporter {
 
 		public void reloadData() throws Exception {
 			File cfgFile = new File(projectDir, "config.cfg");
-			JSONObject configs = new JSONObject(FileUtils.readFileString(cfgFile));
+			
+			String json = FileUtils.readFileString(cfgFile);
+			JSONObject configs = new JSONObject(json);
 
-			name = configs.getString("name");
-			packageName = configs.getString("package");
-			versionCode = configs.getInt("versionCode");
-			versionName = configs.getString("versionName");
-			icon = new File(projectDir, configs.getString("icon"));
+			name = JSONUtils.getString(configs, "name", "Unknown");
+			packageName = JSONUtils.getString(configs, "package", "com.example.package");
+			versionCode = JSONUtils.getInt(configs, "versionCode", 1);
+			versionName = JSONUtils.getString(configs, "versionName", "1.0");
+			
+			icon = new File(projectDir, JSONUtils.getString(configs, "icon", ""));
 
 			if (configs.has("customKeystore")) {
 				customKeytore = configs.getString("customKeystore");
@@ -168,8 +170,10 @@ public class ApkExporter {
 				apk64.changePackage(projectInfo.packageName);
 				apk64.changeVersion(projectInfo.versionCode, projectInfo.versionName);
 
-				apk64.replaceDrawable("ic_launcher.png", projectInfo.icon);
-				apk64.replaceDrawable("ic_launcher.jpg", projectInfo.icon);
+				if (projectInfo.icon.exists()) {
+					apk64.replaceDrawable("ic_launcher.png", projectInfo.icon);
+					apk64.replaceDrawable("ic_launcher.jpg", projectInfo.icon);
+				}
 
 				for (String permission : projectInfo.permissions) {
 					apk64.addPermission(permission);

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.raffa064.engine.Encryptor;
 import com.raffa064.engine.core.Scene;
 import com.raffa064.engine.core.api.API;
 import com.raffa064.engine.core.api.AssetsAPI;
@@ -23,12 +24,13 @@ import com.raffa064.engine.core.api.TagAPI;
 import com.raffa064.engine.core.collision.Shape;
 import com.raffa064.engine.core.components.Native;
 import com.raffa064.engine.core.components.StandardComponents;
+import com.raffa064.engine.core.json.JSONLoader;
+import com.raffa064.engine.core.json.JSONUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
-import com.raffa064.engine.Encryptor;
 
 public class App {
 	public float viewportWidth = 1024;
@@ -179,11 +181,11 @@ public class App {
 		JSONObject config =  new JSONObject(Assets.readFile("config.cfg"));
 		JSONObject viewport = config.getJSONObject("viewport");
 
-		viewportWidth = (float) viewport.getDouble("width");
-		viewportHeight = (float) viewport.getDouble("height");
-		keepWidth = viewport.getBoolean("keepWidth");
+		viewportWidth = (float) JSONUtils.getDouble(viewport, "width", 1024);
+		viewportHeight = (float) JSONUtils.getDouble(viewport, "height", 720);
+		keepWidth = JSONUtils.getBoolean(viewport, "keepWidth", true);
 
-		String mainScene = config.getString("mainScene");
+		String mainScene = JSONUtils.getString(config, "mainScene", "main");
 		Scene scene = loadScene(mainScene);
 		setScene(scene);
 	}
@@ -197,7 +199,8 @@ public class App {
 	}
 
 	public Scene loadScene(String name) throws Exception {
-		Scene scn = jsonLoader.sceneFromJson(sceneFiles.get(name));
+		String json = sceneFiles.get(name);
+		Scene scn = jsonLoader.sceneFromJson(json);
 		return scn;
 	}
 

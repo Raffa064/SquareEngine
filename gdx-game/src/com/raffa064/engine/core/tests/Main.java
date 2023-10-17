@@ -1,23 +1,20 @@
 package com.raffa064.engine.core.tests;
 
+import com.raffa064.engine.Encryptor;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
-import com.raffa064.engine.core.JSONLoader;
 import com.raffa064.engine.core.Scene;
 import com.raffa064.engine.core.ScriptEngine;
 import com.raffa064.engine.core.api.ComponentAPI;
 import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.components.commons2d.Transform2D;
+import com.raffa064.engine.core.json.JSONLoader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import com.raffa064.engine.Encryptor;
 
 public class Main {
 	public static void main(String[] args) throws Exception {

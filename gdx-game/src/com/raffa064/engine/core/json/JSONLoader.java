@@ -1,11 +1,14 @@
-package com.raffa064.engine.core;
+package com.raffa064.engine.core.json;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.raffa064.engine.core.App;
+import com.raffa064.engine.core.Component;
+import com.raffa064.engine.core.Component.ExportedProp;
+import com.raffa064.engine.core.GameObject;
 import com.raffa064.engine.core.Scene;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import com.raffa064.engine.core.Component.ExportedProp;
 
 public class JSONLoader {
 	private App app;

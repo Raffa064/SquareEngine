@@ -8,11 +8,12 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.collision.Shape;
+import com.raffa064.engine.core.json.JSONUtils;
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 public class AssetsAPI extends API {
     private HashMap<String, Object> assets = new HashMap<>();
@@ -25,7 +26,7 @@ public class AssetsAPI extends API {
 	public APIState createState() {
 		return buildState();
 	}
-	
+
 
 	@Override
 	public void useState(APIState values) {
@@ -41,25 +42,25 @@ public class AssetsAPI extends API {
 
 		return texture;
 	}
-	
+
 	public Shape shape(String path) {
 		if (assets.containsKey(path)) {
 			return (Shape) assets.get(path);
 		}
-		
+
 		String json = readFile(path);
-		
+
 		try {
 			JSONArray array = new JSONArray(json);
 			float[] shape = new float[array.length()];
-			
+
 			for (int i = 0; i < shape.length; i++) {
 				shape[i] = array.get(i);
 			}
-			
+
 			Shape shapeObj = new Shape(shape);
 			assets.put(path, shape);
-			
+
 			return shapeObj;
 		} catch (JSONException e) {
 			return null;
@@ -77,109 +78,39 @@ public class AssetsAPI extends API {
 
 		return content;
 	}
-	
+
 	public BitmapFont font(String path) {
 		try {
 			JSONObject json = new JSONObject(readFile(path)); // Certifique-se de que 'jsonString' contenha seu JSON.
 
 			FreeTypeFontGenerator generator = fontGenerator(json.getString("font"));
 			FreeTypeFontParameter params = new FreeTypeFontParameter();
-
-			if (json.has("size")) {
-				params.size = json.getInt("size");
-			}
 			
-			if (json.has("mono")) {
-				params.mono = json.getBoolean("mono");
-			}
-			
-			if (json.has("color")) {
-				params.color = Color.valueOf(json.getString("color"));
-			}
-			
-			if (json.has("gamma")) {
-				params.gamma = (float) json.getDouble("gamma");
-			}
-			
-			if (json.has("renderCount")) {
-				params.renderCount = json.getInt("renderCount");
-			}
-			
-			if (json.has("borderWidth")) {
-				params.borderWidth = (float) json.getDouble("borderWidth");
-			}
-			
-			if (json.has("borderColor")) {
-				params.borderColor = Color.valueOf(json.getString("borderColor"));
-			}
-			
-			if (json.has("borderStraight")) {
-				params.borderStraight = json.getBoolean("borderStraight");
-			}
-			
-			if (json.has("borderGamma")) {
-				params.borderGamma = (float) json.getDouble("borderGamma");
-			}
-			
-			if (json.has("shadowOffsetX")) {
-				params.shadowOffsetX = json.getInt("shadowOffsetX");
-			}
-			
-			if (json.has("shadowOffsetY")) {
-				params.shadowOffsetY = json.getInt("shadowOffsetY");
-			}
-			
-			if (json.has("shadowColor")) {
-				params.shadowColor = Color.valueOf(json.getString("shadowColor"));
-			}
-			
-			if (json.has("spaceX")) {
-				params.spaceX = json.getInt("spaceX");
-			}
-			
-			if (json.has("spaceY")) {
-				params.spaceY = json.getInt("spaceY");
-			}
-			
-			if (json.has("padTop")) {
-				params.padTop = json.getInt("padTop");
-			}
-			
-			if (json.has("padLeft")) {
-				params.padLeft = json.getInt("padLeft");
-			}
-			
-			if (json.has("padBottom")) {
-				params.padBottom = json.getInt("padBottom");
-			}
-			
-			if (json.has("padRight")) {
-				params.padRight = json.getInt("padRight");
-			}
-			
-			if (json.has("characters")) {
-				params.characters = json.getString("characters");
-			}
-			
-			if (json.has("kerning")) {
-				params.kerning = json.getBoolean("kerning");
-			}
-			
-			if (json.has("flip")) {
-				params.flip = json.getBoolean("flip");
-			}
-			
-			if (json.has("genMipMaps")) {
-				params.genMipMaps = json.getBoolean("genMipMaps");
-			}
-			
-			if (json.has("minFilter")) {
-				params.minFilter = Texture.TextureFilter.valueOf(json.getString("minFilter"));
-			}
-			
-			if (json.has("magFilter")) {
-				params.magFilter = Texture.TextureFilter.valueOf(json.getString("magFilter"));
-			}
+			params.size = JSONUtils.getInt(json, "size", 10);
+			params.mono = JSONUtils.getBoolean(json, "mono", false);
+			params.color = Color.valueOf(JSONUtils.getString(json, "color", "ffffff"));
+			params.gamma = (float) JSONUtils.getDouble(json, "gamma", 1.8);
+			params.renderCount = JSONUtils.getInt(json, "renderCount", 2);
+			params.borderWidth = (float) JSONUtils.getDouble(json, "borderWidth", 0);
+			params.borderColor = Color.valueOf(JSONUtils.getString(json, "borderColor", "000000"));
+			params.borderStraight = JSONUtils.getBoolean(json, "borderStraight", false);
+			params.borderGamma = (float) JSONUtils.getDouble(json, "borderGamma", 1.8);
+			params.shadowOffsetX = JSONUtils.getInt(json, "shadowOffsetX", 0);
+			params.shadowOffsetY = JSONUtils.getInt(json, "shadowOffsetY", 0);
+			params.shadowColor = Color.valueOf(JSONUtils.getString(json, "shadowColor", "00000010"));
+			params.spaceX = JSONUtils.getInt(json, "spaceX", 0);
+			params.spaceY = JSONUtils.getInt(json, "spaceY", 0);
+			params.padTop = JSONUtils.getInt(json, "padTop", 0);
+			params.padLeft = JSONUtils.getInt(json, "padLeft", 0);
+			params.padBottom = JSONUtils.getInt(json, "padBottom", 0);
+			params.padRight = JSONUtils.getInt(json, "padRight", 0);
+			params.characters = JSONUtils.getString(json, "characters", FreeTypeFontGenerator.DEFAULT_CHARS);
+			params.kerning = JSONUtils.getBoolean(json, "kerning", true);
+			params.flip = JSONUtils.getBoolean(json, "flip", false);
+			params.genMipMaps = JSONUtils.getBoolean(json, "genMipMaps", false);
+			params.minFilter = Texture.TextureFilter.valueOf(JSONUtils.getString(json, "minFilter", "Nearest"));
+			params.magFilter = Texture.TextureFilter.valueOf(JSONUtils.getString(json, "magFilter", "Nearest"));
+			params.incremental = JSONUtils.getBoolean(json, "incremental", false);
 			
 			BitmapFont font = generator.generateFont(params);
 			int randID = (int) Math.floor((Math.random() * Integer.MAX_VALUE));
@@ -189,7 +120,7 @@ public class AssetsAPI extends API {
 			return null;
 		}
 	}
-	
+
 	private FreeTypeFontGenerator fontGenerator(String path) {
 		if (assets.containsKey(path)) {
 			return (FreeTypeFontGenerator) assets.get(path);
@@ -203,7 +134,7 @@ public class AssetsAPI extends API {
 
 		return generator;
 	}
-	
+
 	public void dispose() {
 		for (Map.Entry<String, Object> entry : assets.entrySet()) {
 			Object value = entry.getValue();
@@ -211,16 +142,16 @@ public class AssetsAPI extends API {
 			if (value instanceof Texture) {
 				((Texture)value).dispose();
 			}
-			
+
 			if (value instanceof FreeTypeFontGenerator) {
 				((FreeTypeFontGenerator)value).dispose();
 			}
-			
+
 			if (value instanceof BitmapFont) {
 				((BitmapFont)value).dispose();
 			}
 		}
-		
+
 		assets.clear();
 	}
 }
