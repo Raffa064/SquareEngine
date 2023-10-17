@@ -4,28 +4,32 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.raffa064.engine.core.App;
+import com.raffa064.engine.core.ProjectConfigs;
 import com.raffa064.engine.core.ScriptEngine.ErrorListener;
 import java.io.File;
+import org.mozilla.javascript.EvaluatorException;
 
 import static com.raffa064.engine.EditorCore.*;
-import org.mozilla.javascript.EvaluatorException;
 
 public class EditorGame extends Game implements Module, ErrorListener {
 	private EditorCore editor;
+	private ProjectConfigs configs;
 	private App app;
 	private boolean reloadRequest;
 	private boolean isStable;
 
-	public EditorGame() {
+	public EditorGame() throws Exception {
 		editor = EditorCore.instance();
 		editor.add(this);
 	}
 
 	public void loadProject() {
 		try {
+			String projectPath = ((File) editor.get(GET_PROJECT_DIR)).getAbsolutePath();
+			configs = new ProjectConfigs(projectPath);
+			
 			App newApp = new App();
-			File projectDir = (File) editor.get(GET_PROJECT_DIR);
-			newApp.loadProject(projectDir, true);
+			newApp.loadProject(configs);
 			newApp.scriptEngine.setErrorListener(this);
 
 			if (app != null) {
@@ -119,6 +123,10 @@ public class EditorGame extends Game implements Module, ErrorListener {
 	
 	@Override
 	public Object onGet(int action, Object[] params) {
+		switch(action) {
+			case GET_PROJECT_CONFIGS: return configs;
+		}
+		
 		return null;
 	}
 

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import static com.raffa064.engine.EditorCore.*;
 import androidx.core.content.FileProvider;
+import com.raffa064.engine.core.ProjectConfigs;
 
 public class EditorActivity extends AndroidApplication implements Module, ExportListener {
 	public File SQUARE_ENGINE_DIR;
@@ -101,12 +102,16 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 	}
 
 	private void initializeGame() {
-		editorGame = new EditorGame();
-		View gameView = initializeForView(editorGame);
-		gameParent.addView(gameView);
-		
-		createFloatBubble();
-		//createFloatWindows();
+		try {
+			editorGame = new EditorGame();
+			View gameView = initializeForView(editorGame);
+			gameParent.addView(gameView);
+
+			createFloatBubble();
+			//createFloatWindows();
+		} catch (Exception e) {
+			error("Error on initialize game: %s", e);
+		}
 	}
 
 	private void createFloatBubble() {
@@ -126,7 +131,8 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 			FileUtils.deleteFiles(outputFile); // delete old apk
 
 			ApkExporter exporter = new ApkExporter(this, buildDir);
-			ExportProcess process = exporter.exportProject(projectDir, outputFile);
+			ProjectConfigs projectConfigs = (ProjectConfigs) editor.get(GET_PROJECT_CONFIGS);
+			ExportProcess process = exporter.exportProject(projectConfigs, outputFile);
 			process.setListener(this);
 
 			isExporting = true;

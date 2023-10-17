@@ -7,7 +7,8 @@ public class EditorCore {
 	private static EditorCore singleton;
 
 	public static final int GET_PROJECT_DIR = 1;
-	public static final int GET_IS_EXPORTING_PROJECT = 2;
+	public static final int GET_PROJECT_CONFIGS = 2;
+	public static final int GET_IS_EXPORTING_PROJECT = 3;
 
 	public static final int EVENT_ERROR = 1;
 	public static final int EVENT_RELOAD_PROJECT = 2;

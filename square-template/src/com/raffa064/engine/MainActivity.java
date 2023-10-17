@@ -1,18 +1,15 @@
 package com.raffa064.engine;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.raffa064.engine.core.ProjectConfigs;
 import com.square.template.R;
-import android.content.pm.ActivityInfo;
-import android.widget.Toast;
-import android.widget.TextView;
-import java.io.IOException;
-import java.io.InputStream;
-import android.content.ClipboardManager;
 
 public class MainActivity extends AndroidApplication {
 	public RuntimeGame game;
@@ -28,24 +25,32 @@ public class MainActivity extends AndroidApplication {
 		getActionBar().hide();
 		setContentView(R.layout.activity_main);
 		
-		int decodeKey = getApplication().getPackageName().hashCode();
-		
-        AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
-        game = new RuntimeGame(decodeKey) {
-			@Override
-			public void error(final String message) {
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
-					}
-				});
-			}
-		};
-		
-		rootLayout = findViewById(R.id.root_layout);
-		gameParent = findViewById(R.id.game_parent);
+		try {
+			rootLayout = findViewById(R.id.root_layout);
+			gameParent = findViewById(R.id.game_parent);
 
-		gameParent.addView(initializeForView(game, cfg));		
+			AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
+			
+			game = new RuntimeGame() {
+				@Override
+				public void error(final String message) {
+					runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+							}
+						});
+				}
+			};
+
+			View gameView = initializeForView(game, cfg);
+			gameParent.addView(gameView);
+			
+			int decodeKey = getApplication().getPackageName().hashCode();
+			ProjectConfigs configs = new ProjectConfigs("project", false, false, true, decodeKey);
+			game.setConfigs(configs);
+		} catch (Exception e) {
+			Toast.makeText(this, "Error: "+e, Toast.LENGTH_LONG).show();
+		}		
     }
 }

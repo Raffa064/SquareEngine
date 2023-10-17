@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 import com.raffa064.engine.core.json.JSONUtils;
+import com.raffa064.engine.core.ProjectConfigs;
 
 public class ApkExporter {
 	public Activity activity;
@@ -51,23 +52,16 @@ public class ApkExporter {
 		is.close();
 	}
 
-	public ExportProcess exportProject(File projectDir, File outputFile) throws Exception {
-		ProjectInfo projectInfo = new ProjectInfo(projectDir);
-
-		ExportProcess process = exportProject(projectInfo, outputFile);
-		return process;
-	}
-
-	public ExportProcess exportProject(ProjectInfo projectInfo, File outputFile) throws Exception {
+	public ExportProcess exportProject(ProjectConfigs projectConfigs, File outputFile) throws Exception {
 		extractAsset("template.apk", templateFile);
 		extractAsset("default.keystore", keyStoreFile);
 		
 		String keyAlias = "alias";
 		String keyPassword = "android";
 
-		if (projectInfo.customKeytore != null) {
+		if (projectConfigs.customKeytore != null) {
 			try {
-				File customKeystoreFile = new File(projectInfo.customKeytore);
+				File customKeystoreFile = new File(projectConfigs.customKeytore);
 				JSONObject keystoreJson = new JSONObject(FileUtils.readFileString(customKeystoreFile));
 
 				File keystore = new File(JSONUtils.getString(keystoreJson, "path", ""));
@@ -88,66 +82,29 @@ public class ApkExporter {
 		configs.setKeyStoreFile(keyStoreFile, keyAlias, keyPassword);
 		configs.setOutputFile(outputFile);
 
-		ExportProcess process = createExportProcess(configs, projectInfo);
+		ExportProcess process = createExportProcess(configs, projectConfigs);
 		process.start();
 
 		return process;
 	}
 
-	public ExportProcess createExportProcess(Apk64Configs configs, ProjectInfo projectInfo) {
+	public ExportProcess createExportProcess(Apk64Configs configs, ProjectConfigs projectConfigs) {
 		Apk64 apk64 = new Apk64();
 
-		ExportProcess process = new ExportProcess(activity, apk64, configs, projectInfo, buildDir);
+		ExportProcess process = new ExportProcess(activity, apk64, configs, projectConfigs, buildDir);
 
 		return process;
-	}
-
-	public static class ProjectInfo {
-		public String name;
-		public String packageName;
-		public int versionCode;
-		public String versionName;
-		public String customKeytore;
-		public File icon;
-		public List<String> permissions = new ArrayList<>();
-		public File projectDir;
-
-		public ProjectInfo(File projectDir) throws Exception {
-			this.projectDir = projectDir;
-			
-			reloadData();
-		}
-
-		public void reloadData() throws Exception {
-			File cfgFile = new File(projectDir, "config.cfg");
-			
-			String json = FileUtils.readFileString(cfgFile);
-			JSONObject configs = new JSONObject(json);
-
-			name = JSONUtils.getString(configs, "name", "Unknown");
-			packageName = JSONUtils.getString(configs, "package", "com.example.package");
-			versionCode = JSONUtils.getInt(configs, "versionCode", 1);
-			versionName = JSONUtils.getString(configs, "versionName", "1.0");
-			
-			icon = new File(projectDir, JSONUtils.getString(configs, "icon", ""));
-
-			if (configs.has("customKeystore")) {
-				customKeytore = configs.getString("customKeystore");
-			}
-
-//			TODO: permissions;
-		}
 	}
 
 	public static class ExportProcess extends Thread {
 		private Activity activity;
 		private Apk64 apk64;
 		private Apk64Configs configs;
-		private ProjectInfo projectInfo;
+		private ProjectConfigs projectInfo;
 		private File buildDir;
 		private ExportListener listener;
 
-		public ExportProcess(Activity activity, Apk64 apk64, Apk64Configs configs, ProjectInfo projectInfo, File buildDir) {
+		public ExportProcess(Activity activity, Apk64 apk64, Apk64Configs configs, ProjectConfigs projectInfo, File buildDir) {
 			this.activity = activity;
 			this.apk64 = apk64;
 			this.configs = configs;
@@ -179,7 +136,7 @@ public class ApkExporter {
 					apk64.addPermission(permission);
 				}
 
-				apk64.addToAssets(projectInfo.projectDir);
+				apk64.addToAssets(projectInfo.getProjectDirAsFile()); // Move project dir to assets folder
 				
 				File assets_projectDir = new File(apk64.getAssets(), "project");
 				ProjectOptimizer.optimizeScripts(assets_projectDir);

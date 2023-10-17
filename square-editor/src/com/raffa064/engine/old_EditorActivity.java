@@ -86,8 +86,8 @@ public class old_EditorActivity extends AndroidApplication implements /*EditorIn
 			FileUtils.deleteFiles(outputFile); // delete old apk
 
 			exporter = new ApkExporter(this, buildDir);
-			ExportProcess process = exporter.exportProject(new File(projectPath), outputFile);
-			process.setListener(this);
+//			ExportProcess process = exporter.exportProject(new File(projectPath), outputFile);
+//			process.setListener(this);
 
 			isExporting = true;
 		} catch (final Exception e) {

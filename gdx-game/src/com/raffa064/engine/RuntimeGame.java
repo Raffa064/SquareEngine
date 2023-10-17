@@ -2,20 +2,25 @@ package com.raffa064.engine;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.files.FileHandle;
 import com.raffa064.engine.core.App;
+import com.raffa064.engine.core.ProjectConfigs;
+import com.raffa064.engine.core.ScriptEngine.ErrorListener;
 import com.raffa064.engine.core.SquareLib;
-import com.raffa064.engine.core.ScriptEngine.*;
 import org.mozilla.javascript.EvaluatorException;
 
 public abstract class RuntimeGame extends Game {
-	private int decodeKey;
+	private ProjectConfigs configs;
 	private EditorInterface android;
 	private App app;
 	private SquareLib lib = new SquareLib();
 
-	public RuntimeGame(int decodeKey) {
-		this.decodeKey = decodeKey;
+	public void setConfigs(ProjectConfigs configs) {
+		this.configs = configs;
+	}
+
+	public ProjectConfigs getConfigs() {
+		return configs;
 	}
 	
 	public String trimLineSource(String lineSource, int offset) {
@@ -27,8 +32,8 @@ public abstract class RuntimeGame extends Game {
 	@Override
 	public void create() {
 		try {
-			app = new App(decodeKey);
-			app.loadProject("project", false);
+			app = new App();
+			app.loadProject(configs);
 			app.scriptEngine.setErrorListener(new ErrorListener() {
 				@Override
 				public void warning(String message, String source, int lineNumber, String lineSource, int lineOffset) {

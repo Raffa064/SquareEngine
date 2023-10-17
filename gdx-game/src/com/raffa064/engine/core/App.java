@@ -33,19 +33,21 @@ import java.util.List;
 import org.json.JSONObject;
 
 public class App {
+	public FileHandle projectDir;
+	public boolean isAbsolutePath; // switch between absolute/internal project folder
+	public boolean autoTranspile = true;
+	public boolean isEncrypted;
+	public int decodeKey;
+
 	public float viewportWidth = 1024;
 	public float viewportHeight = 600;
 	public boolean keepWidth = true;
 
-	public int decodeKey;
-	public boolean absolutePath; // switch between absolute/internal project folder
-	public FileHandle projectFolder;
 	public Scene currentScene, nextScene;
 	public List<Native> apiInjectionList = new ArrayList<>();
 	public JSONLoader jsonLoader;
 	public HashMap<String, String> sceneFiles = new HashMap<>();
 	public ScriptEngine scriptEngine;
-	public boolean autoTranspile = true;
 
 	public List<API> apiList = new ArrayList<>();
 	public DebugAPI Debug;
@@ -58,39 +60,16 @@ public class App {
 	public AssetsAPI Assets;
 	public LoggerAPI Logger;
 
-	public App() {}
-
-	public App(int decodeKey) {
-		this.decodeKey = decodeKey;
-		this.autoTranspile = false;
-	}
-
-	public void loadProject(FileHandle folder, boolean absolutePath) throws Exception {
-		projectFolder = folder;
-
-		this.absolutePath = absolutePath;
-
+	public void loadProject(ProjectConfigs configs) throws Exception {
+		projectDir = configs.getProjectDir();
+		isAbsolutePath = configs.isAbsolutePath;
+		autoTranspile = configs.autoTranspile;
+		isEncrypted = configs.isEncrypted;
+		decodeKey = configs.decodeKey;
+					
 		init();
-		loadProjectFiles(folder);
-		loadConfigs();
-	}
-
-	public void loadProject(String projectPath, boolean absolutePath) throws Exception {
-		FileHandle folder = absolutePath ? 
-			Gdx.files.absolute(projectPath) :
-			Gdx.files.internal(projectPath);
-
-		loadProject(folder, absolutePath);
-	}
-
-	public void loadProject(File projectDir, boolean absolutePath) throws Exception {
-		String path = projectDir.getAbsolutePath();
-
-		FileHandle folder = absolutePath ?
-			Gdx.files.absolute(path) :
-			Gdx.files.internal(path);
-
-		loadProject(folder, absolutePath);
+		loadProjectFiles(projectDir); // recursvive load
+		loadConfigs(configs);
 	}
 
 	public void init() {
@@ -166,34 +145,30 @@ public class App {
 					break;
 				case "js":
 					String code = file.readString();
-					
+
 					if (decodeKey != 0) {
 						code = Encryptor.decrypt(code, decodeKey);
 					}
-					
+
 					Component.loadScript(file.name(), code);
 					break;
 			}
 		}
 	}
 
-	private void loadConfigs() throws Exception {
-		JSONObject config =  new JSONObject(Assets.readFile("config.cfg"));
-		JSONObject viewport = config.getJSONObject("viewport");
-
-		viewportWidth = (float) JSONUtils.getDouble(viewport, "width", 1024);
-		viewportHeight = (float) JSONUtils.getDouble(viewport, "height", 720);
-		keepWidth = JSONUtils.getBoolean(viewport, "keepWidth", true);
-
-		String mainScene = JSONUtils.getString(config, "mainScene", "main");
-		Scene scene = loadScene(mainScene);
+	private void loadConfigs(ProjectConfigs configs) throws Exception {
+		viewportWidth = configs.viewportWidth;
+		viewportHeight = configs.viewportHeight;
+		keepWidth = configs.keepWidth;
+		
+		Scene scene = loadScene(configs.mainScene);
 		setScene(scene);
 	}
 
 	public FileHandle path(String path) {
-		String inProjectPath = projectFolder.path() + "/" + path;
+		String inProjectPath = projectDir.path() + "/" + path;
 
-		return absolutePath ? 
+		return isAbsolutePath ? 
 			Gdx.files.absolute(inProjectPath) :
 			Gdx.files.internal(inProjectPath);
 	}
