@@ -54,6 +54,9 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 		openProject("project");
 		initializeViews();
 		initializeGame();
+
+		createFloatBubble();
+		//createFloatWindows();
 	}
 
 	@Override
@@ -106,9 +109,6 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 			editorGame = new EditorGame();
 			View gameView = initializeForView(editorGame);
 			gameParent.addView(gameView);
-
-			createFloatBubble();
-			//createFloatWindows();
 		} catch (Exception e) {
 			error("Error on initialize game: %s", e);
 		}
@@ -117,6 +117,19 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 	private void createFloatBubble() {
 		FloatBubble bubble = new FloatBubble(this);
 		bubble.addIntoView(rootLayout);
+		
+		bubble.setOnBubbleActionListener(new FloatBubble.OnBubbleActionListener() {
+			@Override
+			public void onAction(int action) {
+				editor.event(action);
+			}
+		});
+
+		bubble.addAction(EVENT_EXPORT_PROJECT, R.drawable.gmd_unarchive);
+		bubble.addAction(EVENT_INSTALL_PROJECT, R.drawable.gmd_adb);
+		bubble.addAction(EVENT_OPEN_CODE, R.drawable.gmd_code);
+		bubble.addAction(EVENT_OPEN_SCENE_TREE, R.drawable.gmd_photo_size_select_actual);
+		bubble.addAction(EVENT_OPEN_INSPECTOR, R.drawable.gmd_visibility);
 	}
 
 	public void exportProject() {

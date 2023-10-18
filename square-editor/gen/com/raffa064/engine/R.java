@@ -34,14 +34,15 @@ public final class R {
     }
     public static final class id {
         public static final int debug=0x7f060002;
+        public static final int float_bubble_container=0x7f060005;
         public static final int float_bubble_scroll_container=0x7f060004;
         public static final int float_bubble_toggler=0x7f060003;
-        public static final int float_window_close=0x7f060007;
-        public static final int float_window_resizer_bottom=0x7f06000a;
-        public static final int float_window_resizer_right=0x7f060009;
-        public static final int float_window_title=0x7f060006;
-        public static final int float_window_top_bar=0x7f060005;
-        public static final int float_window_webview=0x7f060008;
+        public static final int float_window_close=0x7f060008;
+        public static final int float_window_resizer_bottom=0x7f06000b;
+        public static final int float_window_resizer_right=0x7f06000a;
+        public static final int float_window_title=0x7f060007;
+        public static final int float_window_top_bar=0x7f060006;
+        public static final int float_window_webview=0x7f060009;
         public static final int game_parent=0x7f060001;
         public static final int root_layout=0x7f060000;
     }

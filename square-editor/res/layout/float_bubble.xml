@@ -23,8 +23,7 @@
 			android:layout_width="50dp"
 			android:layout_height="wrap_content"
 			android:background="@drawable/float_window_background"
-			android:padding="10dp">
-
+			android:id="@+id/float_bubble_container">
 		</LinearLayout>
 
 	</ScrollView>

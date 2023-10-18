@@ -69,6 +69,23 @@ public class EditorGame extends Game implements Module, ErrorListener {
 			return;
 		}
 		
+		keyboardShortcuts();
+		
+		if (reloadRequest) {
+			reloadRequest = false;
+			loadProject();
+		}
+
+		if (isStable()) {
+			try {
+				app.render(Gdx.graphics.getDeltaTime());
+			} catch (Exception e) {
+				error("Error on render frame: %s", e);
+			}
+		}
+	}
+
+	private void keyboardShortcuts() {
 		if (Gdx.input.isKeyPressed(Input.Keys.F1)) {
 			editor.event(EditorCore.EVENT_EXPORT_PROJECT);
 		}
@@ -83,19 +100,6 @@ public class EditorGame extends Game implements Module, ErrorListener {
 
 		if (Gdx.input.isKeyPressed(Input.Keys.F4)) {
 			editor.event(EditorCore.EVENT_RELOAD_PROJECT);
-		}
-		
-		if (reloadRequest) {
-			reloadRequest = false;
-			loadProject();
-		}
-
-		if (isStable()) {
-			try {
-				app.render(Gdx.graphics.getDeltaTime());
-			} catch (Exception e) {
-				error("Error on render frame: %s", e);
-			}
 		}
 	}
 

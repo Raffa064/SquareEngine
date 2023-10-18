@@ -16,6 +16,8 @@ import com.raffa064.engine.core.json.JSONUtils;
 import com.raffa064.engine.core.ProjectConfigs;
 
 public class ApkExporter {
+	public int BUFFER_SIZE = 4096;
+	
 	public Activity activity;
 	public File buildDir;
 	public File templateFile;
@@ -37,7 +39,7 @@ public class ApkExporter {
 		FileOutputStream fos = new FileOutputStream(targetFile);
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[BUFFER_SIZE];
 		int length;
 		while ((length = is.read(buffer)) > 0) {
 			bos.write(buffer, 0, length);
@@ -89,7 +91,7 @@ public class ApkExporter {
 	}
 
 	public ExportProcess createExportProcess(Apk64Configs configs, ProjectConfigs projectConfigs) {
-		Apk64 apk64 = new Apk64();
+		Apk64 apk64 = new Apk64(BUFFER_SIZE);
 
 		ExportProcess process = new ExportProcess(activity, apk64, configs, projectConfigs, buildDir);
 
