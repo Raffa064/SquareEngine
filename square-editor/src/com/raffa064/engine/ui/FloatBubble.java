@@ -17,6 +17,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.animation.ObjectAnimator;
 import android.view.animation.LinearInterpolator;
+import android.view.View.OnLongClickListener;
+import android.widget.Toast;
 
 public class FloatBubble {
 	private Activity activity;
@@ -63,7 +65,7 @@ public class FloatBubble {
 		view.addView(bubble);	
 	}
 	
-	public void addAction(final int action, int resIcon) {
+	public void addAction(final int action, int resIcon, final String label) {
 		final ImageButton button = new ImageButton(activity);
 		button.setAdjustViewBounds(true);
 		button.setScaleType(ScaleType.FIT_CENTER);
@@ -80,6 +82,13 @@ public class FloatBubble {
 				anim.setInterpolator(new LinearInterpolator());
 				anim.setDuration(280);
 				anim.start();
+			}
+		});
+		button.setOnLongClickListener(new OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View view) {
+				Toast.makeText(activity, label, Toast.LENGTH_SHORT).show();
+				return true;
 			}
 		});
 		

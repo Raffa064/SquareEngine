@@ -71,6 +71,23 @@ public class EditorActivity extends AndroidApplication {
 		editor.event(EVENT_RELOAD_PROJECT); // Resquest reload
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch (requestCode) {
+			case OPEN_CODE_EDITOR:
+				editor.event(EVENT_CODE_EDITOR_CLOSED);
+				break;
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		editor.remove(editorModule);
+	}
+
  	private void createEngineDir() {
 		SQUARE_ENGINE_DIR = new File(Environment.getExternalStorageDirectory(), "SquareEngine");
 
@@ -113,21 +130,10 @@ public class EditorActivity extends AndroidApplication {
 			}
 		});
 
-		bubble.addAction(EVENT_EXPORT_PROJECT, R.drawable.gmd_unarchive);
-		bubble.addAction(EVENT_INSTALL_PROJECT, R.drawable.gmd_adb);
-		bubble.addAction(EVENT_OPEN_CODE_EDITOR, R.drawable.gmd_code);
-		bubble.addAction(EVENT_OPEN_SCENE_TREE, R.drawable.gmd_photo_size_select_actual);
-		bubble.addAction(EVENT_OPEN_INSPECTOR, R.drawable.gmd_visibility);
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		switch (requestCode) {
-			case OPEN_CODE_EDITOR:
-				editor.event(EVENT_CODE_EDITOR_CLOSED);
-				break;
-		}
+		bubble.addAction(EVENT_EXPORT_PROJECT, R.drawable.gmd_unarchive, "Export APK");
+		bubble.addAction(EVENT_INSTALL_PROJECT, R.drawable.gmd_adb, "Install APK");
+		bubble.addAction(EVENT_OPEN_CODE_EDITOR, R.drawable.gmd_code, "Code editor");
+		bubble.addAction(EVENT_OPEN_SCENE_TREE, R.drawable.gmd_photo_size_select_actual, "Scene Tree");
+		bubble.addAction(EVENT_OPEN_INSPECTOR, R.drawable.gmd_visibility, "Inspector");
 	}
 }
