@@ -9,20 +9,23 @@ public class EditorCore {
 	public static final int GET_PROJECT_DIR = 1;
 	public static final int GET_PROJECT_CONFIGS = 2;
 	public static final int GET_IS_EXPORTING_PROJECT = 3;
+	public static final int GET_IS_IN_CODE_EDITOR = 4;
 
 	public static final int EVENT_ERROR = 1;
 	public static final int EVENT_RELOAD_PROJECT = 2;
 	public static final int EVENT_EXPORT_PROJECT = 3;
 	public static final int EVENT_INSTALL_PROJECT = 4;
-	public static final int EVENT_OPEN_CODE = 5;
-	public static final int EVENT_OPEN_SCENE_TREE = 6;
-	public static final int EVENT_OPEN_INSPECTOR = 7;
+	public static final int EVENT_OPEN_CODE_EDITOR = 5;
+	public static final int EVENT_CODE_EDITOR_CLOSED = 6;
+	public static final int EVENT_OPEN_SCENE_TREE = 7;
+	public static final int EVENT_OPEN_INSPECTOR = 8;
 
 	private List<Module> moduleList = new ArrayList<>();
 
 	private EditorCore() {}
 
 	public void add(Module module) {
+		module.editor = this;
 		moduleList.add(module);
 	}
 
@@ -49,6 +52,8 @@ public class EditorCore {
 	}
 
 	public static interface Module {
+		public EditorCore editor;
+		
 		public Object onGet(int action, Object... params);
 
 		public void onEvent(int event, Object... params);

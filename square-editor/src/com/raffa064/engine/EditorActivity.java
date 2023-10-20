@@ -24,22 +24,28 @@ import java.io.OutputStream;
 import static com.raffa064.engine.EditorCore.*;
 import androidx.core.content.FileProvider;
 import com.raffa064.engine.core.ProjectConfigs;
+import com.raffa064.engine.modules.EditorModule;
 
-public class EditorActivity extends AndroidApplication implements Module, ExportListener {
+public class EditorActivity extends AndroidApplication {
+	public static final int OPEN_CODE_EDITOR = 1;
+	
 	public File SQUARE_ENGINE_DIR;
 
-	public EditorCore editor;
-
-	private File projectDir;
+	// Editor Runtime
+	private EditorCore editor;
 	private EditorGame editorGame;
-	private boolean isExporting;
-
-	public RelativeLayout rootLayout;
-	public LinearLayout gameParent;
+	
+	private EditorModule editorModule;
+	public File projectDir;
+	
+	// Views
+	private RelativeLayout rootLayout;
+	private LinearLayout gameParent;
 
 	public EditorActivity() {
 		editor = EditorCore.instance();
-		editor.add(this);
+		editorModule = new EditorModule(this);
+		editor.add(editorModule);
 	}
 
 	@Override
@@ -65,24 +71,6 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 		editor.event(EVENT_RELOAD_PROJECT); // Resquest reload
 	}
 
-	private void error(String message, Exception error) {
-		if (message.contains("%s")) {
-			message = String.format(message, error.toString());
-		}
-
-		final String finalMessage = message;
-		runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					Toast.makeText(EditorActivity.this, finalMessage, Toast.LENGTH_LONG).show();
-				}
-			});
-	}
-
-	private void error(String message) {
-		error(message, new Exception());
-	}
-
  	private void createEngineDir() {
 		SQUARE_ENGINE_DIR = new File(Environment.getExternalStorageDirectory(), "SquareEngine");
 
@@ -95,7 +83,7 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 		projectDir = new File(SQUARE_ENGINE_DIR, name);
 
 		if (!projectDir.exists()) {
-			error("Project don't exists");
+			editor.event(EVENT_ERROR, "Project don't exists");
 		}
 	} 
 
@@ -110,7 +98,7 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 			View gameView = initializeForView(editorGame);
 			gameParent.addView(gameView);
 		} catch (Exception e) {
-			error("Error on initialize game: %s", e);
+			editor.event(EVENT_ERROR, "Error on initialize game: %s", e);
 		}
 	}
 
@@ -127,90 +115,19 @@ public class EditorActivity extends AndroidApplication implements Module, Export
 
 		bubble.addAction(EVENT_EXPORT_PROJECT, R.drawable.gmd_unarchive);
 		bubble.addAction(EVENT_INSTALL_PROJECT, R.drawable.gmd_adb);
-		bubble.addAction(EVENT_OPEN_CODE, R.drawable.gmd_code);
+		bubble.addAction(EVENT_OPEN_CODE_EDITOR, R.drawable.gmd_code);
 		bubble.addAction(EVENT_OPEN_SCENE_TREE, R.drawable.gmd_photo_size_select_actual);
 		bubble.addAction(EVENT_OPEN_INSPECTOR, R.drawable.gmd_visibility);
 	}
 
-	public void exportProject() {
-		if (isExporting) return;
-
-		try {
-			File buildDir = new File(SQUARE_ENGINE_DIR, ".build");
-			File outputFile = new File(projectDir, "game.apk");
-
-			buildDir.mkdir();
-
-			FileUtils.deleteFiles(outputFile); // delete old apk
-
-			ApkExporter exporter = new ApkExporter(this, buildDir);
-			ProjectConfigs projectConfigs = (ProjectConfigs) editor.get(GET_PROJECT_CONFIGS);
-			ExportProcess process = exporter.exportProject(projectConfigs, outputFile);
-			process.setListener(this);
-
-			isExporting = true;
-		} catch (final Exception e) {
-			error("Export error: %s", e);
-		}
-	}
-
-	public void installProject() {
-		// Code from (sajad abbasi): https://stackoverflow.com/questions/47964308/intent-to-install-apk-on-android-n
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		
-		File apkFile = new File(projectDir, "game.apk");
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-			Uri apkUri = FileProvider.getUriForFile(this, "com.raffa064.engine.provider", apkFile);
-			Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-			intent.setData(apkUri);
-			intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-			startActivity(intent);
-		} else {
-			Uri apkUri = Uri.fromFile(apkFile);
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-		}
-	}
-	
-	public void openCodeActivity() {
-		Intent intent = new Intent(this, CodeActivity.class);
-		intent.putExtra("project", projectDir.toString());		
-		startActivity(intent);
-	}
-
-	@Override
-	public Object onGet(int action, Object[] params) {
-		switch (action) {
-			case GET_PROJECT_DIR: return projectDir;
-			case GET_IS_EXPORTING_PROJECT: return isExporting;
-		}
-
-		return null;
-	}
-
-	@Override
-	public void onEvent(int event, Object[] params) {
-		switch (event) {
-			case EVENT_ERROR:
-				String message = (String) params[0];
-				Exception error = (Exception) params[1];
-				error(message, error);
-				break;
-			case EVENT_EXPORT_PROJECT:
-				exportProject();
-				break;
-			case EVENT_INSTALL_PROJECT:
-				installProject();
-				break;
-			case EVENT_OPEN_CODE:
-				openCodeActivity();
+		switch (requestCode) {
+			case OPEN_CODE_EDITOR:
+				editor.event(EVENT_CODE_EDITOR_CLOSED);
 				break;
 		}
-	}
-
-	@Override
-	public void sucess() {
-		isExporting = false;
 	}
 }

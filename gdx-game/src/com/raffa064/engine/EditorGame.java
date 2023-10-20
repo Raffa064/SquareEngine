@@ -95,7 +95,7 @@ public class EditorGame extends Game implements Module, ErrorListener {
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.F3)) {
-			editor.event(EditorCore.EVENT_OPEN_CODE);
+			editor.event(EditorCore.EVENT_OPEN_CODE_EDITOR);
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.F4)) {

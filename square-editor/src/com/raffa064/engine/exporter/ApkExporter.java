@@ -151,20 +151,23 @@ public class ApkExporter {
 				FileUtils.deleteFiles(buildDir);
 
 				if (listener != null) {
-					listener.sucess();
+					listener.onSucess();
 				}
 			} catch (final Exception e) {
-				activity.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(activity, "Export error: " + e, Toast.LENGTH_LONG).show();
-					}
-				});
+				if (listener != null) {
+					listener.onError(e);
+				}
+			}
+			
+			if (listener != null) {
+				listener.onFinished();
 			}
 		}
 	}
 
 	public static interface ExportListener {
-		public void sucess();
+		public void onSucess();
+		public void onError(Exception error);
+		public void onFinished();
 	}
 }

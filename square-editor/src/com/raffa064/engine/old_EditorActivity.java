@@ -17,7 +17,7 @@ import com.raffa064.engine.exporter.ApkExporter.ExportProcess;
 import com.raffa064.engine.ui.FloatWindow;
 import java.io.File;
 
-public class old_EditorActivity extends AndroidApplication implements /*EditorInterface,*/ ApkExporter.ExportListener {
+public class old_EditorActivity extends AndroidApplication /*implements EditorInterface, ApkExporter.ExportListener*/ {
 	private final int OPEN_EDITOR_CODE = 1;
 	
 	private EditorApplication application;
@@ -100,7 +100,7 @@ public class old_EditorActivity extends AndroidApplication implements /*EditorIn
 		}
 	}
 	
-	@Override
+//	@Override
 	public void sucess() {
 		isExporting = false;
 	}
