@@ -61,7 +61,7 @@ public class ComponentAPI extends API {
 		}
 		
 		ScriptEngine.CompiledScript script = app.scriptEngine.newObject(name);
-		Script scriptCom = new Script(script);
+		Script scriptCom = new Script(app, script);
 		return scriptCom;
 	}
 	

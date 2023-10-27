@@ -18,9 +18,18 @@ public abstract class Component {
 	public String name;
 	public GameObject obj;
 	public List<ExportedProp> exportedProps = new ArrayList<>();
+	private int inputPriority;
 
 	public Component(String name) {
 		this.name = name;
+	}
+
+	public void setInputPriority(int inputPriority) {
+		this.inputPriority = inputPriority;
+	}
+
+	public int getInputPriority() {
+		return inputPriority;
 	}
 
 	public <T> T get(String key, Class<T> type) {

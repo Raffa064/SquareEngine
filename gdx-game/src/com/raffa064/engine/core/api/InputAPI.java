@@ -8,6 +8,8 @@ import com.badlogic.gdx.InputProcessor;
 import java.util.ArrayList;
 import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.api.InputAPI.Event;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class InputAPI extends API {
 	public static final int ANY_KEY = -1;
@@ -414,6 +416,10 @@ public class InputAPI extends API {
 	public void unsubscribe(Component component) {
 		inputHandler.unsubscribe(component);
 	}
+	
+	public void sortInputComponents() {
+		inputHandler.sort();
+	}
 
 	private Vector3 getTouchCoords(int cursor) {
 		Vector3 point = new Vector3(Gdx.input.getX(cursor), Gdx.graphics.getHeight() - Gdx.input.getY(cursor), 0);
@@ -559,11 +565,20 @@ public class InputAPI extends API {
 
 		public void subscribe(Component component) {
 			componentList.add(component);
-			// TODO: sort my priority
+			sort();
 		}
 		
 		public void unsubscribe(Component component) {
 			componentList.remove(component);
+		}
+		
+		public void sort() {
+			Collections.sort(componentList, new Comparator<Component>() {
+				@Override
+				public int compare(Component a, Component b) {
+					return a.getInputPriority() - b.getInputPriority();
+				}
+			});
 		}
 		
 		public boolean emitEvent(Event event) {

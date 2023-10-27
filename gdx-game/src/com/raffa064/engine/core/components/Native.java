@@ -36,6 +36,13 @@ public abstract class Native extends Component  {
 	public Native(String name) {
 		super(name);
 	}
+
+	@Override
+	public void setInputPriority(int inputPriority) {
+		super.setInputPriority(inputPriority);
+		
+		Input.sortInputComponents();
+	}
 	
 	public void exportProps(String... nameAndTypeList) {
 		for (int i = 0; i < nameAndTypeList.length; i += 2) {

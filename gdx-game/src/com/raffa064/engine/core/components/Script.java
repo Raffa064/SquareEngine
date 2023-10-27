@@ -1,5 +1,6 @@
 package com.raffa064.engine.core.components;
 
+import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.ScriptEngine.CompiledScript;
 import com.raffa064.engine.core.api.InputAPI;
@@ -8,18 +9,28 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
 public class Script extends Component {
+	private App app;
 	public CompiledScript script;
 
-	public Script(CompiledScript script) {
+	public Script(App app, CompiledScript script) {
 		super(script.name);
 		
+		this.app = app;
 		this.script = script;
+
 		set("THIS", this);
 		
 		for (Map.Entry<String, String> entry : script.exportedProps.entrySet()) {
 			ExportedProp prop = new ExportedProp(entry.getKey(), entry.getValue());
 			exportedProps.add(prop);
 		}
+	}
+
+	@Override
+	public void setInputPriority(int inputPriority) {
+		super.setInputPriority(inputPriority);
+		
+		app.Input.sortInputComponents();
 	}
 	
 	public Scriptable js() {
