@@ -130,8 +130,7 @@ public class ApkExporter {
 				apk64.changeVersion(projectInfo.versionCode, projectInfo.versionName);
 
 				if (projectInfo.icon.exists()) {
-					apk64.replaceDrawable("ic_launcher.png", projectInfo.icon);
-					apk64.replaceDrawable("ic_launcher.jpg", projectInfo.icon);
+					apk64.replaceAppIcon(projectInfo.icon);
 				}
 
 				for (String permission : projectInfo.permissions) {
@@ -153,7 +152,7 @@ public class ApkExporter {
 				if (listener != null) {
 					listener.onSucess();
 				}
-			} catch (final Exception e) {
+			} catch (Error | Exception e) {
 				if (listener != null) {
 					listener.onError(e);
 				}
@@ -167,7 +166,7 @@ public class ApkExporter {
 
 	public static interface ExportListener {
 		public void onSucess();
-		public void onError(Exception error);
+		public void onError(Throwable error);
 		public void onFinished();
 	}
 }

@@ -1,7 +1,7 @@
 package com.raffa064.engine.ui;
 
 import android.view.View;
-import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout.LayoutParams;
 
 public class ResizerListener extends CustomTouchListener {
 	public static final int MODE_HORIZONTAL = 1;

@@ -25,27 +25,26 @@ import static com.raffa064.engine.EditorCore.*;
 import androidx.core.content.FileProvider;
 import com.raffa064.engine.core.ProjectConfigs;
 import com.raffa064.engine.modules.EditorModule;
+import com.raffa064.engine.ui.FloatWindow;
 
 public class EditorActivity extends AndroidApplication {
 	public static final int OPEN_CODE_EDITOR = 1;
 	
-	public File SQUARE_ENGINE_DIR;
-
 	// Editor Runtime
-	private EditorCore editor;
+	private EditorCore core;
 	private EditorGame editorGame;
 	
+	// Modules
 	private EditorModule editorModule;
-	public File projectDir;
 	
 	// Views
 	private RelativeLayout rootLayout;
 	private LinearLayout gameParent;
 
 	public EditorActivity() {
-		editor = EditorCore.instance();
+		core = EditorCore.instance();
 		editorModule = new EditorModule(this);
-		editor.add(editorModule);
+		core.add(editorModule);
 	}
 
 	@Override
@@ -56,19 +55,18 @@ public class EditorActivity extends AndroidApplication {
 		getActionBar().hide();
 		setContentView(R.layout.activity_main);
 
-		createEngineDir();
-		openProject("project");
+		setupDirs();
 		initializeViews();
 		initializeGame();
 
 		createFloatBubble();
-		//createFloatWindows();
+		createFloatWindows();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		editor.event(EVENT_RELOAD_PROJECT); // Resquest reload
+		core.event(EVENT_RELOAD_PROJECT); // Resquest reload
 	}
 
 	@Override
@@ -77,7 +75,7 @@ public class EditorActivity extends AndroidApplication {
 
 		switch (requestCode) {
 			case OPEN_CODE_EDITOR:
-				editor.event(EVENT_CODE_EDITOR_CLOSED);
+				core.event(EVENT_CODE_EDITOR_CLOSED);
 				break;
 		}
 	}
@@ -85,24 +83,17 @@ public class EditorActivity extends AndroidApplication {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		editor.remove(editorModule);
+		
+		core.remove(editorModule);
 	}
 
- 	private void createEngineDir() {
-		SQUARE_ENGINE_DIR = new File(Environment.getExternalStorageDirectory(), "SquareEngine");
-
-		if (!SQUARE_ENGINE_DIR.exists()) {
-			SQUARE_ENGINE_DIR.mkdir();
-		}
+ 	private void setupDirs() {
+		File engineDir = new File(Environment.getExternalStorageDirectory(), "SquareEngine");
+		File projectDir = new File(engineDir, "project"); // TODO: change to target project name
+		
+		core.event(EVENT_CHANGE_ENGINE_DIR, engineDir);
+		core.event(EVENT_OPEN_PROJECT, projectDir); 
 	}
-
-	private void openProject(String name) {
-		projectDir = new File(SQUARE_ENGINE_DIR, name);
-
-		if (!projectDir.exists()) {
-			editor.event(EVENT_ERROR, "Project don't exists");
-		}
-	} 
 
 	private void initializeViews() {
 		rootLayout = findViewById(R.id.root_layout);
@@ -115,18 +106,18 @@ public class EditorActivity extends AndroidApplication {
 			View gameView = initializeForView(editorGame);
 			gameParent.addView(gameView);
 		} catch (Exception e) {
-			editor.event(EVENT_ERROR, "Error on initialize game: %s", e);
+			core.event(EVENT_ERROR, "Error on initialize game: %s", e);
 		}
 	}
 
 	private void createFloatBubble() {
 		FloatBubble bubble = new FloatBubble(this);
-		bubble.addIntoView(rootLayout);
 		
+		bubble.addIntoView(rootLayout);
 		bubble.setOnBubbleActionListener(new FloatBubble.OnBubbleActionListener() {
 			@Override
 			public void onAction(int action) {
-				editor.event(action);
+				core.event(action);
 			}
 		});
 
@@ -135,5 +126,16 @@ public class EditorActivity extends AndroidApplication {
 		bubble.addAction(EVENT_OPEN_CODE_EDITOR, R.drawable.gmd_code, "Code editor");
 		bubble.addAction(EVENT_OPEN_SCENE_TREE, R.drawable.gmd_photo_size_select_actual, "Scene Tree");
 		bubble.addAction(EVENT_OPEN_INSPECTOR, R.drawable.gmd_visibility, "Inspector");
+	}
+	
+	private void createFloatWindows() {
+		FloatWindow window = new FloatWindow(this);
+		window.load("file:///android_asset/scene-tree/scene-tree.html");
+		window.title("Title");
+		window.position(0, 0);
+		window.width(500);
+		window.height(500);
+		window.addIntoView(rootLayout);
+		window.toggleWindow();
 	}
 }

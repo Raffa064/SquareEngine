@@ -41,7 +41,11 @@ public class Script extends Component {
 	}
 
 	public Object call(String methodName, Object... params) {
-		return ScriptableObject.callMethod(script.objectScope, methodName, params);
+		if (ScriptableObject.hasProperty(script.objectScope, methodName)) {
+			return ScriptableObject.callMethod(script.objectScope, methodName, params);	
+		} 
+		
+		return null;
 	}
 	
 	@Override

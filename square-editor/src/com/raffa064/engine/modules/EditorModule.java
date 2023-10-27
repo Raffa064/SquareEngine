@@ -10,16 +10,19 @@ import com.raffa064.engine.CodeActivity;
 import com.raffa064.engine.EditorActivity;
 import com.raffa064.engine.core.ProjectConfigs;
 import com.raffa064.engine.exporter.ApkExporter;
+import com.raffa064.engine.exporter.ApkExporter.ExportListener;
 import com.raffa064.engine.exporter.ApkExporter.ExportProcess;
-import com.raffa064.engine.exporter.ApkExporter.*;
 import java.io.File;
 
 import static com.raffa064.engine.EditorCore.*;
 
 public class EditorModule implements Module, ExportListener {
 	private EditorActivity activity;
-	public boolean isExporting;
-	public boolean isInCodeEditor;
+	
+	public File engineDir;
+	public File projectDir;
+	private boolean isExporting;
+	private boolean isInCodeEditor;
 
 	public EditorModule(EditorActivity activity) {
 		this.activity = activity;
@@ -28,7 +31,7 @@ public class EditorModule implements Module, ExportListener {
     @Override
 	public Object onGet(int action, Object[] params) {
 		switch (action) {
-			case GET_PROJECT_DIR: return activity.projectDir;
+			case GET_PROJECT_DIR: return projectDir;
 			case GET_IS_EXPORTING_PROJECT: return isExporting;
 			case GET_IS_IN_CODE_EDITOR: return isExporting;
 		}
@@ -48,6 +51,12 @@ public class EditorModule implements Module, ExportListener {
 				}
 				
 				error(message, error);
+				break;
+			case EVENT_CHANGE_ENGINE_DIR:
+				changeEngineDir((File) params[0]);
+				break;
+			case EVENT_OPEN_PROJECT:
+				openProject((File) params[0]);
 				break;
 			case EVENT_EXPORT_PROJECT:
 				exportProject();
@@ -70,7 +79,7 @@ public class EditorModule implements Module, ExportListener {
 	}
 	
 	@Override
-	public void onError(Exception error) {
+	public void onError(Throwable error) {
 		// Log error
 	}
 
@@ -92,20 +101,37 @@ public class EditorModule implements Module, ExportListener {
 			}
 		});
 	}
+	
+	private void changeEngineDir(File engineDir) {
+		if (!engineDir.exists()) {
+			engineDir.mkdir();
+		}
+
+		this.engineDir = engineDir;
+	}
+	
+	private void openProject(File projectDir) {
+		if (!projectDir.exists()) {
+			core.event(EVENT_ERROR, "Project don't exists");
+			return;
+		}
+		
+		this.projectDir = projectDir;
+	}
 
 	public void exportProject() {
 		if (isExporting) return;
 
 		try {
-			File buildDir = new File(activity.SQUARE_ENGINE_DIR, ".build");
-			File outputFile = new File(activity.projectDir, "game.apk");
+			File buildDir = new File(engineDir, ".build");
+			File outputFile = new File(projectDir, "game.apk");
 
 			buildDir.mkdir(); // create build directory
 
 			FileUtils.deleteFiles(outputFile); // delete old apk
 
 			ApkExporter exporter = new ApkExporter(activity, buildDir);
-			ProjectConfigs projectConfigs = (ProjectConfigs) editor.get(GET_PROJECT_CONFIGS);
+			ProjectConfigs projectConfigs = (ProjectConfigs) core.get(GET_PROJECT_CONFIGS);
 			ExportProcess process = exporter.exportProject(projectConfigs, outputFile);
 			process.setListener(this);
 
@@ -118,7 +144,7 @@ public class EditorModule implements Module, ExportListener {
 	public void installProject() {
 		// Code from (sajad abbasi): https://stackoverflow.com/questions/47964308/intent-to-install-apk-on-android-n
 
-		File apkFile = new File(activity.projectDir, "game.apk");
+		File apkFile = new File(projectDir, "game.apk");
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 			Uri apkUri = FileProvider.getUriForFile(activity, "com.raffa064.engine.provider", apkFile);
 			Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
@@ -138,7 +164,7 @@ public class EditorModule implements Module, ExportListener {
 		if (isInCodeEditor) return;
 		
 		Intent intent = new Intent(activity, CodeActivity.class);
-		intent.putExtra("project", activity.projectDir.toString());		
+		intent.putExtra("project", projectDir.toString());		
 		activity.startActivityForResult(intent, EditorActivity.OPEN_CODE_EDITOR);
 	}
 }

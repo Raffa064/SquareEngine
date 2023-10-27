@@ -12,20 +12,20 @@ import org.mozilla.javascript.EvaluatorException;
 import static com.raffa064.engine.EditorCore.*;
 
 public class EditorGame extends Game implements Module, ErrorListener {
-	private EditorCore editor;
+	private EditorCore core;
 	private ProjectConfigs configs;
 	private App app;
 	private boolean reloadRequest;
 	private boolean isStable;
 
 	public EditorGame() throws Exception {
-		editor = EditorCore.instance();
-		editor.add(this);
+		core = EditorCore.instance();
+		core.add(this);
 	}
 
 	public void loadProject() {
 		try {
-			String projectPath = ((File) editor.get(GET_PROJECT_DIR)).getAbsolutePath();
+			String projectPath = ((File) core.get(GET_PROJECT_DIR)).getAbsolutePath();
 			configs = new ProjectConfigs(projectPath);
 			
 			App newApp = new App();
@@ -44,7 +44,7 @@ public class EditorGame extends Game implements Module, ErrorListener {
 	}
 
 	private void error(String message, Exception e) {
-		editor.event(EVENT_ERROR, message, e);
+		core.event(EVENT_ERROR, message, e);
 		isStable = false;
 	}
 
@@ -63,7 +63,7 @@ public class EditorGame extends Game implements Module, ErrorListener {
 
 	@Override
 	public void render() {
-		boolean isExporting = (boolean) editor.get(EditorCore.GET_IS_EXPORTING_PROJECT);
+		boolean isExporting = (boolean) core.get(EditorCore.GET_IS_EXPORTING_PROJECT);
 		
 		if (isExporting) {
 			return;
@@ -87,19 +87,19 @@ public class EditorGame extends Game implements Module, ErrorListener {
 
 	private void keyboardShortcuts() {
 		if (Gdx.input.isKeyPressed(Input.Keys.F1)) {
-			editor.event(EditorCore.EVENT_EXPORT_PROJECT);
+			core.event(EditorCore.EVENT_EXPORT_PROJECT);
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.F2)) {
-			editor.event(EditorCore.EVENT_INSTALL_PROJECT);
+			core.event(EditorCore.EVENT_INSTALL_PROJECT);
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.F3)) {
-			editor.event(EditorCore.EVENT_OPEN_CODE_EDITOR);
+			core.event(EditorCore.EVENT_OPEN_CODE_EDITOR);
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.F4)) {
-			editor.event(EditorCore.EVENT_RELOAD_PROJECT);
+			core.event(EditorCore.EVENT_RELOAD_PROJECT);
 		}
 	}
 
@@ -116,6 +116,8 @@ public class EditorGame extends Game implements Module, ErrorListener {
 
 	@Override
 	public void dispose() {
+		core.remove(this);
+		
 		if (isStable()) {
 			try {
 				app.dispose();

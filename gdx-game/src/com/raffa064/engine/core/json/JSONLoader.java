@@ -135,15 +135,15 @@ public class JSONLoader {
 	}
 
 	private Component parseComponent(JSONObject componentJSON) throws Exception {
-		String name = componentJSON.getString("name");
+		String name = JSONUtils.getString(componentJSON, "name", "Unknown");
 		Component component = (Component) app.Component.create(name);
 
-		JSONArray exportedPropsJSON = componentJSON.getJSONArray("exportedProps");
+		JSONArray exportedPropsJSON = JSONUtils.getJSONArray(componentJSON, "exportedProps", new JSONArray());
 		for (int i = 0; i < exportedPropsJSON.length(); i++) {
 			JSONObject propJSON = exportedPropsJSON.getJSONObject(i);
 
-			String propName = propJSON.getString("name");
-			String propType = propJSON.getString("type");
+			String propName = JSONUtils.getString(propJSON, "name", "Unknown");
+			String propType = JSONUtils.getString(propJSON, "type", "Unknown");
 			Object propValue = parseProp(propType, propJSON.getString("value"));
 
 			component.set(propName, propValue);
@@ -152,18 +152,18 @@ public class JSONLoader {
 		return component;
 	}
 
-	private GameObject parseGameObject(JSONObject sceneJSON) throws Exception {
+	private GameObject parseGameObject(JSONObject objJSON) throws Exception {
 		GameObject obj = new GameObject();
 
-		obj.setName(sceneJSON.getString("name"));
+		obj.setName(JSONUtils.getString(objJSON, "name", "Unknown"));
 
-		JSONArray components = sceneJSON.getJSONArray("components");
+		JSONArray components = JSONUtils.getJSONArray(objJSON, "components", new JSONArray());
 		for (int i = 0; i < components.length(); i++) {
 			JSONObject componentJSON = components.getJSONObject(i);
 			obj.add(parseComponent(componentJSON));
 		}
 
-		JSONArray children = sceneJSON.getJSONArray("children");
+		JSONArray children = JSONUtils.getJSONArray(objJSON, "children", new JSONArray());
 		for (int i = 0; i < children.length(); i++) {
 			JSONObject child = children.getJSONObject(i);
 			obj.addChild(parseGameObject(child));
@@ -181,9 +181,9 @@ public class JSONLoader {
 		Scene scene = new Scene();
 		scene.setApp(app);
 
-		scene.setName(sceneJSON.getString("name"));
+		scene.setName(JSONUtils.getString(sceneJSON, "name", "Unknown"));
 
-		JSONArray children = sceneJSON.getJSONArray("children");
+		JSONArray children = JSONUtils.getJSONArray(sceneJSON, "children", new JSONArray());
 		for (int i = 0; i < children.length(); i++) {
 			JSONObject child = children.getJSONObject(i);
 			scene.addChild(parseGameObject(child));

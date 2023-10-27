@@ -7,16 +7,22 @@ public class HoverListener extends CustomTouchListener {
 	private View view;
 	private LayoutParams params;
 	private boolean isDrag;
+	private boolean hasOnClick;
 
-	public HoverListener(View view) {
+	public HoverListener(boolean hasOnClick) {
+		this.hasOnClick = hasOnClick;
+	}
+
+	public HoverListener(View view, boolean hasOnClick) {
 		this.view = view;
 		this.params = (LayoutParams) view.getLayoutParams();
+		this.hasOnClick = hasOnClick;
 	}
 
 	@Override
 	public boolean onDown(float x, float y, int touch) {
 		isDrag = false;
-		return false;
+		return !hasOnClick;
 	}
 
 	@Override

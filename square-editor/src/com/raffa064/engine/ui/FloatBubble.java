@@ -52,7 +52,7 @@ public class FloatBubble {
 		
 		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		bubble.setLayoutParams(params);
-		bubbleToggler.setOnTouchListener(new HoverListener(bubble));
+		bubbleToggler.setOnTouchListener(new HoverListener(bubble, true));
 		bubbleToggler.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {

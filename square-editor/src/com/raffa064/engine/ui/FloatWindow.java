@@ -59,7 +59,7 @@ public class FloatWindow {
 		windowParams = new LayoutParams(width, height);
 		window.setLayoutParams(windowParams);
 
-		windowTopBar.setOnTouchListener(new HoverListener(window) {
+		windowTopBar.setOnTouchListener(new HoverListener(window, false) {
 				@Override
 				public boolean onMove(float x, float y, float dragX, float dragY, int touch) {
 					boolean onMove = super.onMove(x, y, dragX, dragY, touch);

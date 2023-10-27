@@ -14,6 +14,8 @@ public class Image extends Native {
 	public int columns = 1;
 	public int rows = 1;
 	public int frame = 0;
+	public boolean flipX;
+	public boolean flipY;
 
 	public Texture texture;
 	public String currentTexture;
@@ -29,6 +31,7 @@ public class Image extends Native {
 			"columns", INTEGER,
 			"rows", INTEGER,
 			"frame", INTEGER
+			// Todo: add flipX/Y
 		);
 	}
 
@@ -73,6 +76,8 @@ public class Image extends Native {
 			width,
 			height
 		);
+		
+		region.flip(flipX, flipY);
 
 		float halfWidth = width / 2;
 		float halfHeight = height / 2;

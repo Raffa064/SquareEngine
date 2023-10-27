@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class App {
 	public FileHandle projectDir;
@@ -103,7 +104,8 @@ public class App {
 			.injectClass(GlyphLayout.class)
 			.injectClass(Rectangle.class)
 			.injectClass(ShapeType.class)
-			.injectClass(Shape.class);
+			.injectClass(Shape.class)
+			.injectClass(TextureRegion.class);
 
 		// Injecting "export type" costants
 		scriptEngine
