@@ -31,6 +31,19 @@ public class AssetsAPI extends API {
 	@Override
 	public void useState(APIState values) {
 	}
+	
+	public String nameOf(Object asset) {
+		for (Map.Entry<String, Object> entry : assets.entrySet()) {
+			String key = entry.getKey();
+			Object value = entry.getValue();
+			
+			if (asset == value) {
+				return key;
+			}
+		}
+		
+		return null;
+	}
 
 	public Texture texture(String path) {
 		if (assets.containsKey(path)) {

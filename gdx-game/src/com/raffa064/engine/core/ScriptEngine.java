@@ -124,7 +124,7 @@ public class ScriptEngine {
 	private String transpile_exportSintax(String js64) {
 		HashMap<String, List<String>> exportedProps = new HashMap<>();
 		
-		Pattern compile = Pattern.compile("export\\s+[A-z0-9_\\$]+\\s*::\\s*[A-z0-9_\\$]+\\s*=\\s*(STRING|COLOR|INTEGER|FLOAT|VECTOR2|GAME_OBJECT)");
+		Pattern compile = Pattern.compile("export\\s+[A-z0-9_\\$]+\\s*::\\s*[A-z0-9_\\$]+\\s*=\\s*(STRING|COLOR|INTEGER|BOOLEAN|FLOAT|VECTOR2|TEXTURE)");
 		Matcher matcher;
 		while ((matcher = compile.matcher(js64)).find()) {
 			int start = matcher.start();
@@ -139,7 +139,7 @@ public class ScriptEngine {
 			classProps.add(propType);
 			exportedProps.put(className, classProps);
 			
-			js64 = js64.substring(0, start) + "// export " + className + "." + propName +  js64.substring(end, js64.length());
+			js64 = js64.substring(0, start) + "/* export " + className + "." + propName + " */"+  js64.substring(end, js64.length());
 		}
 		
 		js64 = transpile_defaultExportValues(js64, exportedProps);
@@ -155,11 +155,13 @@ public class ScriptEngine {
 				return "0.0";
 			case "INTEGER":
 				return "0";
+			case "BOOLEAN":
+				return "0";
 			case "COLOR": 
 				return "new Color()";
 			case "VECTOR2":
 				return "new Vector2()";
-			case "GAME_OBJECT":
+			case "TEXTURE":
 				return "null";
 		}
 

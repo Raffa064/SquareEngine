@@ -114,8 +114,8 @@ public class App {
 			.inject("VECTOR2", "VECTOR2")
 			.inject("FLOAT", "FLOAT")
 			.inject("INTEGER", "INTEGER")
-			.inject("TEXTURE", "TEXTURE")
-			.inject("GAME_OBJECT", "GAME_OBJECT");
+			.inject("BOOLEAN", "BOOLEAN")
+			.inject("TEXTURE", "TEXTURE");
 
 		// Injecting APIs 
 		scriptEngine

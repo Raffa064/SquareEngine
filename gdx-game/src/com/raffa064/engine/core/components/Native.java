@@ -14,6 +14,7 @@ import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import com.raffa064.engine.core.api.InputAPI.Event;
 
 public abstract class Native extends Component  {
 	public DebugAPI Debug;
@@ -44,5 +45,10 @@ public abstract class Native extends Component  {
 			ExportedProp exportedProp = new ExportedProp(name, type);
 			exportedProps.add(exportedProp);
 		}
+	}
+
+	@Override
+	public boolean input(InputAPI.Event event) {
+		return false;
 	}
 }

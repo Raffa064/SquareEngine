@@ -71,7 +71,7 @@ public class SceneAPI extends API {
 		
 		for (Object component : components) {
 			if (component instanceof Scriptable) {
-				Object comp = ScriptableObject.getProperty((Scriptable) component, "_javaInstance");
+				Object comp = ScriptableObject.getProperty((Scriptable) component, "THIS");
 				obj.add((Component) comp);
 				continue;
 			}

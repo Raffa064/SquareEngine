@@ -9,6 +9,8 @@ import com.raffa064.engine.core.GameObject;
 import com.raffa064.engine.core.Scene;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import com.badlogic.gdx.graphics.Texture;
+import org.mozilla.javascript.ast.ArrayLiteral;
 
 public class JSONLoader {
 	private App app;
@@ -19,16 +21,17 @@ public class JSONLoader {
 
 	public Object json(Object value, String type) throws Exception {
 		switch (type) {
+			case "COLOR": 
+				return ((Color) value).toString(); // 12345678
 			case "STRING":
 			case "FLOAT":
 			case "INTEGER":
+			case "BOOLEAN":
 				return value;
-			case "COLOR": 
-				return ((Color) value).toString(); // 12345678
 			case "VECTOR2":
 				return ((Vector2) value).toString(); // (x, y)
-			case "GAME_OBJECT":
-				throw new Exception("NOT IMPLEMENTED");
+			case "TEXTURE":
+				return app.Assets.nameOf(value);
 		}
 
 		return null;
@@ -123,12 +126,14 @@ public class JSONLoader {
 				return Float.parseFloat(value);
 			case "INTEGER":
 				return (int) Float.parseFloat(value); // This will prevent possible trobbles
+			case "BOOLEAN":
+				return Boolean.parseBoolean(value);
 			case "COLOR": 
 				return Color.valueOf(value);
 			case "VECTOR2":
 				return parseVector2(value); // (x, y)
-			case "GAME_OBJECT":
-				throw new Exception("NOT IMPLEMENTED");
+			case "TEXTURE":
+				return app.Assets.texture(value); // (x, y)
 		}
 
 		return null;

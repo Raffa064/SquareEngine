@@ -4,6 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
 import com.raffa064.engine.core.App;
+import com.badlogic.gdx.InputProcessor;
+import java.util.ArrayList;
+import com.raffa064.engine.core.Component;
+import com.raffa064.engine.core.api.InputAPI.Event;
 
 public class InputAPI extends API {
 	public static final int ANY_KEY = -1;
@@ -374,9 +378,14 @@ public class InputAPI extends API {
 	
 	private static final int LAST = 0;
 	private static final int CURRENT = 1;
+
+	public static final int KEY_EVENT = 255;
+	public static final int TOUCH_EVENT = 255;
 	
 	public int[][] fingers = new int[10][2];
 	public int[][] keys = new int[255][2];
+	
+	private InputHandler inputHandler;
 	
 	public InputAPI(App app) {
 		super(app);
@@ -384,14 +393,28 @@ public class InputAPI extends API {
 
 	@Override
 	public APIState createState() {
-		return buildState();
+		Gdx.input.setInputProcessor(inputHandler = new InputHandler());
+		
+		return buildState(
+			inputHandler
+		);
 	}
-
 
 	@Override
 	public void useState(APIState values) {
+		inputHandler = values.next();
+		
+		Gdx.input.setInputProcessor(inputHandler);
+	}
+
+	public void subscribe(Component component) {
+		inputHandler.subscribe(component);
 	}
 	
+	public void unsubscribe(Component component) {
+		inputHandler.unsubscribe(component);
+	}
+
 	private Vector3 getTouchCoords(int cursor) {
 		Vector3 point = new Vector3(Gdx.input.getX(cursor), Gdx.graphics.getHeight() - Gdx.input.getY(cursor), 0);
 		return app.Scene.getCamera().unproject(point);
@@ -529,5 +552,118 @@ public class InputAPI extends API {
 	
 	public String keyName(int keycode) {
 		return Input.Keys.toString(keycode);
+	}
+	
+	public static class InputHandler implements InputProcessor {
+		private ArrayList<Component> componentList = new ArrayList<>();
+
+		public void subscribe(Component component) {
+			componentList.add(component);
+			// TODO: sort my priority
+		}
+		
+		public void unsubscribe(Component component) {
+			componentList.remove(component);
+		}
+		
+		public boolean emitEvent(Event event) {
+			for (Component component : componentList) {
+				boolean lockEvent = component.input(event);
+				
+				if (lockEvent) {
+					return true;
+				}
+			}
+			
+			return false;
+		}
+
+		public boolean emitKeyEvent(int keycode, boolean down, boolean up) {
+			InputAPI.Event event = new Event(KEY_EVENT, keycode, down, up);
+			return emitEvent(event);
+		}
+
+		public boolean emitKeyEvent(char key, boolean down, boolean up) {
+			InputAPI.Event event = new Event(KEY_EVENT, key, down, up);
+			return emitEvent(event);
+		}
+		
+		public boolean emitTouchEvent(int x, int y, int pointer, int button, boolean down, boolean drag, boolean up) {
+			InputAPI.Event event = new Event(TOUCH_EVENT, x, y, pointer, button, down, drag, up);
+			return emitEvent(event);
+		}
+		
+		@Override
+		public boolean keyDown(int keycode) {
+			return emitKeyEvent(keycode, true, false);
+		}
+
+		@Override
+		public boolean keyUp(int keycode) {
+			return emitKeyEvent(keycode, false, true);
+		}
+
+		@Override
+		public boolean keyTyped(char key) {
+			return emitKeyEvent(key, false, true);
+		}
+
+		@Override
+		public boolean touchDown(int x, int y, int pointer, int button) {
+			return emitTouchEvent(x, y, pointer, button, true, false, false);
+		}
+
+		@Override
+		public boolean touchUp(int x, int y, int pointer, int button) {
+			return emitTouchEvent(x, y, pointer, button, false, false, true);
+		}
+
+		@Override
+		public boolean touchDragged(int x, int y, int pointer) {
+			return emitTouchEvent(x, y, pointer, -1, false, true, false);
+		}
+
+		@Override
+		public boolean mouseMoved(int x, int y) {
+			return false; // Unecesary (at this moment)
+		}
+
+		@Override
+		public boolean scrolled(float x, float y) {
+			return false; // Unecesary (at this moment)
+		}
+	}
+	
+	public static class Event {
+		public int type;
+		public int keycode;
+		public char key;
+		public int x, y, pointer, button;
+		public boolean down, drag, up;
+
+		public Event(int type, int keycode, boolean down, boolean up) {
+			this.type = type;
+			this.keycode = keycode;
+			this.down = down;
+			this.up = up;
+		}
+		
+		public Event(int type, char key, boolean down, boolean up) {
+			this.type = type;
+			this.key = key;
+			this.down = down;
+			this.up = up;
+		}
+		
+		public Event(int type, int x, int y, int pointer, int button, boolean down, boolean drag, boolean up) {
+			this.type = type;
+			this.x = x;
+			this.y = y;
+			this.pointer = pointer;
+			this.button = button;
+			this.down = down;
+			this.drag = drag;
+			this.up = up;
+		}
 	}
 }

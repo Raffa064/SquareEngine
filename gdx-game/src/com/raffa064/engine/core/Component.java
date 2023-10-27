@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.util.ArrayList;
 import java.util.List;
+import com.raffa064.engine.core.api.InputAPI.Event;
 
 public abstract class Component {
 	public static final String COLOR = "COLOR";
@@ -11,8 +12,8 @@ public abstract class Component {
 	public static final String VECTOR2 = "VECTOR2";
 	public static final String FLOAT = "FLOAT";
 	public static final String INTEGER = "INTEGER";
+	public static final String BOOLEAN = "BOOLEAN";
 	public static final String TEXTURE = "TEXTURE";
-	public static final String GAME_OBJECT = "GAME_OBJECT";
 	
 	public String name;
 	public GameObject obj;
@@ -43,6 +44,8 @@ public abstract class Component {
 
 	public abstract void ready();
 
+	public abstract boolean input(Event event);
+	
 	public abstract void process(float delta);
 
 	public abstract void exit();

@@ -18,10 +18,14 @@ import java.util.regex.Pattern;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
+		test_transpiler();
+	}
+
+	private static void encrptTest() {
 		String source = readFile("/storage/emulated/0/AppProjects/SquareEngine/gdx-game/src/com/raffa064/engine/core/tests/teste.js");
-		
+
 		int key = (int) (Math.random() * Integer.MAX_VALUE);
-		
+
 		String encrypt = Encryptor.encrypt(source, key);
 		String decrypt = Encryptor.decrypt(encrypt, key);
 
