@@ -136,6 +136,5 @@ public class EditorActivity extends AndroidApplication {
 		window.width(500);
 		window.height(500);
 		window.addIntoView(rootLayout);
-		window.toggleWindow();
 	}
 }

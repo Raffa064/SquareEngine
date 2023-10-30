@@ -10,6 +10,8 @@ import com.raffa064.engine.core.Component;
 import com.raffa064.engine.core.api.InputAPI.Event;
 import java.util.Collections;
 import java.util.Comparator;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class InputAPI extends API {
 	public static final int ANY_KEY = -1;
@@ -422,7 +424,7 @@ public class InputAPI extends API {
 	}
 
 	private Vector3 getTouchCoords(int cursor) {
-		Vector3 point = new Vector3(Gdx.input.getX(cursor), Gdx.graphics.getHeight() - Gdx.input.getY(cursor), 0);
+		Vector3 point = new Vector3(Gdx.input.getX(cursor), Gdx.input.getY(cursor), 0);
 		return app.Scene.getCamera().unproject(point);
 	}
 	
@@ -679,6 +681,12 @@ public class InputAPI extends API {
 			this.down = down;
 			this.drag = drag;
 			this.up = up;
+		}
+
+		public Vector2 getWorldTouch(OrthographicCamera cam) {
+			Vector3 unproject = cam.unproject(new Vector3(x, y, 0));
+			Vector2 cursor = new Vector2(unproject.x, unproject.y);
+			return cursor;
 		}
 	}
 }

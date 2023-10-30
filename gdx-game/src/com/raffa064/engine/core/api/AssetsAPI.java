@@ -14,6 +14,7 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.badlogic.gdx.graphics.Pixmap;
 
 public class AssetsAPI extends API {
     private HashMap<String, Object> assets = new HashMap<>();
@@ -43,6 +44,29 @@ public class AssetsAPI extends API {
 		}
 		
 		return null;
+	}
+	
+	public Texture placeholder(Color color) {
+		return placeholder(color.toString());
+	}
+	
+	public Texture placeholder(String color) {
+		if (color.startsWith("#")) {
+			color = color.substring(1);
+		}
+		
+		if (assets.containsKey(color)) {
+			return (Texture) assets.get(color);
+		}
+		
+		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+		Color colorObj = Color.valueOf(color);
+		pixmap.drawPixel(0, 0, Color.rgba8888(colorObj));
+		Texture texture = new Texture(pixmap);
+		
+		assets.put(color, texture);
+		
+		return texture;
 	}
 
 	public Texture texture(String path) {
@@ -129,7 +153,7 @@ public class AssetsAPI extends API {
 			int randID = (int) Math.floor((Math.random() * Integer.MAX_VALUE));
 			assets.put(path + randID, font);
 			return font;
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
