@@ -3,6 +3,10 @@ package com.raffa064.engine;
 import java.util.Base64;
 import java.util.Random;
 
+/*
+	Used to encode/decode js files on exported apk
+*/
+
 public class Encryptor {   
     public static String encrypt(String inputString, int key) {
 		byte[] inputBytes = inputString.getBytes();

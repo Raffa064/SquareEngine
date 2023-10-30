@@ -132,7 +132,7 @@ public class ApkExporter {
 				if (projectInfo.icon.exists()) {
 					apk64.replaceAppIcon(projectInfo.icon);
 				}
-
+				
 				for (String permission : projectInfo.permissions) {
 					apk64.addPermission(permission);
 				}

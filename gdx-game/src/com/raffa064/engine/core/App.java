@@ -32,8 +32,10 @@ import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.raffa064.engine.Android;
 
 public class App {
+	public ProjectConfigs configs;
 	public FileHandle projectDir;
 	public boolean isAbsolutePath; // switch between absolute/internal project folder
 	public boolean autoTranspile = true;
@@ -44,6 +46,7 @@ public class App {
 	public float viewportHeight = 600;
 	public boolean keepWidth = true;
 
+	public Android android;
 	public Scene currentScene, nextScene;
 	public List<Native> apiInjectionList = new ArrayList<>();
 	public JSONLoader jsonLoader;
@@ -60,8 +63,14 @@ public class App {
 	public ComponentAPI Component;
 	public AssetsAPI Assets;
 	public LoggerAPI Logger;
+	
+	public App(Android android) {
+		this.android = android;
+	}
 
 	public void loadProject(ProjectConfigs configs) throws Exception {
+		this.configs = configs;
+		
 		projectDir = configs.getProjectDir();
 		isAbsolutePath = configs.isAbsolutePath;
 		autoTranspile = configs.autoTranspile;
@@ -188,6 +197,7 @@ public class App {
 		}
 
 		currentScene = scene;
+		android.setOrientation(currentScene.orientation);
 
 		scene.setApp(this);
 		scene.init();

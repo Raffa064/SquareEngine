@@ -24,7 +24,7 @@ public class old_EditorActivity extends AndroidApplication /*implements EditorIn
 	private AndroidJSI androidJSI;
 	
 	public String projectPath = "/storage/emulated/0/SquareEngine/project";
-	public DebugGame game;
+//	public DebugGame game;
 	public boolean isOpenedEditor;
 
 	private RelativeLayout rootLayout;

@@ -55,6 +55,11 @@ public class SceneAPI extends API {
 		return false;
 	}
 	
+	public void setOrientation(String orientation) {
+		app.android.setOrientation(orientation);
+		app.currentScene.orientation = orientation;
+	}
+	
 	public GameObject prefabObject(String path) {
 		try {
 			String json = app.Assets.readFile(path);

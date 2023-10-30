@@ -12,13 +12,15 @@ import org.mozilla.javascript.EvaluatorException;
 import static com.raffa064.engine.EditorCore.*;
 
 public class EditorGame extends Game implements Module, ErrorListener {
+	private Android android;
 	private EditorCore core;
 	private ProjectConfigs configs;
 	private App app;
 	private boolean reloadRequest;
 	private boolean isStable;
 
-	public EditorGame() throws Exception {
+	public EditorGame(Android android) throws Exception {
+		this.android = android;
 		core = EditorCore.instance();
 		core.add(this);
 	}
@@ -28,7 +30,7 @@ public class EditorGame extends Game implements Module, ErrorListener {
 			String projectPath = ((File) core.get(GET_PROJECT_DIR)).getAbsolutePath();
 			configs = new ProjectConfigs(projectPath);
 			
-			App newApp = new App();
+			App newApp = new App(android);
 			newApp.loadProject(configs);
 			newApp.scriptEngine.setErrorListener(this);
 

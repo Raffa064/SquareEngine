@@ -10,10 +10,14 @@ import com.raffa064.engine.core.SquareLib;
 import org.mozilla.javascript.EvaluatorException;
 
 public abstract class RuntimeGame extends Game {
+	private Android android;
 	private ProjectConfigs configs;
-	private EditorInterface android;
 	private App app;
 	private SquareLib lib = new SquareLib();
+
+	public RuntimeGame(Android android) {
+		this.android = android;
+	}
 
 	public void setConfigs(ProjectConfigs configs) {
 		this.configs = configs;
@@ -32,7 +36,7 @@ public abstract class RuntimeGame extends Game {
 	@Override
 	public void create() {
 		try {
-			app = new App();
+			app = new App(android);
 			app.loadProject(configs);
 			app.scriptEngine.setErrorListener(new ErrorListener() {
 				@Override

@@ -1,9 +1,7 @@
 package com.raffa064.engine;
 
 import android.content.Intent;
-import android.content.pm.PackageInstaller.Session;
-import android.net.Uri;
-import android.os.Build;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -11,23 +9,15 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import apk64.FileUtils;
 import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.raffa064.engine.exporter.ApkExporter;
-import com.raffa064.engine.exporter.ApkExporter.ExportListener;
-import com.raffa064.engine.exporter.ApkExporter.ExportProcess;
-import com.raffa064.engine.ui.FloatBubble;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import static com.raffa064.engine.EditorCore.*;
-import androidx.core.content.FileProvider;
-import com.raffa064.engine.core.ProjectConfigs;
 import com.raffa064.engine.modules.EditorModule;
+import com.raffa064.engine.ui.FloatBubble;
 import com.raffa064.engine.ui.FloatWindow;
+import java.io.File;
 
-public class EditorActivity extends AndroidApplication {
+import static com.raffa064.engine.EditorCore.*;
+
+public class EditorActivity extends AndroidApplication implements Android {
 	public static final int OPEN_CODE_EDITOR = 1;
 	
 	// Editor Runtime
@@ -87,6 +77,34 @@ public class EditorActivity extends AndroidApplication {
 		core.remove(editorModule);
 	}
 
+	@Override
+	public void setOrientation(final String orientationStr) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				int orientation;
+
+				switch (orientationStr.toLowerCase()) {
+					case "landscape":
+						orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+						break;
+					case "portrait":
+						orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+						break;
+					case "senorlandscape":
+						orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+						break;
+					default:
+						orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+						break;
+				}
+
+				Toast.makeText(EditorActivity.this, "ORIENTATIION: "+orientation, 1).show();
+				setRequestedOrientation(orientation);
+			}
+		});
+	}
+
  	private void setupDirs() {
 		File engineDir = new File(Environment.getExternalStorageDirectory(), "SquareEngine");
 		File projectDir = new File(engineDir, "project"); // TODO: change to target project name
@@ -102,7 +120,7 @@ public class EditorActivity extends AndroidApplication {
 
 	private void initializeGame() {
 		try {
-			editorGame = new EditorGame();
+			editorGame = new EditorGame(this);
 			View gameView = initializeForView(editorGame);
 			gameParent.addView(gameView);
 		} catch (Exception e) {
@@ -121,11 +139,12 @@ public class EditorActivity extends AndroidApplication {
 			}
 		});
 
-		bubble.addAction(EVENT_EXPORT_PROJECT, R.drawable.gmd_unarchive, "Export APK");
-		bubble.addAction(EVENT_INSTALL_PROJECT, R.drawable.gmd_adb, "Install APK");
+		bubble.addAction(EVENT_RELOAD_PROJECT, R.drawable.cmd_autorenew, "Reload");
 		bubble.addAction(EVENT_OPEN_CODE_EDITOR, R.drawable.gmd_code, "Code editor");
 		bubble.addAction(EVENT_OPEN_SCENE_TREE, R.drawable.gmd_photo_size_select_actual, "Scene Tree");
 		bubble.addAction(EVENT_OPEN_INSPECTOR, R.drawable.gmd_visibility, "Inspector");
+		bubble.addAction(EVENT_EXPORT_PROJECT, R.drawable.gmd_unarchive, "Export APK");
+		bubble.addAction(EVENT_INSTALL_PROJECT, R.drawable.gmd_adb, "Install APK");
 	}
 	
 	private void createFloatWindows() {

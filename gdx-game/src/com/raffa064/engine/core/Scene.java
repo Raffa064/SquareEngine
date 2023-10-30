@@ -16,6 +16,7 @@ public class Scene extends GameObject {
 	public SpriteBatch batch;
 	public ShapeRenderer shape;
 	public HashMap<API, APIState> states;
+	public String orientation;
 	
 	public Scene() {}
 	

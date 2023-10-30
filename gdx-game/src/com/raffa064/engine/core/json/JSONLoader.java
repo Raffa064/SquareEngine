@@ -187,7 +187,8 @@ public class JSONLoader {
 		scene.setApp(app);
 
 		scene.setName(JSONUtils.getString(sceneJSON, "name", "Unknown"));
-
+		scene.orientation = JSONUtils.getString(sceneJSON, "orientation", app.configs.defaultOrientaion);
+		
 		JSONArray children = JSONUtils.getJSONArray(sceneJSON, "children", new JSONArray());
 		for (int i = 0; i < children.length(); i++) {
 			JSONObject child = children.getJSONObject(i);

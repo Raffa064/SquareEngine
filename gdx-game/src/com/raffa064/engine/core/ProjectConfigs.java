@@ -23,6 +23,7 @@ public class ProjectConfigs {
 	public String versionName;
 	public String customKeytore;
 	public File icon;
+	public String defaultOrientaion;
 	public List<String> permissions = new ArrayList<>();
 
 	// Runtime configs
@@ -61,7 +62,8 @@ public class ProjectConfigs {
 			versionCode = JSONUtils.getInt(configs, "versionCode", 1);
 			versionName = JSONUtils.getString(configs, "versionName", "1.0");
 			icon = new File(projectPath, JSONUtils.getString(configs, "icon", ""));
-
+			defaultOrientaion = JSONUtils.getString(configs, "defaultOrientation", "sensor");
+			
 			if (configs.has("customKeystore")) {
 				customKeytore = configs.getString("customKeystore");
 			}

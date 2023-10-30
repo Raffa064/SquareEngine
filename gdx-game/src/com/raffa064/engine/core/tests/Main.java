@@ -195,7 +195,7 @@ public class Main {
 		gameObject2.add(trans2);
 		scene.addChild(gameObject2);
 
-		App app = new App();
+		App app = new App(null);
 		app.Component = new ComponentAPI(app);
 		JSONLoader sceneLoader = new JSONLoader(app);
 		String json = sceneLoader.asJson(scene);

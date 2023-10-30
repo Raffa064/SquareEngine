@@ -11,26 +11,27 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int float_window_background=0x7f020000;
-        public static final int gmd_adb=0x7f020001;
-        public static final int gmd_bug_report=0x7f020002;
-        public static final int gmd_check_circle=0x7f020003;
-        public static final int gmd_code=0x7f020004;
-        public static final int gmd_error=0x7f020005;
-        public static final int gmd_lock=0x7f020006;
-        public static final int gmd_notifications=0x7f020007;
-        public static final int gmd_photo_size_select_actual=0x7f020008;
-        public static final int gmd_play_arrow=0x7f020009;
-        public static final int gmd_play_for_work=0x7f02000a;
-        public static final int gmd_publish=0x7f02000b;
-        public static final int gmd_settings=0x7f02000c;
-        public static final int gmd_unarchive=0x7f02000d;
-        public static final int gmd_visibility=0x7f02000e;
-        public static final int gmd_visibility_off=0x7f02000f;
-        public static final int gmd_vpn_key=0x7f020010;
-        public static final int gmd_widgets=0x7f020011;
-        public static final int ic_launcher=0x7f020012;
-        public static final int square=0x7f020013;
+        public static final int cmd_autorenew=0x7f020000;
+        public static final int float_window_background=0x7f020001;
+        public static final int gmd_adb=0x7f020002;
+        public static final int gmd_bug_report=0x7f020003;
+        public static final int gmd_check_circle=0x7f020004;
+        public static final int gmd_code=0x7f020005;
+        public static final int gmd_error=0x7f020006;
+        public static final int gmd_lock=0x7f020007;
+        public static final int gmd_notifications=0x7f020008;
+        public static final int gmd_photo_size_select_actual=0x7f020009;
+        public static final int gmd_play_arrow=0x7f02000a;
+        public static final int gmd_play_for_work=0x7f02000b;
+        public static final int gmd_publish=0x7f02000c;
+        public static final int gmd_settings=0x7f02000d;
+        public static final int gmd_unarchive=0x7f02000e;
+        public static final int gmd_visibility=0x7f02000f;
+        public static final int gmd_visibility_off=0x7f020010;
+        public static final int gmd_vpn_key=0x7f020011;
+        public static final int gmd_widgets=0x7f020012;
+        public static final int ic_launcher=0x7f020013;
+        public static final int square=0x7f020014;
     }
     public static final class id {
         public static final int debug=0x7f060002;
