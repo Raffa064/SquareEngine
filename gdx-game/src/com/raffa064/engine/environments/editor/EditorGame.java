@@ -1,30 +1,37 @@
-package com.raffa064.engine;
+package com.raffa064.engine.environments.editor;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.ProjectConfigs;
 import com.raffa064.engine.core.ScriptEngine.ErrorListener;
+import com.raffa064.engine.environments.Android;
+import com.raffa064.engine.environments.BaseGame;
 import java.io.File;
 import org.mozilla.javascript.EvaluatorException;
 
-import static com.raffa064.engine.EditorCore.*;
+import static com.raffa064.engine.environments.editor.EditorCore.*;
 
-public class EditorGame extends Game implements Module, ErrorListener {
-	private Android android;
-	private EditorCore core;
-	private ProjectConfigs configs;
-	private App app;
+public class EditorGame extends BaseGame implements Module, ErrorListener {
 	private boolean reloadRequest;
 	private boolean isStable;
 
 	public EditorGame(Android android) throws Exception {
-		this.android = android;
+		super(android);
 		core = EditorCore.instance();
 		core.add(this);
 	}
+	
+	private void error(String message, Exception e) {
+		core.event(EVENT_ERROR, message, e);
+		isStable = false;
+	}
 
+	public boolean isStable() {
+		return app != null && isStable;
+	}
+
+	@Override
 	public void loadProject() {
 		try {
 			String projectPath = ((File) core.get(GET_PROJECT_DIR)).getAbsolutePath();
@@ -44,23 +51,10 @@ public class EditorGame extends Game implements Module, ErrorListener {
 			error("Error on load project: %s", e);
 		}
 	}
-
-	private void error(String message, Exception e) {
-		core.event(EVENT_ERROR, message, e);
-		isStable = false;
-	}
-
-	public boolean isStable() {
-		return app != null && isStable;
-	}
 	
-	public String trimLineSource(String lineSource, int offset) {
-		return lineSource.substring(Math.max(0, offset - 10), Math.min(lineSource.length(), offset + 10));
-	}
-
 	@Override
-	public void create() {
-		loadProject();
+	public void error(String message) {
+		error(message, null);
 	}
 
 	@Override
@@ -145,23 +139,5 @@ public class EditorGame extends Game implements Module, ErrorListener {
 				reloadRequest = true; 
 				break;
 		}
-	}
-	
-	@Override
-	public void warning(String message, String source, int lineNumber, String lineSource, int lineOffset) {
-		error(String.format("Script Error (%s:%d): %s\n%s", source, lineNumber, message, trimLineSource(lineSource, lineOffset)), null);
-	}
-
-	@Override
-	public void error(String message, String source, int lineNumber, String lineSource, int lineOffset) {
-		error(String.format("Script Error (%s:%d): %s\n%s", source, lineNumber, message, trimLineSource(lineSource, lineOffset)), null);
-	}
-
-	@Override
-	public EvaluatorException runtimeError(String message, String source, int lineNumber, String lineSource, int lineOffset) {
-		String error = String.format("Script Error (%s:%d): %s\n%s", source, lineNumber, message, trimLineSource(lineSource, lineOffset));
-		error(error, null);
-		
-		return new EvaluatorException(error);
 	}
 }

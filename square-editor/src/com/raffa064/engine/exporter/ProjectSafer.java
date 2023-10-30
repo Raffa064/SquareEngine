@@ -1,10 +1,10 @@
 package com.raffa064.engine.exporter;
 
 import apk64.FileUtils;
+import com.raffa064.engine.environments.runtime.Encryptor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import com.raffa064.engine.Encryptor;
 
 public class ProjectSafer {
 	public static void safe(File projectDir, int decodeKey) throws Exception {

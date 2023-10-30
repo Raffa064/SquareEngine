@@ -10,12 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.badlogic.gdx.backends.android.AndroidApplication;
+import com.raffa064.engine.environments.Android;
+import com.raffa064.engine.environments.editor.EditorCore;
+import com.raffa064.engine.environments.editor.EditorGame;
 import com.raffa064.engine.modules.EditorModule;
 import com.raffa064.engine.ui.FloatBubble;
 import com.raffa064.engine.ui.FloatWindow;
 import java.io.File;
 
-import static com.raffa064.engine.EditorCore.*;
+import static com.raffa064.engine.environments.editor.EditorCore.*;
 
 public class EditorActivity extends AndroidApplication implements Android {
 	public static final int OPEN_CODE_EDITOR = 1;

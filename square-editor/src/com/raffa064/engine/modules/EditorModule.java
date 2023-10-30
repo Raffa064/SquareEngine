@@ -14,7 +14,7 @@ import com.raffa064.engine.exporter.ApkExporter.ExportListener;
 import com.raffa064.engine.exporter.ApkExporter.ExportProcess;
 import java.io.File;
 
-import static com.raffa064.engine.EditorCore.*;
+import static com.raffa064.engine.environments.editor.EditorCore.*;
 
 public class EditorModule implements Module, ExportListener {
 	private EditorActivity activity;
