@@ -33,7 +33,7 @@ public abstract class RuntimeGame extends BaseGame {
 		try {
 			app.render(Gdx.graphics.getDeltaTime());
 		} catch(Exception e) {
-			
+			error("Render error: " + e.toString());
 		}
 	}
 
@@ -42,7 +42,7 @@ public abstract class RuntimeGame extends BaseGame {
 		try {
 			app.resize(width, height);
 		} catch(Exception e) {
-
+			error("Resize error: " + e.toString());
 		}
 	}
 
@@ -51,7 +51,7 @@ public abstract class RuntimeGame extends BaseGame {
 		try {
 			app.dispose();
 		} catch(Exception e) {
-			
+			error("Dispose error: " + e.toString());
 		}
 	}
 }

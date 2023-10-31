@@ -17,37 +17,30 @@ import com.square.template.R;
 public class MainActivity extends AndroidApplication implements Android {
 	public RuntimeGame game;
 
-	private RelativeLayout rootLayout;
-	private LinearLayout gameParent;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		getActionBar().hide();
-		setContentView(R.layout.activity_main);
 		
 		try {
-			rootLayout = findViewById(R.id.root_layout);
-			gameParent = findViewById(R.id.game_parent);
-
 			AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
 			
 			game = new RuntimeGame(this) {
 				@Override
 				public void error(final String message) {
 					runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
-							}
-						});
+						@Override
+						public void run() {
+							Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+						}
+					});
 				}
 			};
 
 			View gameView = initializeForView(game, cfg);
-			gameParent.addView(gameView);
+			setContentView(gameView);
 			
 			int decodeKey = getApplication().getPackageName().hashCode();
 			ProjectConfigs configs = new ProjectConfigs("project", false, false, true, decodeKey);
@@ -60,12 +53,12 @@ public class MainActivity extends AndroidApplication implements Android {
 	@Override
 	public void setOrientation(final String orientationName) {
 		runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					int orientationCode = getOrientationCode(orientationName);
-					setRequestedOrientation(orientationCode);
-				}
-			});
+			@Override
+			public void run() {
+				int orientationCode = getOrientationCode(orientationName);
+				setRequestedOrientation(orientationCode);
+			}
+		});
 	}
 
 	private int getOrientationCode(String orientationName) {
