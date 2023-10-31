@@ -116,7 +116,7 @@ public class EditorActivity extends AndroidApplication implements Android {
 			String key = (String) entry[0];
 			int value = (Integer) entry[1];
 
-			if (orientationName == key) {
+			if (orientationName.equals(key)) {
 				return value;
 			}
 		}
