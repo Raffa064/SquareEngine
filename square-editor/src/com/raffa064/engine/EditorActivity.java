@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+import apk64.Apk64;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.raffa064.engine.environments.Android;
 import com.raffa064.engine.environments.editor.EditorCore;
@@ -22,14 +22,14 @@ import static com.raffa064.engine.environments.editor.EditorCore.*;
 
 public class EditorActivity extends AndroidApplication implements Android {
 	public static final int OPEN_CODE_EDITOR = 1;
-	
+
 	// Editor Runtime
 	private EditorCore core;
 	private EditorGame editorGame;
-	
+
 	// Modules
 	private EditorModule editorModule;
-	
+
 	// Views
 	private RelativeLayout rootLayout;
 	private LinearLayout gameParent;
@@ -76,42 +76,55 @@ public class EditorActivity extends AndroidApplication implements Android {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+
 		core.remove(editorModule);
 	}
 
 	@Override
 	public void setOrientation(final String orientationStr) {
 		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				int orientation;
+				@Override
+				public void run() {
+					int orientation = Apk64.SCREEN_ORIENTATION_SENSOR;
 
-				switch (orientationStr.toLowerCase()) {
-					case "landscape":
-						orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-						break;
-					case "portrait":
-						orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-						break;
-					case "senorlandscape":
-						orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-						break;
-					default:
-						orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
-						break;
+					Object[][] map = {
+						{ "behind", Apk64.SCREEN_ORIENTATION_BEHIND },
+						{ "fullSensor", Apk64.SCREEN_ORIENTATION_FULL_SENSOR },
+						{ "fullUser", Apk64.SCREEN_ORIENTATION_FULL_USER },
+						{ "landscape", Apk64.SCREEN_ORIENTATION_LANDSCAPE },
+						{ "locked", Apk64.SCREEN_ORIENTATION_LOCKED },
+						{ "noSensor", Apk64.SCREEN_ORIENTATION_NOSENSOR },
+						{ "portrait", Apk64.SCREEN_ORIENTATION_PORTRAIT },
+						{ "reverseLandscape", Apk64.SCREEN_ORIENTATION_REVERSE_LANDSCAPE },
+						{ "reversePortrait", Apk64.SCREEN_ORIENTATION_REVERSE_PORTRAIT },
+						{ "sensor", Apk64.SCREEN_ORIENTATION_SENSOR },
+						{ "sensorLandscape", Apk64.SCREEN_ORIENTATION_SENSOR_LANDSCAPE },
+						{ "sensorPortrait", Apk64.SCREEN_ORIENTATION_SENSOR_PORTRAIT },
+						{ "unspecified", Apk64.SCREEN_ORIENTATION_UNSPECIFIED },
+						{ "user", Apk64.SCREEN_ORIENTATION_USER },
+						{ "userLandscape", Apk64.SCREEN_ORIENTATION_USER_LANDSCAPE },
+						{ "userPortrait", Apk64.SCREEN_ORIENTATION_USER_PORTRAIT },
+					};
+					
+					for (Object[] entry : map) {
+						String key = (String) entry[0];
+						int value = (Integer) entry[1];
+						
+						if (orientationStr == key) {
+							orientation = value;
+							break;
+						}
+					}
+
+					setRequestedOrientation(orientation);
 				}
-
-				Toast.makeText(EditorActivity.this, "ORIENTATIION: "+orientation, 1).show();
-				setRequestedOrientation(orientation);
-			}
-		});
+			});
 	}
 
  	private void setupDirs() {
 		File engineDir = new File(Environment.getExternalStorageDirectory(), "SquareEngine");
 		File projectDir = new File(engineDir, "project"); // TODO: change to target project name
-		
+
 		core.event(EVENT_CHANGE_ENGINE_DIR, engineDir);
 		core.event(EVENT_OPEN_PROJECT, projectDir); 
 	}
@@ -133,14 +146,14 @@ public class EditorActivity extends AndroidApplication implements Android {
 
 	private void createFloatBubble() {
 		FloatBubble bubble = new FloatBubble(this);
-		
+
 		bubble.addIntoView(rootLayout);
 		bubble.setOnBubbleActionListener(new FloatBubble.OnBubbleActionListener() {
-			@Override
-			public void onAction(int action) {
-				core.event(action);
-			}
-		});
+				@Override
+				public void onAction(int action) {
+					core.event(action);
+				}
+			});
 
 		bubble.addAction(EVENT_RELOAD_PROJECT, R.drawable.cmd_autorenew, "Reload");
 		bubble.addAction(EVENT_OPEN_CODE_EDITOR, R.drawable.gmd_code, "Code editor");
@@ -149,7 +162,7 @@ public class EditorActivity extends AndroidApplication implements Android {
 		bubble.addAction(EVENT_EXPORT_PROJECT, R.drawable.gmd_unarchive, "Export APK");
 		bubble.addAction(EVENT_INSTALL_PROJECT, R.drawable.gmd_adb, "Install APK");
 	}
-	
+
 	private void createFloatWindows() {
 		FloatWindow window = new FloatWindow(this);
 		window.load("file:///android_asset/scene-tree/scene-tree.html");

@@ -89,7 +89,7 @@ public class EditorModule implements Module, ExportListener {
 	}
 	
 	public void error(String message, Exception error) {
-		if (message != null) {
+		if (error != null) {
 			message = String.format(message, error.toString());
 		}
 
