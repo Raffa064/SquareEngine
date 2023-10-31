@@ -7,19 +7,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.raffa064.engine.core.components.Native;
 
+/*
+	Engine Objects class.
+	An object is a set of components and other objects, 
+	that can be a behavior, sprite, character, etc.
+*/
+
 public class GameObject {
 	protected App app;
+	protected boolean isReady;
+	
 	private String name = "Unknown";
 	private List<GameObject> children = new ArrayList<>();
 	private List<Component> componentList = new ArrayList<>();
-	public GameObject parent;
 	private boolean queuedFree;
 	private int zIndex = 0;
-	protected boolean isReady;
-	
 	private String tag;
 	private List<String> groups = new ArrayList<>();
 
+	public GameObject parent;
+	
 	public void setTag(String tag) {
 		this.tag = tag;
 	}

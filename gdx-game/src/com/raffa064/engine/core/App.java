@@ -31,6 +31,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+	Topmost core class. It manage, and store all engine features.
+*/
+
 public class App {
 	public ProjectConfigs configs;
 	public FileHandle projectDir;

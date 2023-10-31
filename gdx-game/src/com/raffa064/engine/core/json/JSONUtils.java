@@ -4,6 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/*
+	Provide methods to facilitate JSON usage
+*/
+
 public class JSONUtils {
     public static boolean getBoolean(JSONObject json, String name, boolean defaultValue) throws JSONException {
         if (json.has(name)) {

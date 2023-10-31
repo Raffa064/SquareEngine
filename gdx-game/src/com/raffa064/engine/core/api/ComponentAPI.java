@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+	API to create and manipulate components
+*/
+
 public class ComponentAPI extends API {
 	private HashMap<String, Class> nativeComponents = new HashMap<>();
 

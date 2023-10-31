@@ -4,6 +4,10 @@ import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
 import java.util.HashMap;
 
+/*
+	Provide tag feature for objects
+*/
+
 public class TagAPI extends API {
 	private HashMap<String, GameObject> tagMap;
 	

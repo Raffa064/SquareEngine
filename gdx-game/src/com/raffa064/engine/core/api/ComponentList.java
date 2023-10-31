@@ -1,4 +1,7 @@
 package com.raffa064.engine.core.api;
 
-public interface ComponentList {
-}
+/*
+	Interface used to import components (See in ComponentAPI.loadComponentList())
+*/
+
+public interface ComponentList {}

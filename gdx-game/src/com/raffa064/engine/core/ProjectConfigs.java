@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
+/*
+	Stores all project configurations (both for editor and runtime environments)
+*/
+
 public class ProjectConfigs {
 	// Load configs
 	public String projectPath;

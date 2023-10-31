@@ -12,6 +12,10 @@ import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
+/*
+	This class is responsible to compile scripts and generate it's objects (CompiledScript)
+*/
+
 public class ScriptEngine {
     public Context ctx;
 	public ScriptableObject globalScope;
@@ -254,6 +258,7 @@ public class ScriptEngine {
 		ctx.exit();
 	}
 	
+	// Compiled Script is an JS instance/obj created from a component
 	public static class CompiledScript {
 		public String name;
 		public Scriptable objectScope;

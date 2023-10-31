@@ -33,7 +33,8 @@ public class Encryptor {
 			}
 		}
 		
-		return Base64.getEncoder().encodeToString(output);
+		String encrypted = Base64.getEncoder().encodeToString(output);
+		return encrypted;
 	}
 	
 	public static String decrypt(String inputString, int key) {
@@ -62,7 +63,7 @@ public class Encryptor {
 			output[i] ^= D;
 		}
 
-		String string = new String(output);
-		return string;
+		String decrypted = new String(output);
+		return decrypted;
 	}
 }

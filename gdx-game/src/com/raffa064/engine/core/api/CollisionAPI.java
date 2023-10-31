@@ -11,6 +11,12 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.GameObject;
 
+/*
+	API to provide features related to physics.
+	
+	NOTE: Underdevelopmenst, it aren't completed, and it can be broken
+*/
+
 public class CollisionAPI extends API {
 	public World world;
 	public Box2DDebugRenderer b2ddr = new Box2DDebugRenderer();

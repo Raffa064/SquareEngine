@@ -8,6 +8,10 @@ import com.raffa064.engine.core.SquareLib;
 import com.raffa064.engine.environments.runtime.RuntimeGame;
 import org.mozilla.javascript.EvaluatorException;
 
+/*
+	Base class for runtime/editor environments
+*/
+
 public abstract class BaseGame extends Game implements ErrorListener {
 	protected Android android;
 	protected ProjectConfigs configs;

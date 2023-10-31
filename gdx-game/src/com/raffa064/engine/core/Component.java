@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import com.raffa064.engine.core.api.InputAPI.Event;
 
+/*
+	Base class for components (such as Native, and ScriptComponents)
+	A component is like an "behavior" that you can add into a object.
+*/
+
 public abstract class Component {
 	public static final String COLOR = "COLOR";
 	public static final String STRING = "STRING";

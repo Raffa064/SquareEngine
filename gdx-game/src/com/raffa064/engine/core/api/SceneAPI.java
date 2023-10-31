@@ -12,6 +12,10 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import java.util.ArrayList;
 
+/*
+	Used to manipulate Scene(s)
+*/
+
 public class SceneAPI extends API {
 	public HistoryList<Scene> history = new HistoryList<>(); // Populated by App.setScene()
 	

@@ -3,6 +3,10 @@ package com.raffa064.engine.core.api;
 import com.raffa064.engine.core.App;
 import java.util.List;
 
+/*
+	API to provide debug functions
+*/
+
 public class DebugAPI extends API {
 	public DebugAPI(App app) {
 		super(app);

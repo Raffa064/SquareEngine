@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
+/*
+	Object group API. Used to provide groups feature.
+*/
+
 public class GroupAPI extends API {
 	private HashMap<String, List<GameObject>> groupMap;
 

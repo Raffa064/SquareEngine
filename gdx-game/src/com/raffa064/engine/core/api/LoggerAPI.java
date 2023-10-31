@@ -2,6 +2,10 @@ package com.raffa064.engine.core.api;
 
 import com.raffa064.engine.core.App;
 
+/*
+	Used to make logs
+*/
+
 public class LoggerAPI extends API {
 	public LoggerAPI(App app) {
 		super(app);

@@ -12,6 +12,10 @@ import org.json.JSONObject;
 import com.badlogic.gdx.graphics.Texture;
 import org.mozilla.javascript.ast.ArrayLiteral;
 
+/*
+	Used to load Object/Scene json
+*/
+
 public class JSONLoader {
 	private App app;
 

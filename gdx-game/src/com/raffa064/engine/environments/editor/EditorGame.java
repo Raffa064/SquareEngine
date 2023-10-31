@@ -12,6 +12,10 @@ import org.mozilla.javascript.EvaluatorException;
 
 import static com.raffa064.engine.environments.editor.EditorCore.*;
 
+/*
+	This is the in-editor game. It provides some debug and edition stuff.
+*/
+
 public class EditorGame extends BaseGame implements Module, ErrorListener {
 	private boolean reloadRequest;
 	private boolean isStable;

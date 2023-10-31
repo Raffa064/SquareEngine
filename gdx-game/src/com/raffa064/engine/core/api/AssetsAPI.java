@@ -16,6 +16,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.badlogic.gdx.graphics.Pixmap;
 
+/*
+	API for use and manage assets 
+*/
+
 public class AssetsAPI extends API {
     private HashMap<String, Object> assets = new HashMap<>();
 

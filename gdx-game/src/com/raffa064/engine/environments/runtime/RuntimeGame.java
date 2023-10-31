@@ -9,6 +9,10 @@ import com.raffa064.engine.environments.Android;
 import com.raffa064.engine.environments.BaseGame;
 import org.mozilla.javascript.EvaluatorException;
 
+/*
+	This is the code that runs the game on exported APK files
+*/
+
 public abstract class RuntimeGame extends BaseGame {
 	public RuntimeGame(Android android) {
 		super(android);

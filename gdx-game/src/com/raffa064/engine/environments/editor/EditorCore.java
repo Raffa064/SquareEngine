@@ -3,6 +3,10 @@ package com.raffa064.engine.environments.editor;
 import java.util.List;
 import java.util.ArrayList;
 
+/*
+	Used to comunicate editor modules
+*/
+
 public class EditorCore {
 	private static EditorCore singleton;
 

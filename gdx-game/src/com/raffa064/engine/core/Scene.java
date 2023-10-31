@@ -10,6 +10,10 @@ import com.raffa064.engine.core.api.API;
 import com.raffa064.engine.core.api.API.APIState;
 import java.util.HashMap;
 
+/*
+	Runtime scene, it stores all scene objects and properties, like batch, shape, background and camera
+*/
+
 public class Scene extends GameObject {
 	public Color backgroundColor = Color.BLACK;
 	public OrthographicCamera camera;

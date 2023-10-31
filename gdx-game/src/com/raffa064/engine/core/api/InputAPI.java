@@ -13,6 +13,11 @@ import java.util.Comparator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+/*
+	InputAPI provides a lot of input features, like key and touch states.
+	It also provides input events to UIComponents
+*/
+
 public class InputAPI extends API {
 	public static final int ANY_KEY = -1;
 

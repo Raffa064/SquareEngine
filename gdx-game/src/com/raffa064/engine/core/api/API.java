@@ -4,9 +4,7 @@ import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.api.API.APIState;
 
 /*
-
-	APIState is a set of values that is individual for aech scene
-
+	An API is a class that provides a engine feature, like assets, graphics and logs
 */
 
 public abstract class API {
