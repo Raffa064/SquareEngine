@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import apk64.Apk64;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.raffa064.engine.environments.Android;
 import com.raffa064.engine.environments.editor.EditorCore;
@@ -21,6 +20,8 @@ import java.io.File;
 import static com.raffa064.engine.environments.editor.EditorCore.*;
 
 public class EditorActivity extends AndroidApplication implements Android {
+	public static final String EXTRA_PROJECT_DIR_NAME = "projectDirName";
+	
 	public static final int OPEN_CODE_EDITOR = 1;
 
 	// Editor Runtime
@@ -81,49 +82,59 @@ public class EditorActivity extends AndroidApplication implements Android {
 	}
 
 	@Override
-	public void setOrientation(final String orientationStr) {
+	public void setOrientation(final String orientationName) {
 		runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					int orientation = Apk64.SCREEN_ORIENTATION_SENSOR;
+			@Override
+			public void run() {
+				int orientationCode = getOrientationCode(orientationName);
+				setRequestedOrientation(orientationCode);
+			}
+		});
+	}
 
-					Object[][] map = {
-						{ "behind", Apk64.SCREEN_ORIENTATION_BEHIND },
-						{ "fullSensor", Apk64.SCREEN_ORIENTATION_FULL_SENSOR },
-						{ "fullUser", Apk64.SCREEN_ORIENTATION_FULL_USER },
-						{ "landscape", Apk64.SCREEN_ORIENTATION_LANDSCAPE },
-						{ "locked", Apk64.SCREEN_ORIENTATION_LOCKED },
-						{ "noSensor", Apk64.SCREEN_ORIENTATION_NOSENSOR },
-						{ "portrait", Apk64.SCREEN_ORIENTATION_PORTRAIT },
-						{ "reverseLandscape", Apk64.SCREEN_ORIENTATION_REVERSE_LANDSCAPE },
-						{ "reversePortrait", Apk64.SCREEN_ORIENTATION_REVERSE_PORTRAIT },
-						{ "sensor", Apk64.SCREEN_ORIENTATION_SENSOR },
-						{ "sensorLandscape", Apk64.SCREEN_ORIENTATION_SENSOR_LANDSCAPE },
-						{ "sensorPortrait", Apk64.SCREEN_ORIENTATION_SENSOR_PORTRAIT },
-						{ "unspecified", Apk64.SCREEN_ORIENTATION_UNSPECIFIED },
-						{ "user", Apk64.SCREEN_ORIENTATION_USER },
-						{ "userLandscape", Apk64.SCREEN_ORIENTATION_USER_LANDSCAPE },
-						{ "userPortrait", Apk64.SCREEN_ORIENTATION_USER_PORTRAIT },
-					};
-					
-					for (Object[] entry : map) {
-						String key = (String) entry[0];
-						int value = (Integer) entry[1];
-						
-						if (orientationStr == key) {
-							orientation = value;
-							break;
-						}
-					}
+	private int getOrientationCode(String orientationName) {
+		Object[][] map = {
+			{ "behind", ActivityInfo.SCREEN_ORIENTATION_BEHIND },
+			{ "fullSensor", ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR },
+			{ "fullUser", ActivityInfo.SCREEN_ORIENTATION_FULL_USER },
+			{ "landscape", ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE },
+			{ "locked", ActivityInfo.SCREEN_ORIENTATION_LOCKED },
+			{ "noSensor", ActivityInfo.SCREEN_ORIENTATION_NOSENSOR },
+			{ "portrait", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT },
+			{ "reverseLandscape", ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE },
+			{ "reversePortrait", ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT },
+			{ "sensor", ActivityInfo.SCREEN_ORIENTATION_SENSOR },
+			{ "sensorLandscape", ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE },
+			{ "sensorPortrait", ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT },
+			{ "unspecified", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED },
+			{ "user", ActivityInfo.SCREEN_ORIENTATION_USER },
+			{ "userLandscape", ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE },
+			{ "userPortrait", ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT },
+		};
 
-					setRequestedOrientation(orientation);
-				}
-			});
+		for (Object[] entry : map) {
+			String key = (String) entry[0];
+			int value = (Integer) entry[1];
+
+			if (orientationName == key) {
+				return value;
+			}
+		}
+		
+		return ActivityInfo.SCREEN_ORIENTATION_SENSOR;
 	}
 
  	private void setupDirs() {
 		File engineDir = new File(Environment.getExternalStorageDirectory(), "SquareEngine");
-		File projectDir = new File(engineDir, "project"); // TODO: change to target project name
+		
+		String projectDirName = "project";
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			projectDirName = extras.getString(EXTRA_PROJECT_DIR_NAME, "project");
+		}
+		
+		File projectDir = new File(engineDir, projectDirName);
 
 		core.event(EVENT_CHANGE_ENGINE_DIR, engineDir);
 		core.event(EVENT_OPEN_PROJECT, projectDir); 

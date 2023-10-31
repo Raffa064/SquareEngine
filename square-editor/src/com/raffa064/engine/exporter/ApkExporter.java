@@ -16,30 +16,72 @@ import com.raffa064.engine.core.json.JSONUtils;
 import com.raffa064.engine.core.ProjectConfigs;
 
 public class ApkExporter {
-	public int BUFFER_SIZE = 4096;
+	public final String TEMPLATE_FILE_NAME = "template.apk";
+	public final String OUTPUT_DIR_NAME = "output";
+	public final String KEYSTORE_FILE_NAME = "keystore";
+	public final int KEY_ALIAS = 0;
+	public final int KEY_PASSWORD = 1;
 	
-	public Activity activity;
-	public File buildDir;
-	public File templateFile;
-	public File outputDir;
-	public File keyStoreFile;
+	private int bufferSize = 4096;
+	
+	private Activity activity;
+	private File buildDir;
+	private File templateFile;
+	private File outputDir;
+	private File keyStoreFile;
 
 	public ApkExporter(Activity activity, File buildDir) {
 		this.activity = activity;
 		this.buildDir = buildDir;
 
-		templateFile = new File(buildDir, "template.apk");
-		outputDir = new File(buildDir, "output");
-		keyStoreFile = new File(buildDir, "keystore");
+		templateFile = new File(buildDir, TEMPLATE_FILE_NAME);
+		outputDir = new File(buildDir, OUTPUT_DIR_NAME);
+		keyStoreFile = new File(buildDir, KEYSTORE_FILE_NAME);
 	}
 
-	public void extractAsset(String assetPath, File targetFile) throws Exception {
+	public void setBufferSize(int bufferSize) {
+		this.bufferSize = bufferSize;
+	}
+
+	public int getBufferSize() {
+		return bufferSize;
+	}
+	
+	public ExportProcess exportProject(ProjectConfigs projectConfigs, File outputFile) throws Exception {
+		// Extract template and defult keystore from assets
+		extractAsset("template.apk", templateFile);
+		extractAsset("default.keystore", keyStoreFile);
+
+		String keyAlias = "alias";
+		String keyPassword = "android";
+
+		if (projectConfigs.customKeytore != null) {
+			String[] data = loadCustomKeystoreData(projectConfigs, keyAlias, keyPassword);
+			keyAlias = data[KEY_ALIAS];
+			keyPassword = data[KEY_PASSWORD];
+		}
+
+		// Setup Apk64 configurations
+		Apk64Configs configs = new Apk64Configs();
+		configs.setTemplateFile(templateFile);
+		configs.setOutputDir(outputDir);
+		configs.setKeyStoreFile(keyStoreFile, keyAlias, keyPassword);
+		configs.setOutputFile(outputFile);
+
+		// Create and start export process (in parallel)
+		ExportProcess process = createExportProcess(configs, projectConfigs);
+		process.start();
+
+		return process;
+	}
+
+	private void extractAsset(String assetPath, File targetFile) throws Exception {
 		InputStream is = activity.getAssets().open(assetPath);
 
 		FileOutputStream fos = new FileOutputStream(targetFile);
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 
-		byte[] buffer = new byte[BUFFER_SIZE];
+		byte[] buffer = new byte[bufferSize];
 		int length;
 		while ((length = is.read(buffer)) > 0) {
 			bos.write(buffer, 0, length);
@@ -54,119 +96,34 @@ public class ApkExporter {
 		is.close();
 	}
 
-	public ExportProcess exportProject(ProjectConfigs projectConfigs, File outputFile) throws Exception {
-		extractAsset("template.apk", templateFile);
-		extractAsset("default.keystore", keyStoreFile);
+	private String[] loadCustomKeystoreData(ProjectConfigs projectConfigs, String keyAlias, String keyPassword) throws Exception {
+		try {
+			File customKeystoreFile = new File(projectConfigs.customKeytore);
+			JSONObject keystoreJson = new JSONObject(FileUtils.readFileString(customKeystoreFile));
+
+			File keystore = new File(JSONUtils.getString(keystoreJson, "path", ""));
+
+			if (keystore.exists()) {
+				keyStoreFile = keystore; // Change from default to custom keystore
+				
+				keyAlias = keystoreJson.getString("alias");
+				keyPassword = keystoreJson.getString("password");
+			}
+		} catch (Exception e) {
+			throw new Exception("Invalid custom keystore");
+		}
 		
-		String keyAlias = "alias";
-		String keyPassword = "android";
-
-		if (projectConfigs.customKeytore != null) {
-			try {
-				File customKeystoreFile = new File(projectConfigs.customKeytore);
-				JSONObject keystoreJson = new JSONObject(FileUtils.readFileString(customKeystoreFile));
-
-				File keystore = new File(JSONUtils.getString(keystoreJson, "path", ""));
-
-				if (keystore.exists()) {
-					keyStoreFile = keystore;
-					keyAlias = keystoreJson.getString("alias");
-					keyPassword = keystoreJson.getString("password");
-				}
-			} catch (Exception e) {
-				throw new Exception("Invalid custom keystore");
-			}
-		}
-
-		Apk64Configs configs = new Apk64Configs();
-		configs.setTemplateFile(templateFile);
-		configs.setOutputDir(outputDir);
-		configs.setKeyStoreFile(keyStoreFile, keyAlias, keyPassword);
-		configs.setOutputFile(outputFile);
-
-		ExportProcess process = createExportProcess(configs, projectConfigs);
-		process.start();
-
-		return process;
+		String[] data = new String[2];
+		data[KEY_ALIAS] = keyAlias;
+		data[KEY_PASSWORD] = keyPassword;
+		
+		return data;
 	}
 
-	public ExportProcess createExportProcess(Apk64Configs configs, ProjectConfigs projectConfigs) {
-		Apk64 apk64 = new Apk64(BUFFER_SIZE);
-
+	private ExportProcess createExportProcess(Apk64Configs configs, ProjectConfigs projectConfigs) {
+		Apk64 apk64 = new Apk64(bufferSize);
 		ExportProcess process = new ExportProcess(activity, apk64, configs, projectConfigs, buildDir);
-
 		return process;
 	}
-
-	public static class ExportProcess extends Thread {
-		private Activity activity;
-		private Apk64 apk64;
-		private Apk64Configs configs;
-		private ProjectConfigs projectInfo;
-		private File buildDir;
-		private ExportListener listener;
-
-		public ExportProcess(Activity activity, Apk64 apk64, Apk64Configs configs, ProjectConfigs projectInfo, File buildDir) {
-			this.activity = activity;
-			this.apk64 = apk64;
-			this.configs = configs;
-			this.projectInfo = projectInfo;
-			this.buildDir = buildDir;
-		}
-
-		public void setListener(ExportListener listener) {
-			this.listener = listener;
-		}
-
-		@Override
-		public void run() {
-			try {
-				apk64.setConfigs(configs);
-				apk64.loadTemplate();
-
-				//Apply changes
-				apk64.changeAppName(projectInfo.name);
-				apk64.changePackage(projectInfo.packageName);
-				apk64.changeVersion(projectInfo.versionCode, projectInfo.versionName);
-
-				if (projectInfo.icon.exists()) {
-					apk64.replaceAppIcon(projectInfo.icon);
-				}
-				
-				for (String permission : projectInfo.permissions) {
-					apk64.addPermission(permission);
-				}
-
-				apk64.addToAssets(projectInfo.getProjectDirAsFile()); // Move project dir to assets folder
-				
-				File assets_projectDir = new File(apk64.getAssets(), "project");
-				ProjectOptimizer.optimizeScripts(assets_projectDir);
-				
-				int key = projectInfo.packageName.hashCode();
-				ProjectSafer.safe(assets_projectDir, key);
-				
-				apk64.finish();
-
-				FileUtils.deleteFiles(buildDir);
-
-				if (listener != null) {
-					listener.onSucess();
-				}
-			} catch (Error | Exception e) {
-				if (listener != null) {
-					listener.onError(e);
-				}
-			}
-			
-			if (listener != null) {
-				listener.onFinished();
-			}
-		}
-	}
-
-	public static interface ExportListener {
-		public void onSucess();
-		public void onError(Throwable error);
-		public void onFinished();
-	}
+	
 }

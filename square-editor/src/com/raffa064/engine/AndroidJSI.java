@@ -12,7 +12,15 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/*
+
+	TODO: Need to refactor
+
+*/
+
 public class AndroidJSI {
+	public static final String INTERFACE_NAME = "app";
+	
 	public WebView sceneTree, inspector;
 	public String projectFolder;
 

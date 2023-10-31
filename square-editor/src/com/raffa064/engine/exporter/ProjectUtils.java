@@ -17,4 +17,8 @@ public class ProjectUtils {
 			files.add(file);
 		}
 	}
+	
+	public static void scanJSFiles(File file, List<File> files) {
+		scanFiles(file, ".js", files);
+	}
 }

@@ -1,5 +1,9 @@
 package com.raffa064.engine;
 
+/*
+	TODO: Refactor, and restructure this class
+*/
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
@@ -10,11 +14,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.raffa064.engine.ui.MyCustomInputConnection;
+import android.widget.Toast;
 
 public class CodeActivity extends Activity {
-	private EditorApplication application;
-	private AndroidJSI androidJSI;	
+	public static final String EXTRA_PROJECT_PATH = "projectPath";
+	public static final int REQUEST_PERMISSIONS_CODE = 1;
 	
+	private AndroidJSI androidJSI;	
 	private WebView webView;
 
 	@Override
@@ -32,9 +38,6 @@ public class CodeActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-//		application = (EditorApplication) getApplication();
-//		androidJSI = application.getAndroidJSI();
 
 		androidJSI = new AndroidJSI();
 		checkPermissions();
@@ -47,7 +50,7 @@ public class CodeActivity extends Activity {
 		} else {
 			requestPermissions(
 				new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				123
+				REQUEST_PERMISSIONS_CODE
 			);
 		}
 	}
@@ -56,10 +59,13 @@ public class CodeActivity extends Activity {
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-		if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-			init();
-		} else {
-			finish();
+		if (requestCode == REQUEST_PERMISSIONS_CODE) {
+			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				init();
+			} else {
+				Toast.makeText(this, "Permissions required!", Toast.LENGTH_SHORT).show();
+				finish();
+			}
 		}
 	}
 
@@ -85,8 +91,9 @@ public class CodeActivity extends Activity {
 		webView.setWebViewClient(new WebViewClient());
 		webView.setAddStatesFromChildren(true);
 		
-		androidJSI.setFolderPath(getIntent().getExtras().getString("project"));
-		webView.addJavascriptInterface(androidJSI, "app");
+		String projectPath = getIntent().getExtras().getString(EXTRA_PROJECT_PATH);
+		androidJSI.setFolderPath(projectPath);
+		webView.addJavascriptInterface(androidJSI, AndroidJSI.INTERFACE_NAME);
 
 		webView.loadUrl("file:///android_asset/code-editor/editor.html");
 	}

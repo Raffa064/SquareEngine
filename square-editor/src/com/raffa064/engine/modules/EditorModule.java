@@ -10,17 +10,22 @@ import com.raffa064.engine.CodeActivity;
 import com.raffa064.engine.EditorActivity;
 import com.raffa064.engine.core.ProjectConfigs;
 import com.raffa064.engine.exporter.ApkExporter;
-import com.raffa064.engine.exporter.ApkExporter.ExportListener;
-import com.raffa064.engine.exporter.ApkExporter.ExportProcess;
+import com.raffa064.engine.exporter.ExportListener;
+import com.raffa064.engine.exporter.ExportProcess;
 import java.io.File;
 
 import static com.raffa064.engine.environments.editor.EditorCore.*;
 
 public class EditorModule implements Module, ExportListener {
+	private final String BUILD_DIRECTORY_NAME = ".build";
+	private final String APK_MIMETYPE = "application/vnd.android.package-archive";
+	private final String FILE_PROVIDER_AUTHORITY = "com.raffa064.engine.provider";
+	private final String EXPORTED_APK_NAME = "game.apk";
+
 	private EditorActivity activity;
 	
-	public File engineDir;
-	public File projectDir;
+	private File engineDir;
+	private File projectDir;
 	private boolean isExporting;
 	private boolean isInCodeEditor;
 
@@ -43,14 +48,7 @@ public class EditorModule implements Module, ExportListener {
 	public void onEvent(int event, Object[] params) {
 		switch (event) {
 			case EVENT_ERROR:
-				String message = (String) params[0];
-				Exception error = null;
-				
-				if (params[1] != null) {
-					error = (Exception) params[1];
-				}
-				
-				error(message, error);
+				error(params);
 				break;
 			case EVENT_CHANGE_ENGINE_DIR:
 				changeEngineDir((File) params[0]);
@@ -72,15 +70,15 @@ public class EditorModule implements Module, ExportListener {
 				break;
 		}
 	}
-	
+
 	@Override
 	public void onSucess() {
-		// Log sucess
+		// TODO: Log sucess
 	}
 	
 	@Override
 	public void onError(Throwable error) {
-		// Log error
+		// TODO: Log error
 	}
 
 	@Override
@@ -88,7 +86,19 @@ public class EditorModule implements Module, ExportListener {
 		isExporting = false;
 	}
 	
-	public void error(String message, Exception error) {
+	private void error(Object[] params) {
+		String message = (String) params[0];
+		Exception error = null;
+
+		if (params[1] != null) {
+			error = (Exception) params[1];
+		}
+
+		error(message, error);
+	}
+	
+	
+	private void error(String message, Exception error) {
 		if (error != null) {
 			message = String.format(message, error.toString());
 		}
@@ -119,16 +129,16 @@ public class EditorModule implements Module, ExportListener {
 		this.projectDir = projectDir;
 	}
 
-	public void exportProject() {
+	private void exportProject() {
 		if (isExporting) return;
 
 		try {
-			File buildDir = new File(engineDir, ".build");
-			File outputFile = new File(projectDir, "game.apk");
+			File buildDir = new File(engineDir, BUILD_DIRECTORY_NAME);
+			File outputFile = new File(projectDir, EXPORTED_APK_NAME);
 
-			buildDir.mkdir(); // create build directory
+			buildDir.mkdir(); // Create build directory
 
-			FileUtils.deleteFiles(outputFile); // delete old apk
+			FileUtils.deleteFiles(outputFile); // Delete old apk
 
 			ApkExporter exporter = new ApkExporter(activity, buildDir);
 			ProjectConfigs projectConfigs = (ProjectConfigs) core.get(GET_PROJECT_CONFIGS);
@@ -141,30 +151,40 @@ public class EditorModule implements Module, ExportListener {
 		}
 	}
 
-	public void installProject() {
+	private void installProject() {
 		// Code from (sajad abbasi): https://stackoverflow.com/questions/47964308/intent-to-install-apk-on-android-n
 
-		File apkFile = new File(projectDir, "game.apk");
+		File apkFile = new File(projectDir, EXPORTED_APK_NAME);
+		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-			Uri apkUri = FileProvider.getUriForFile(activity, "com.raffa064.engine.provider", apkFile);
-			Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-			intent.setData(apkUri);
-			intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-			activity.startActivity(intent);
+			installByFileProvider(apkFile);
 		} else {
-			Uri apkUri = Uri.fromFile(apkFile);
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			activity.startActivity(intent);
+			installByActionView(apkFile);
 		}
 	}
-	
-	public void openCodeActivity() {
+
+	private void installByFileProvider(File apkFile) {
+		Uri apkUri = FileProvider.getUriForFile(activity, FILE_PROVIDER_AUTHORITY, apkFile);
+		Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+		intent.setData(apkUri);
+		intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		activity.startActivity(intent);
+	}
+
+	private void installByActionView(File apkFile) {
+		Uri apkUri = Uri.fromFile(apkFile);
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setDataAndType(apkUri, APK_MIMETYPE);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		activity.startActivity(intent);
+	}
+
+	private void openCodeActivity() {
 		if (isInCodeEditor) return;
 		
+		isInCodeEditor = true;
 		Intent intent = new Intent(activity, CodeActivity.class);
-		intent.putExtra("project", projectDir.toString());		
+		intent.putExtra(CodeActivity.EXTRA_PROJECT_PATH, projectDir.toString());		
 		activity.startActivityForResult(intent, EditorActivity.OPEN_CODE_EDITOR);
 	}
 }

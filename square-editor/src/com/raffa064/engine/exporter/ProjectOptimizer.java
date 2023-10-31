@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ProjectOptimizer {
 	public static void optimizeScripts(File projectDir) throws Exception {
 		List<File> scriptFiles = new ArrayList<>();
-		ProjectUtils.scanFiles(projectDir, ".js", scriptFiles); // get script files
+		ProjectUtils.scanJSFiles(projectDir, scriptFiles); // Get script files
 		
 		ScriptEngine engine = new ScriptEngine();
 

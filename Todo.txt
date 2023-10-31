@@ -1,3 +1,5 @@
+• Refactor to AndroidJSI
+• Refactor to all classes in ui folder (square-editor)
 • Add screen orientation to apk export
 • Add collision event handlers
 • Make collider shape editable
