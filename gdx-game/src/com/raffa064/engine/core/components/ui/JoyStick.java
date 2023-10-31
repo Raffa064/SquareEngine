@@ -61,6 +61,22 @@ public class JoyStick extends SingleTouchRectUiBase {
 		return MathUtils.sinDeg(angle) * value;
 	}
 
+	public float angle() {
+		return angle;
+	}
+	
+	public float angleRad() {
+		return (angle / 180) * MathUtils.PI;
+	}
+
+	public float value() {
+		return value;
+	}
+	
+	public float value(float scalar) {
+		return value * scalar;
+	}
+
 	@Override
 	public void process(float delta) {
 		Rectangle rect = getRectangle();
