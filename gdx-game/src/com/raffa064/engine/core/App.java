@@ -105,6 +105,10 @@ public class App {
 
 	private void setupScriptEngine() {
 		scriptEngine.setAutoTranspile(autoTranspile);
+		
+		// Injecting built-in functions
+		String builtIn = Gdx.files.internal("built-in.js").readString();
+		scriptEngine.compile(builtIn);
 
 		// Injecting classes into script scope
 		scriptEngine
