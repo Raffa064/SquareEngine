@@ -35,22 +35,28 @@ public final class R {
     }
     public static final class id {
         public static final int debug=0x7f060002;
-        public static final int float_bubble_container=0x7f060005;
-        public static final int float_bubble_scroll_container=0x7f060004;
-        public static final int float_bubble_toggler=0x7f060003;
-        public static final int float_window_close=0x7f060008;
-        public static final int float_window_resizer_bottom=0x7f06000b;
-        public static final int float_window_resizer_right=0x7f06000a;
-        public static final int float_window_title=0x7f060007;
-        public static final int float_window_top_bar=0x7f060006;
-        public static final int float_window_webview=0x7f060009;
+        public static final int float_bubble_container=0x7f060007;
+        public static final int float_bubble_scroll_container=0x7f060006;
+        public static final int float_bubble_toggler=0x7f060005;
+        public static final int float_notification_container=0x7f060004;
+        public static final int float_notification_icon=0x7f060008;
+        public static final int float_notification_message=0x7f06000a;
+        public static final int float_notification_scroll_container=0x7f060003;
+        public static final int float_notification_title=0x7f060009;
+        public static final int float_window_close=0x7f06000d;
+        public static final int float_window_resizer_bottom=0x7f060010;
+        public static final int float_window_resizer_right=0x7f06000f;
+        public static final int float_window_title=0x7f06000c;
+        public static final int float_window_top_bar=0x7f06000b;
+        public static final int float_window_webview=0x7f06000e;
         public static final int game_parent=0x7f060001;
         public static final int root_layout=0x7f060000;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int float_bubble=0x7f030001;
-        public static final int float_window=0x7f030002;
+        public static final int float_notification=0x7f030002;
+        public static final int float_window=0x7f030003;
     }
     public static final class string {
         public static final int app_name=0x7f050000;

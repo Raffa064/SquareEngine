@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content">
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="10dp"
+		android:background="@drawable/float_window_background"
+		android:layout_marginBottom="10dp"
+		android:layout_marginRight="10dp">
+
+		<ImageView
+			android:src="@drawable/gmd_error"
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:adjustViewBounds="true"
+			android:id="@+id/float_notification_icon"/>
+
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:paddingLeft="10dp">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="#FFFFFF"
+				android:text="Title"
+				android:id="@+id/float_notification_title"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="#AAAAAA"
+				android:id="@+id/float_notification_message"
+				android:text="Message message message message message message message message message message message message message message message message message message message message message message message message message"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+</LinearLayout>
+

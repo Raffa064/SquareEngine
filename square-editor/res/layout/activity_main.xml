@@ -18,5 +18,20 @@
 		android:text=""
 		android:id="@+id/debug"/>
 
+	<ScrollView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:id="@+id/float_notification_scroll_container">
+
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="350dp"
+			android:layout_height="wrap_content"
+			android:id="@+id/float_notification_container"/>
+
+	</ScrollView>
+
 </RelativeLayout>
 

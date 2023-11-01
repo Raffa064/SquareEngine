@@ -18,6 +18,8 @@ import com.raffa064.engine.ui.FloatWindow;
 import java.io.File;
 
 import static com.raffa064.engine.environments.editor.EditorCore.*;
+import com.raffa064.engine.ui.FloatNotifications;
+import android.widget.ScrollView;
 
 public class EditorActivity extends AndroidApplication implements Android {
 	public static final String EXTRA_PROJECT_DIR_NAME = "projectDirName";
@@ -55,6 +57,10 @@ public class EditorActivity extends AndroidApplication implements Android {
 
 		createFloatBubble();
 		createFloatWindows();
+
+		ScrollView scrollContainer = findViewById(R.id.float_notification_scroll_container);
+		LinearLayout container = findViewById(R.id.float_notification_container);
+		FloatNotifications n = new FloatNotifications(this, scrollContainer, container);
 	}
 
 	@Override
