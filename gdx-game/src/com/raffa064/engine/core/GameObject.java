@@ -1,11 +1,11 @@
 package com.raffa064.engine.core;
 
+import com.raffa064.engine.core.components.Native;
 import com.raffa064.engine.core.components.Script;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.raffa064.engine.core.components.Native;
 
 /*
 	Engine Objects class.

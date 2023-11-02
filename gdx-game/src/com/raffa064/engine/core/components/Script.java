@@ -60,6 +60,10 @@ public class Script extends Component {
 		return null;
 	}
 	
+	public Object eval(String code) {
+		return app.scriptEngine.eval(script.objectScope, code);
+	}
+	
 	@Override
 	public void ready() {
 		call("ready");

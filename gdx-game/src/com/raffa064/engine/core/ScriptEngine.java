@@ -9,8 +9,10 @@ import java.util.regex.Pattern;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.WrapFactory;
 
 /*
 	This class is responsible to compile scripts and generate it's objects (CompiledScript)
@@ -38,6 +40,23 @@ public class ScriptEngine {
 		ctx = Context.enter();
 		ctx.setOptimizationLevel(-1);
 		globalScope = ctx.initStandardObjects();
+		
+		ctx.setWrapFactory(new WrapFactory() {
+			@Override
+			public Object wrap(Context ctx, Scriptable scope, Object obj, Class<?> staticType) {
+				Object outputObject = super.wrap(ctx, scope, obj, staticType);
+				
+				if (outputObject instanceof Scriptable) {
+					Scriptable scriptable = (Scriptable) outputObject;
+					
+					if (scriptable.getPrototype() == null) {
+						scriptable.setPrototype(new NativeObject()); // Allows to add custom props to java objects
+					}
+				}
+				
+				return outputObject;
+			}
+		});
 	}
 	
 	public void setErrorListener(ErrorListener errorListener) {
@@ -58,6 +77,14 @@ public class ScriptEngine {
 		}
 		
 		compile(script, "compiled.js");
+	}
+	
+	public Object eval(Scriptable scope, String code) {
+		return ctx.evaluateString(scope, code, "eval", 1, null);
+	}
+	
+	public Object eval(String code) {
+		return eval(globalScope, code);
 	}
 
 	public CompiledScript newObject(Scriptable scope, String name) {
