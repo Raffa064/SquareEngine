@@ -49,15 +49,15 @@ function tan(angleRad) {
 }
 
 function cosDeg(angleDeg) {
-	return Math.cos(toDegrees(angle))
+	return Math.cos(toRadians(angleDeg))
 }
 
 function sinDeg(angle) {
-	return Math.sin(toDegrees(angle))
+	return Math.sin(toRadians(angle))
 }
 
 function tanDeg(angle) {
-	return Math.tan(toDegrees(angle))
+	return Math.tan(toRadians(angle))
 }
 
 function limit(minValue, maxValue, x) {
