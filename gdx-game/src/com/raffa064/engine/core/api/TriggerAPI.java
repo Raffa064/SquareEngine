@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import org.mozilla.javascript.InterpretedFunction;
 
 public class TriggerAPI extends API {
 	public HashMap<String, List<Trigger>> layers;
@@ -47,26 +48,30 @@ public class TriggerAPI extends API {
 				a.collided = new ArrayList<>();
 				
 				for (String layerName : a.masks) {
-					List<Trigger> layer = entry.getValue();
+					List<Trigger> layer = layer(layerName);
 		
 					for (Trigger b : layer) {
 						if (a == b) continue;
 						
-						/* 
-							if collided
-								if lastCollided
-									colliding
-								else
-									entered
-							else
-								if lastCollided
-									exited
-						*/
+						if (a.overlap(b)) {
+							a.collided.add(b);
+							if (!lCollided.contains(b)) {
+								callListeners(a.enterListeners);
+							}
+						} else {
+							if (lCollided.contains(b)) {
+								callListeners(a.exitListeners);
+							}
+						}
 					}
 				}
 			}
 		}
 	}	
+	
+	private void callListeners(Object listeners) {
+		// TODO: call each function inside listeners
+	}
 
 	public void unsubscribe(Trigger trigger) {
 		for (String layerName : trigger.layers) {

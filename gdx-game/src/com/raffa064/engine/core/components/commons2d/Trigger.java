@@ -16,8 +16,8 @@ public abstract class Trigger extends Native {
 	public List<String> masks = new ArrayList<>();
 	public List<Trigger> collided = new ArrayList<>();
 
-	private List<InterpretedFunction> enterListeners = new ArrayList<>();
-	private List<InterpretedFunction> exitListeners = new ArrayList<>();
+	public List<InterpretedFunction> enterListeners = new ArrayList<>();
+	public List<InterpretedFunction> exitListeners = new ArrayList<>();
 	
 	public Trigger(String name) {
 		super(name);
@@ -45,7 +45,9 @@ public abstract class Trigger extends Native {
 	public void ready() {
 		Trigger.subscribe(this);
 	}
-
+	
+	public abstract boolean overlap(Trigger trigger);
+	
 	@Override
 	public abstract void process(float delta);
 
