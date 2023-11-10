@@ -2,11 +2,14 @@ package com.raffa064.engine.core.api;
 
 import com.raffa064.engine.core.App;
 import com.raffa064.engine.core.components.commons2d.Trigger;
+import com.raffa064.engine.core.components.commons2d.Trigger.ListenerFunction;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import org.mozilla.javascript.InterpretedFunction;
+import com.raffa064.engine.core.components.commons2d.Trigger.ListenerFunction;
+import org.mozilla.javascript.Scriptable;
 
 public class TriggerAPI extends API {
 	public HashMap<String, List<Trigger>> layers;
@@ -14,7 +17,7 @@ public class TriggerAPI extends API {
 	public TriggerAPI(App app) {
 		super(app);
 	}
-	
+
 	@Override
 	public API.APIState createState() {
 		return buildState(
@@ -69,7 +72,18 @@ public class TriggerAPI extends API {
 		}
 	}	
 	
-	private void callListeners(Object listeners) {
+	public ListenerFunction createListener(Scriptable obj, InterpretedFunction function) {
+		ListenerFunction listener = new ListenerFunction(
+			app.scriptEngine.ctx,
+			app.scriptEngine.globalScope,
+			obj, 
+			function
+		);
+		
+		return listener;
+	}
+	
+	private void callListeners(List<ListenerFunction> listeners) {
 		// TODO: call each function inside listeners
 	}
 
