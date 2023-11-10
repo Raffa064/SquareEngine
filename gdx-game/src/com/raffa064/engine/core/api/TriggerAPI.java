@@ -59,11 +59,11 @@ public class TriggerAPI extends API {
 						if (a.overlap(b)) {
 							a.collided.add(b);
 							if (!lCollided.contains(b)) {
-								callListeners(a.enterListeners);
+								callListeners(a.enterListeners, b);
 							}
 						} else {
 							if (lCollided.contains(b)) {
-								callListeners(a.exitListeners);
+								callListeners(a.exitListeners, b);
 							}
 						}
 					}
@@ -83,8 +83,10 @@ public class TriggerAPI extends API {
 		return listener;
 	}
 	
-	private void callListeners(List<ListenerFunction> listeners) {
-		// TODO: call each function inside listeners
+	private void callListeners(List<ListenerFunction> listeners, Trigger trigger) {
+		for (ListenerFunction listener : listeners) {
+			listener.on(trigger);
+		}
 	}
 
 	public void unsubscribe(Trigger trigger) {
