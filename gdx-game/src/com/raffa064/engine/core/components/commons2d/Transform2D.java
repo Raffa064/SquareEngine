@@ -4,6 +4,10 @@ import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.raffa064.engine.core.components.Native;
 
+/*
+	Add 2d transformations such as position, scale and rotation 
+*/
+
 public class Transform2D extends Native {
 	public final Vector2 pos = new Vector2();
 	public final Vector2 scale = new Vector2(1, 1);

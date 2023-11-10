@@ -21,9 +21,11 @@ import com.raffa064.engine.core.api.InputAPI;
 import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
+import com.raffa064.engine.core.api.TriggerAPI;
 import com.raffa064.engine.core.collision.Shape;
 import com.raffa064.engine.core.components.Native;
 import com.raffa064.engine.core.components.StandardComponents;
+import com.raffa064.engine.core.components.commons2d.Trigger;
 import com.raffa064.engine.core.json.JSONLoader;
 import com.raffa064.engine.environments.Android;
 import com.raffa064.engine.environments.runtime.Encryptor;
@@ -49,12 +51,12 @@ public class App {
 
 	public Android android;
 	public Scene currentScene, nextScene;
-	public List<Native> apiInjectionList = new ArrayList<>();
 	public JSONLoader jsonLoader;
 	public HashMap<String, String> sceneFiles = new HashMap<>();
 	public ScriptEngine scriptEngine;
 
 	public List<API> apiList = new ArrayList<>();
+	public TriggerAPI Trigger;
 	public DebugAPI Debug;
 	public InputAPI Input;
 	public CollisionAPI Collision;
@@ -87,6 +89,7 @@ public class App {
 		apiList.clear();
 
 		// APIs
+		Trigger = new TriggerAPI(this);
 		Debug = new DebugAPI(this);
 		Input = new InputAPI(this);
 		Collision = new CollisionAPI(this);
@@ -219,6 +222,7 @@ public class App {
 	}
 
 	public void injectDependencies(Native component) {
+		component.Trigger = Trigger;
 		component.Debug = Debug;
 		component.Input = Input;
 		component.Collision = Collision;

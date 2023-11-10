@@ -12,11 +12,10 @@ import com.raffa064.engine.core.api.InputAPI;
 import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import com.raffa064.engine.core.api.InputAPI.Event;
+import com.raffa064.engine.core.api.TriggerAPI;
 
 public abstract class Native extends Component  {
+	public TriggerAPI Trigger;
 	public DebugAPI Debug;
 	public InputAPI Input;
 	public CollisionAPI Collision;
@@ -28,10 +27,6 @@ public abstract class Native extends Component  {
 	public LoggerAPI Logger;
 	public SpriteBatch batch;
 	public ShapeRenderer shape;
-	
-	public Native() {
-		super("Unknown");
-	}
 	
 	public Native(String name) {
 		super(name);
