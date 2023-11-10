@@ -27,7 +27,7 @@ public class RectTrigger extends Trigger {
 		super.ready();
 	}
 	
-	public Rectangle getTransformdRect() {
+	public Rectangle getTransformedRect() {
 		Matrix3 transformed = transform.transformed();
 		Vector2 pos = transformed.getTranslation(new Vector2());
 		Vector2 scale = transformed.getScale(new Vector2());
@@ -44,7 +44,7 @@ public class RectTrigger extends Trigger {
 	public void process(float delta) {
 		if (Input.keyPressed(Input.D)) {
 			Texture dbg = Assets.placeholder(collided.isEmpty()? Color.BLUE : Color.RED);
-			Rectangle rect = getTransformdRect();
+			Rectangle rect = getTransformedRect();
 			batch.draw(dbg, rect.x, rect.y, rect.width, rect.height);
 		}
 	}
@@ -54,8 +54,8 @@ public class RectTrigger extends Trigger {
 		if (trigger instanceof RectTrigger) {
 			RectTrigger rTrigger = (RectTrigger) trigger;
 			
-			Rectangle a = getTransformdRect();
-			Rectangle b = rTrigger.getTransformdRect();
+			Rectangle a = getTransformedRect();
+			Rectangle b = rTrigger.getTransformedRect();
 			
 			return a.overlaps(b);
 		}
