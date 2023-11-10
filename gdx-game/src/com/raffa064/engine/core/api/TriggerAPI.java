@@ -31,7 +31,14 @@ public class TriggerAPI extends API {
 	}
 	
 	public List<Trigger> layer(String name) {
-		return layers.getOrDefault(name, new ArrayList<Trigger>());
+		List<Trigger> layer = layers.getOrDefault(name, null);
+		
+		if (layer == null) {
+			layer = new ArrayList<Trigger>();
+			layers.put(name, layer);
+		}
+		
+		return layer;
 	}
 	
 	public void subscribe(Trigger trigger) {
@@ -72,12 +79,11 @@ public class TriggerAPI extends API {
 		}
 	}	
 	
-	public ListenerFunction createListener(Scriptable obj, InterpretedFunction function) {
+	public ListenerFunction createListener(Scriptable obj, String functionName) {
 		ListenerFunction listener = new ListenerFunction(
 			app.scriptEngine.ctx,
-			app.scriptEngine.globalScope,
 			obj, 
-			function
+			functionName
 		);
 		
 		return listener;

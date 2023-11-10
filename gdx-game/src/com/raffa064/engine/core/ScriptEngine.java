@@ -21,7 +21,6 @@ import org.mozilla.javascript.WrapFactory;
 public class ScriptEngine {
     public Context ctx;
 	public ScriptableObject globalScope;
-	public int globalConstStringId = 0;
 	public boolean autoTranspile = true;
 
 	public ScriptEngine() {

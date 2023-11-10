@@ -33,8 +33,8 @@ public abstract class Trigger extends Native {
 		throw new Error("Unknown trigger event: '" + event + "'");
 	}
 	
-	public void subscribe(String event, Scriptable obj, InterpretedFunction function) {
-		ListenerFunction listener = Trigger.createListener(obj, function);
+	public void subscribe(String event, Scriptable obj, String functionName) {
+		ListenerFunction listener = Trigger.createListener(obj, functionName);
 		
 		subscribe(event, listener);
 	}
@@ -48,8 +48,8 @@ public abstract class Trigger extends Native {
 		throw new Error("Unknown trigger event: '" + event + "'");
 	}
 	
-	public void unsubscribe(String event, Scriptable obj, InterpretedFunction function) {
-		ListenerFunction listener = Trigger.createListener(obj, function);
+	public void unsubscribe(String event, Scriptable obj, String functionName) {
+		ListenerFunction listener = Trigger.createListener(obj, functionName);
 
 		unsubscribe(event, listener);
 	}
@@ -62,7 +62,7 @@ public abstract class Trigger extends Native {
 	public abstract boolean overlap(Trigger trigger);
 	
 	@Override
-	public abstract void process(float delta);
+	public void process(float delta) {}
 
 	@Override
 	public void exit() {
@@ -70,22 +70,20 @@ public abstract class Trigger extends Native {
 	}
 	
 	public static class ListenerFunction {
-		private Context ctx;
-		private ScriptableObject scope;
-		private Scriptable obj;
-		private InterpretedFunction function;
+		protected Context ctx;
+		protected Scriptable obj;
+		protected String functionName;
 		
 		public ListenerFunction() {}
 
-		public ListenerFunction(Context ctx, ScriptableObject scope, Scriptable obj, InterpretedFunction function) {
+		public ListenerFunction(Context ctx, Scriptable obj, String functionName) {
 			this.ctx = ctx;
-			this.scope = scope;
 			this.obj = obj;
-			this.function = function;
+			this.functionName = functionName;
 		}
 		
 		public void on(Trigger trigger) {
-			function.call(ctx, scope, obj, new Object[]{ trigger });
+			ScriptableObject.callMethod(ctx, obj, functionName, new Object[] { trigger });
 		}
 
 		@Override
@@ -93,8 +91,8 @@ public abstract class Trigger extends Native {
 			if (obj instanceof ListenerFunction) {
 				ListenerFunction lf = (ListenerFunction) obj;
 				
-				if (function != null) {
-					if (lf.function == function) {
+				if (functionName != null) {
+					if (lf.functionName == functionName) {
 						return true; // Js mode
 					}
 				} else {

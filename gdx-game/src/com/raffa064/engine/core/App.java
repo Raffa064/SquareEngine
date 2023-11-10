@@ -244,10 +244,10 @@ public class App {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		Input.update();
-		
+		Trigger.update();
+
 		currentScene.process(delta);
 		
-		Trigger.update();
 		Collision.stepPhysics(delta);
 		Collision.renderDebug();
 
