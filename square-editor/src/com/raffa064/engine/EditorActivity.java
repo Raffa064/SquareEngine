@@ -20,6 +20,7 @@ import java.io.File;
 import static com.raffa064.engine.environments.editor.EditorCore.*;
 import com.raffa064.engine.ui.FloatNotifications;
 import android.widget.ScrollView;
+import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 public class EditorActivity extends AndroidApplication implements Android {
 	public static final String EXTRA_PROJECT_DIR_NAME = "projectDirName";
