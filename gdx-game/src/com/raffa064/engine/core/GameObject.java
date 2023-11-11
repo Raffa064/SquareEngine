@@ -19,6 +19,8 @@ public class GameObject {
 	
 	private String name = "Unknown";
 	private List<GameObject> children = new ArrayList<>();
+	private List<GameObject> childrenToAdd = new ArrayList<>();
+	private List<GameObject> childrenToSort = new ArrayList<>();
 	private List<Component> componentList = new ArrayList<>();
 	private boolean queuedFree;
 	private int zIndex = 0;
@@ -39,7 +41,7 @@ public class GameObject {
 		this.zIndex = zIndex;
 		
 		if (parent != null) {
-			parent.changeIndex(this);
+			parent.requestSortIndexes(this);
 		}
 	}
 
@@ -47,9 +49,8 @@ public class GameObject {
 		return zIndex;
 	}
 	
-	public void changeIndex(GameObject child) {
-		children.remove(child);
-		addChildByIndex(child);
+	public void requestSortIndexes(GameObject child) {
+		childrenToSort.add(child);
 	}
 	
 	private void addChildByIndex(GameObject child) {
@@ -127,11 +128,15 @@ public class GameObject {
 	}
 
 	public void addChild(GameObject child) {
+		childrenToAdd.add(child);
+	}
+	
+	private void forceAddChild(GameObject child) {
 		checkName(child);
 		addChildByIndex(child);
 		child.setApp(app);
 		child.parent = this;
-		
+
 		if (isReady) child.ready();
 	}
 
@@ -191,6 +196,20 @@ public class GameObject {
 	}
 
 	public void process(float delta) {
+		for (int i = 0; i < childrenToAdd.size(); i++) {
+			GameObject child = childrenToAdd.get(i);
+			forceAddChild(child);
+		}
+		
+		childrenToAdd.clear();
+		
+		for (GameObject child : childrenToSort) {
+			children.remove(child);
+			addChildByIndex(child);
+		}
+		
+		childrenToSort.clear();
+		
 		for (int i = 0; i < componentList.size(); i++) {
 			Component component = componentList.get(i);
 			component.process(delta);
