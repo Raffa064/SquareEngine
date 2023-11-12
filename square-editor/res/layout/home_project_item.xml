@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="50dp"
+	android:gravity="center_vertical">
+
+	<ImageView
+		android:src="@android:drawable/ic_delete"
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:layout_marginLeft="10dp"
+		android:id="@+id/project_item_icon"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Medium Text"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_marginLeft="10dp"
+		android:id="@+id/project_item_name"/>
+
+</LinearLayout>
+

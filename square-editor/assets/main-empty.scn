@@ -1,0 +1,5 @@
+{
+	name: "MainScene",
+    orientation: 'sensor',
+    children: []
+}

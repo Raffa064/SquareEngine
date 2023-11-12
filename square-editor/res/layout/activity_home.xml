@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:background="#FF222222">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@drawable/bg_portrait"
+		android:alpha="0.4">
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center">
+
+		<ImageView
+			android:src="@drawable/banner"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:maxHeight="100dp"
+			android:layout_gravity="center_horizontal"
+			android:adjustViewBounds="true"/>
+
+		<include
+			layout="@layout/activity_home_container"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:id="@+id/home_create_project_dialog_container"
+		android:gravity="center"
+		android:background="#6A000000"
+		android:padding="10dp"
+		android:visibility="gone">
+
+		<include
+			layout="@layout/activity_home_create_project_dialog"/>
+
+	</LinearLayout>
+
+</RelativeLayout>
+

@@ -1,0 +1,29 @@
+private JSONObject createDefaultMainScene() throws JSONException {
+					JSONObject mainLoaderComponent = new JSONObject();
+					mainLoaderComponent.put("name", "MainLoader");
+					mainLoaderComponent.put("exportedProps", new JSONArray());
+
+					JSONArray components = new JSONArray();
+					components.put(mainLoaderComponent);
+
+					JSONObject mainLoaderObject = new JSONObject();
+					mainLoaderObject.put("name", "MainLoader");
+					mainLoaderObject.put("components", components);
+					mainLoaderObject.put("children", new JSONArray());
+
+					JSONArray children = new JSONArray();
+					children.put(mainLoaderObject);
+
+					JSONObject json = createScene(children);
+
+					return json;
+				}
+
+				private JSONObject createScene(JSONArray children) throws JSONException {
+					JSONObject json = new JSONObject();
+					json.put("name", "Main");
+					json.put("orientation", "sensor");
+					json.put("children", children);
+
+					return json;
+				}

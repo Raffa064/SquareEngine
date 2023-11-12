@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#FF222222">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@drawable/bg_landscape"
+		android:alpha="0.4">
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<ImageView
+			android:src="@drawable/banner"
+			android:layout_width="0dp"
+			android:layout_height="100dp"
+			android:adjustViewBounds="true"
+			android:layout_weight=".5"
+			android:layout_gravity="center_vertical"/>
+
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1.0">
+
+			<include
+				layout="@layout/activity_home_container"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_centerInParent="true"
+		android:id="@+id/home_create_project_dialog_container"
+		android:gravity="center"
+		android:background="#6A000000"
+		android:padding="10dp"
+		android:visibility="gone">
+
+		<include
+			layout="@layout/activity_home_create_project_dialog"/>
+
+	</LinearLayout>
+
+</RelativeLayout>
+

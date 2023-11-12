@@ -1,0 +1,16 @@
+{
+	name: "MainScene",
+    orientation: 'sensor',
+	children: [
+		{
+      		name: 'MainLoader',
+        	components: [
+        		{
+            		name: 'MainLoader',
+		            exportedProps: []
+        		} 
+        	],
+        	children: []
+      	}
+    ]
+}

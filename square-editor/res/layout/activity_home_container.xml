@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content">
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:background="@drawable/float_window_background"
+		android:layout_marginTop="10dp">
+
+		<Button
+			android:layout_width="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_height="wrap_content"
+			android:text="Create"
+			android:layout_weight="1.0"
+			android:textColor="#FFFFFFFF"
+			android:id="@+id/home_create_project_button"/>
+
+		<Button
+			android:layout_width="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_height="wrap_content"
+			android:text="Import"
+			android:layout_weight="1.0"
+			android:textColor="#FFFFFFFF"
+			android:id="@+id/home_import_project_button"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_margin="10dp"
+		android:background="@drawable/float_window_background">
+
+		<ListView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:divider="#00000000"
+			android:id="@+id/home_project_list"
+			android:padding="10dp"
+			android:dividerHeight="10dp"/>
+
+	</LinearLayout>
+
+</LinearLayout>
+

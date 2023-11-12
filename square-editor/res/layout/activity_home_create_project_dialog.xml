@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:fillViewport="true">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@drawable/float_window_background"
+		android:padding="10dp"
+		android:layout_weight="1.0">
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Project name:"/>
+
+		<EditText
+			android:layout_width="wrap_content"
+			android:ems="10"
+			android:layout_height="wrap_content"
+			android:hint="Ex: MyGame"
+			android:id="@+id/create_project_dialog_name"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Package name:"/>
+
+		<EditText
+			android:layout_width="wrap_content"
+			android:inputType="textMultiLine"
+			android:layout_height="wrap_content"
+			android:ems="10"
+			android:hint="Ex: com.package.name"
+			android:id="@+id/create_project_dialog_package"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Screen resolution"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center">
+
+			<EditText
+				android:layout_width="wrap_content"
+				android:inputType="number"
+				android:layout_height="wrap_content"
+				android:layout_weight="1.0"
+				android:text="1280"
+				android:id="@+id/create_project_dialog_width"
+				android:hint="Ex: 1280"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="x"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:gravity="center"/>
+
+			<EditText
+				android:layout_width="wrap_content"
+				android:inputType="number"
+				android:layout_height="wrap_content"
+				android:layout_weight="1.0"
+				android:text="720"
+				android:id="@+id/create_project_dialog_height"
+				android:hint="Ex: 720"/>
+
+		</LinearLayout>
+
+		<Switch
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Keep width (aspect ratio)"
+			android:id="@+id/create_project_dialog_keep_width"/>
+
+		<Switch
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Default project structure"
+			android:id="@+id/create_project_dialog_default_structure"/>
+
+		<Button
+			android:layout_width="match_parent"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_height="wrap_content"
+			android:text="Apply changes"
+			android:id="@+id/create_project_dialog_apply"/>
+
+	</LinearLayout>
+
+</ScrollView>
+
