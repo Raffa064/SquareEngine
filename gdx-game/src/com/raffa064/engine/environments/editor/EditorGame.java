@@ -19,6 +19,7 @@ import static com.raffa064.engine.environments.editor.EditorCore.*;
 public class EditorGame extends BaseGame implements Module, ErrorListener {
 	private boolean reloadRequest;
 	private boolean isStable;
+	private int turbo;
 
 	public EditorGame(Android android) throws Exception {
 		super(android);
@@ -78,7 +79,10 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 
 		if (isStable()) {
 			try {
-				app.render(Gdx.graphics.getDeltaTime());
+				int fpsMultiplier = turbo + 1;
+				for (int i = 0; i < fpsMultiplier; i++) {
+					app.render(Gdx.graphics.getDeltaTime()/fpsMultiplier);
+				}
 			} catch (Exception e) {
 				error("Error on render frame: %s", e);
 			}
@@ -141,6 +145,9 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 		switch (event) {
 			case EVENT_RELOAD_PROJECT: 
 				reloadRequest = true; 
+				break;
+			case EVENT_TOGGLE_TURBO:
+				turbo = ++turbo % 10;
 				break;
 		}
 	}

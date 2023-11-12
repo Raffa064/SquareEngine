@@ -172,7 +172,8 @@ public class EditorActivity extends AndroidApplication implements Android {
 					core.event(action);
 				}
 			});
-
+			
+		bubble.addAction(EVENT_TOGGLE_TURBO, R.drawable.gmd_play_arrow, "Turbo");
 		bubble.addAction(EVENT_RELOAD_PROJECT, R.drawable.cmd_autorenew, "Reload");
 		bubble.addAction(EVENT_OPEN_CODE_EDITOR, R.drawable.gmd_code, "Code editor");
 		bubble.addAction(EVENT_OPEN_SCENE_TREE, R.drawable.gmd_photo_size_select_actual, "Scene Tree");
