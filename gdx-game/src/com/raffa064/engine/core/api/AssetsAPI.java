@@ -17,8 +17,8 @@ import org.json.JSONObject;
 import com.badlogic.gdx.graphics.Pixmap;
 
 /*
-	API for use and manage assets 
-*/
+ API for use and manage assets 
+ */
 
 public class AssetsAPI extends API {
     private HashMap<String, Object> assets = new HashMap<>();
@@ -36,41 +36,84 @@ public class AssetsAPI extends API {
 	@Override
 	public void useState(APIState values) {
 	}
-	
+
 	public String nameOf(Object asset) {
 		for (Map.Entry<String, Object> entry : assets.entrySet()) {
 			String key = entry.getKey();
 			Object value = entry.getValue();
-			
+
 			if (asset == value) {
 				return key;
 			}
 		}
-		
+
 		return null;
 	}
-	
-	public Texture placeholder(Color color) {
-		return placeholder(color.toString());
-	}
-	
+
 	public Texture placeholder(String color) {
 		if (color.startsWith("#")) {
 			color = color.substring(1);
 		}
 		
-		if (assets.containsKey(color)) {
-			return (Texture) assets.get(color);
+		String name = "pixel-" + color; // pixel-rrggbbaa
+
+		if (assets.containsKey(name)) {
+			return (Texture) assets.get(name);
 		}
-		
+
 		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 		Color colorObj = Color.valueOf(color);
 		pixmap.drawPixel(0, 0, Color.rgba8888(colorObj));
 		Texture texture = new Texture(pixmap);
-		
-		assets.put(color, texture);
-		
+		pixmap.dispose();
+
+		assets.put(name, texture);
+
 		return texture;
+	}
+	
+	public Texture placeholder(Color color) {
+		return placeholder(color.toString());
+	}
+
+	public Texture placeholder(String color, int width, int height, int radius) {
+		if (color.startsWith("#")) {
+			color = color.substring(1);
+		}
+
+		String name = "cicle-" + color + "-"+width+"x"+height+"-"+radius; // circle-rrggbbaaa-WIDTHxHEIGHT-RADIUS
+		if (assets.containsKey(name)) {
+			return (Texture) assets.get(name);
+		}
+
+		Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+		Color colorObj = Color.valueOf(color);
+		pixmap.setColor(Color.rgba8888(colorObj));
+		pixmap.fillCircle(width / 2, height / 2, radius);
+		Texture texture = new Texture(pixmap);
+		pixmap.dispose();
+
+		assets.put(name, texture);
+
+		return texture;
+	}
+
+	public Texture placeholder(String color, int size) {
+		int correction = 0;
+		
+		if (size % 2 == 0) {
+			correction = 1;
+		}
+		
+		return placeholder(color, size, size, size / 2 - correction);
+	}
+
+	public Texture placeholder(Color color, int width, int height, int radius) {
+		return placeholder(color.toString(), width, height, radius);
+	}
+
+	public Texture placeholder(Color color, int size) {
+		return placeholder(color.toString(), size);
 	}
 
 	public Texture texture(String path) {
@@ -126,7 +169,7 @@ public class AssetsAPI extends API {
 
 			FreeTypeFontGenerator generator = fontGenerator(json.getString("font"));
 			FreeTypeFontParameter params = new FreeTypeFontParameter();
-			
+
 			params.size = JSONUtils.getInt(json, "size", 10);
 			params.mono = JSONUtils.getBoolean(json, "mono", false);
 			params.color = Color.valueOf(JSONUtils.getString(json, "color", "ffffff"));
@@ -152,7 +195,7 @@ public class AssetsAPI extends API {
 			params.minFilter = Texture.TextureFilter.valueOf(JSONUtils.getString(json, "minFilter", "Nearest"));
 			params.magFilter = Texture.TextureFilter.valueOf(JSONUtils.getString(json, "magFilter", "Nearest"));
 			params.incremental = JSONUtils.getBoolean(json, "incremental", false);
-			
+
 			BitmapFont font = generator.generateFont(params);
 			int randID = (int) Math.floor((Math.random() * Integer.MAX_VALUE));
 			assets.put(path + randID, font);

@@ -28,7 +28,7 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 	}
 	
 	private void error(String message, Exception e) {
-		core.event(EVENT_ERROR, message, e);
+		core.event(EVENT_ERROR, ""+message, e);
 		isStable = false;
 	}
 
