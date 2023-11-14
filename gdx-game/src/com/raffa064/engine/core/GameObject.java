@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 /*
  Engine Objects class.
@@ -14,90 +16,80 @@ import java.util.regex.Pattern;
  */
 
 public class GameObject {
-	private static final int ACTION_ADD_COMPONENT = 0;
-	private static final int ACTION_ADD_CHILD = 1;
-	private static final int ACTION_CHANGE_CHILD_INDEX = 2;
-	private static final int ACTION_REMOVE_CHILD = 3;
-	
+//	private static final int ACTION_ADD_COMPONENT = 0;
+//	private static final int ACTION_ADD_CHILD = 1;
+//	private static final int ACTION_CHANGE_CHILD_INDEX = 2;
+//	private static final int ACTION_REMOVE_CHILD = 3;
+//	
 	protected App app;
 	protected boolean isReady;
 
 	private String name = "Unknown";
 	private List<GameObject> children = new ArrayList<>();
+	private List<GameObject> nextFrameChildren = new ArrayList<>();
 	private List<Component> components = new ArrayList<>();
-	private List<Object[]> requestedActions = new ArrayList<>();
 	private boolean queuedFree;
 	private int zIndex = 0;
-	private String tag;
-	private List<String> groups = new ArrayList<>();
-	
+//	private String tag;
+//	private List<String> groups = new ArrayList<>();
+//	
 	public GameObject parent;
+
+	public GameObject() {}
 	
-	private void requestAction(Object value, int action) {
-		Object[] params = { value, action };
-		
-		requestedActions.add(params);
+	public void setApp(App app) {
+		this.app = app;
 	}
-	
-	private void actionAddComponent(Component component) {
+
+	public void add(Component component) {
 		components.add(component);
 		
-		if (isReady && !component.isReady()) {
-			component.set("obj", this);
-
-			if (component instanceof Native) {
-				app.injectDependencies((Native) component);
+		component.obj = this;
+		component.set("obj", this);
+		
+		if (isReady) {
+			// TODO: need to call component.ready (in next frame?)
+		}
+	}
+	
+	public void add(Scriptable scriptComponent) {
+		Script component = (Script) ScriptableObject.getProperty(scriptComponent, "THIS"); // Get Java instance from JS object
+		add(component);
+	}
+	
+	public Object get(String componentName) {
+		for (Component component : components) {
+			if (componentName.equals(component.name)) {
+				if (component instanceof Script) {
+					// In theory, only scripts will acess script components directily, 
+					// so it convert Script component into your JS instance
+					return ((Script)component).script.objectScope; 
+				}
+				
+				return component;
 			}
-			
-			component._ready();
 		}
+		
+		return null;
 	}
 	
-	private void actionAddChild(GameObject child) {
-		checkName(child);
-		addChildByIndex(child);
-		child.setApp(app);
-		child.parent = this;
-
-		if (isReady && !child.isReady) {
-			child.ready();
-		}
-	}
-
-	private void actionChangeChildIndex(GameObject child) {
-		children.remove(child);
-		addChildByIndex(child);
-	}
-
-	private void actionRemoveChild(GameObject child) {
-		children.remove(child);
-		child.exit();
+	public List<Component> getComponents() {
+		return components;
 	}
 	
-	public void setTag(String tag) {
-		this.tag = tag;
-	}
-
-	public String getTag() {
-		return tag;
-	}
-
 	public void setZIndex(int zIndex) {
 		this.zIndex = zIndex;
-
-		if (parent != null) {
-			parent.changeIndex(this);
+		
+		if (isReady) {
+			parent.children.remove(this);
+			parent.addChildByIndex(this);
 		}
 	}
-
+	
 	public int getZIndex() {
 		return zIndex;
 	}
-
-	public void changeIndex(GameObject child) {
-		requestAction(child, ACTION_CHANGE_CHILD_INDEX);
-	}
-
+	
 	private void addChildByIndex(GameObject child) {
 		for (int i = 0; i < children.size(); i++) {
 			if (child.zIndex < children.get(i).zIndex) {
@@ -108,17 +100,42 @@ public class GameObject {
 
 		children.add(child);
 	}
+	
+	public void addChild(GameObject child) {
+		child.app = app;
+		child.parent = this;
 
-	public List<Component> getComponents() {
-		return components;
+		if (isReady) {
+			nextFrameChildren.add(child); // When obj is ready, it will add the child at the beging of next frame (in process method)
+		} else {
+			addChildByIndex(child);
+		}
+	}	
+	
+	public Object getChild(String childName) {
+		for (GameObject child: children) {
+			if (childName.equals(child.name)) {
+				return child;
+			}
+		}
+		
+		return null;
 	}
-
+	
 	public List<GameObject> getChildren() {
 		return children;
 	}
+	
+	public String getName() {
+		return name;
+	}
 
-	public void setApp(App app) {
-		this.app = app;
+	public void setName(String name) {
+		this.name = name;
+
+		if (isReady && parent != null) {
+			parent.checkChildName(this);
+		}
 	}
 
 	private String increseNumber(String name) {
@@ -135,151 +152,78 @@ public class GameObject {
 		}
 
 		return name;
-	} 
+	}
 
-	private void checkName(GameObject child) {
+	private void checkChildName(GameObject child) {
 		for (GameObject c : children) {
 			if (c == child) continue;
 
 			if (c.name.equals(child.name)) {
 				child.name = increseNumber(child.name);
-				checkName(child);
+				checkChildName(child);
 			}
 		}
 	}
+	
+	public void ready() {
+		isReady = true;
 
-	public void setName(String name) {
-		this.name = name;
-
-		if (parent != null) {
-			parent.checkName(this);
-		}
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public GameObject child(String name) {
-		for (int i = 0; i < children.size(); i++) {
-			GameObject child = children.get(i);
-
-			if (child.name.equals(name)) {
-				return child;
+		for (Component component : components) {
+			if (component instanceof Native) {
+				app.injectDependencies((Native) component);
 			}
-		}
-
-		return null;
-	}
-
-	public GameObject addChild(GameObject child) {
-		requestAction(child,  ACTION_ADD_CHILD);
-		return this;
-	}
-
-	public <T extends Component> GameObject add(T component) {
-		requestAction(component, ACTION_ADD_COMPONENT);
+			
+			component.ready();
+		}		
 		
-		return this;
+		for (GameObject child : children) {
+			child.ready();
+		}
 	}
-
-	public Object get(String name) {
+	
+	public void process(float delta) {
+		for (GameObject child : nextFrameChildren) {
+			checkChildName(child);
+			addChildByIndex(child);
+			
+			child.ready();
+		}
+		
+		nextFrameChildren.clear();
+		
 		for (Component component : components) {
-			if (component.name.equals(name)) {
-				if (component instanceof Script) {
-					return ((Script) component).script.objectScope;
-				}
-				return component;
+			component.process(delta);
+		}
+		
+		List<GameObject> trash = new ArrayList<>();
+		for (GameObject child : children) {
+			child.process(delta);
+			
+			if (child.isQueuedFree()) {
+				trash.add(child);
 			}
 		}
-
-		return null;
-	}
-
-	public boolean has(String name) {
-		for (Component component : components) {
-			if (component.name.equals(name)) {
-				return true;
-			}
+		
+		for (GameObject child : trash) {
+			child.exit();
+			children.remove(child);
 		}
-
-		return false;
 	}
 
 	public void queueFree() {
 		queuedFree = true;
 	}
-
+	
 	public boolean isQueuedFree() {
 		return queuedFree;
 	}
-
-	public void ready() {
-		isReady = true;
-
-		for (int i = 0; i < components.size(); i++) {
-			Component component = components.get(i);
-			component.set("obj", this);
-
-			if (component instanceof Native) {
-				app.injectDependencies((Native) component);
-			}
-
-			component._ready();
-		}
-
-		for (int i = 0; i < children.size(); i++) {
-			GameObject child = children.get(i);
-			child.ready();
-		}
-	}
-
-	public void process(float delta) {
-		for (Object[] params : requestedActions) {
-			Object value = params[0];
-			int action = params[1];
-			
-			switch (action) {
-				case ACTION_ADD_COMPONENT:
-					actionAddComponent((Component) value);
-					break;
-				case ACTION_ADD_CHILD:
-					actionAddChild((GameObject) value);
-					break;
-				case ACTION_CHANGE_CHILD_INDEX:
-					actionChangeChildIndex((GameObject) value);
-					break;
-				case ACTION_REMOVE_CHILD:
-					actionRemoveChild((GameObject) value);
-					break;
-			}
-		}
-		
-		requestedActions.clear();
-		
-		for (int i = 0; i < components.size(); i++) {
-			Component component = components.get(i);
-			component.process(delta);
-		}
-
-		for (int i = 0; i < children.size(); i++) {
-			GameObject child = children.get(i);
-			child.process(delta);
-
-			if (child.isQueuedFree()) {
-				requestAction(child, ACTION_REMOVE_CHILD);
-			}
-		}
-	}
-
+	
 	public void exit() {
-		for (int i = 0; i < children.size(); i++) {
-			GameObject child = children.get(i);
+		for (GameObject child : children) {
 			child.exit();
 		}
 		
-		for (int i = 0; i < components.size(); i++) {
-			Component component = components.get(i);
+		for (Component component : components) {
 			component.exit();
 		}
 	}
