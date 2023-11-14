@@ -198,29 +198,37 @@ public class SceneAPI extends API {
 		}
 	}
 	
-	public String tree(GameObject obj, String log, int level, int[] components) {
+	public String tree(GameObject obj, String log, int level, int[] data) {
+		// Indent
 		for (int i = 0; i < level; i++) {
 			log += ' ';
 		}
 
+		// Add object name
 		log += obj.getName() + '\n';
-		components[0] += obj.getComponents().size();
-
+		
+		// Store statistics
+		data[0]++;                             // Object amount
+		data[1] += obj.getComponents().size(); // Component amount
+		
+		// List childs (recursively)
 		List<GameObject> children = obj.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			GameObject child = children.get(i);
-			log = tree(child, log, level+1, components);
+			log = tree(child, log, level + 1, data);
 		}
 
+		// Show statistics
 		if (level == 1) {
-			log += "Component Amount: " + components[1];
+			log = "Objects: " + data[0] + ", Components: " + data[1] + "\n" + log;
 		}
 
 		return log;
 	}
 	
 	public String tree(GameObject obj) {
-		return tree(obj, "", 1, new int[2]);
+		int[] data = new int[2];
+		return tree(obj, "", 1, data);
 	}
 	
 	public String tree() {
