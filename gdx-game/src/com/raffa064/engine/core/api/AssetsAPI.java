@@ -36,6 +36,10 @@ public class AssetsAPI extends API {
 	@Override
 	public void useState(APIState values) {
 	}
+	
+	public int amount() {
+		return assets.size();
+	}
 
 	public String nameOf(Object asset) {
 		for (Map.Entry<String, Object> entry : assets.entrySet()) {
@@ -48,6 +52,17 @@ public class AssetsAPI extends API {
 		}
 
 		return null;
+	}
+	
+	public String names() {
+		String names = "";		
+		
+		for (Map.Entry<String, Object> entry : assets.entrySet()) {
+			String key = entry.getKey();
+			names += key + "\n";
+		}
+		
+		return names;
 	}
 
 	public Texture placeholder(String color) {
@@ -163,7 +178,13 @@ public class AssetsAPI extends API {
 		return content;
 	}
 
-	public BitmapFont font(String path) {
+	public BitmapFont font(String path, String instanceName) {
+		String name = path + "-" + instanceName;
+		
+		if (assets.containsKey(name)) {
+			return (BitmapFont) assets.get(name);
+		}
+		
 		try {
 			JSONObject json = new JSONObject(readFile(path)); // Certifique-se de que 'jsonString' contenha seu JSON.
 
@@ -197,13 +218,20 @@ public class AssetsAPI extends API {
 			params.incremental = JSONUtils.getBoolean(json, "incremental", false);
 
 			BitmapFont font = generator.generateFont(params);
-			int randID = (int) Math.floor((Math.random() * Integer.MAX_VALUE));
-			assets.put(path + randID, font);
+			assets.put(name, font);
 			return font;
 		} catch (Exception e) {
 			return null;
 		}
 	}
+	
+	// Caution! it will create a new instance each call
+	public BitmapFont font(String path) {
+		long randID = (long) Math.floor((Math.random() * Long.MAX_VALUE));
+		String instanceName = Long.toHexString(randID);
+		
+		return font(path, instanceName);
+	} 
 
 	private FreeTypeFontGenerator fontGenerator(String path) {
 		if (assets.containsKey(path)) {
@@ -218,22 +246,26 @@ public class AssetsAPI extends API {
 
 		return generator;
 	}
+	
+	public void dispose(Object asset) {
+		if (asset instanceof Texture) {
+			((Texture)asset).dispose();
+		}
 
-	public void dispose() {
+		if (asset instanceof FreeTypeFontGenerator) {
+			((FreeTypeFontGenerator)asset).dispose();
+		}
+
+		if (asset instanceof BitmapFont) {
+			((BitmapFont)asset).dispose();
+		}
+	}
+	
+	public void disposeAll() {
 		for (Map.Entry<String, Object> entry : assets.entrySet()) {
-			Object value = entry.getValue();
-
-			if (value instanceof Texture) {
-				((Texture)value).dispose();
-			}
-
-			if (value instanceof FreeTypeFontGenerator) {
-				((FreeTypeFontGenerator)value).dispose();
-			}
-
-			if (value instanceof BitmapFont) {
-				((BitmapFont)value).dispose();
-			}
+			Object asset = entry.getValue();
+			
+			dispose(asset);
 		}
 
 		assets.clear();

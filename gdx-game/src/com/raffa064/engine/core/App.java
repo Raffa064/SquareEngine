@@ -262,7 +262,7 @@ public class App {
 	}
 
 	public void dispose() {
-		Assets.dispose();
+		Assets.disposeAll();
 		scriptEngine.exit();
 	}
 }
