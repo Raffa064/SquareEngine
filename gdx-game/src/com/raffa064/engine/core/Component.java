@@ -23,10 +23,16 @@ public abstract class Component {
 	public String name;
 	public GameObject obj;
 	public List<ExportedProp> exportedProps = new ArrayList<>();
+	
 	private int inputPriority;
-
+	private boolean isReady;
+	
 	public Component(String name) {
 		this.name = name;
+	}
+
+	public boolean isReady() {
+		return isReady;
 	}
 
 	public void setInputPriority(int inputPriority) {
@@ -54,6 +60,11 @@ public abstract class Component {
 			this.getClass().getField(key).set(this, value);
 		} catch (Exception e) {
 		}
+	}
+	
+	public void _ready() {
+		ready();
+		isReady = true;
 	}
 
 	public abstract void ready();

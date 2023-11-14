@@ -37,8 +37,9 @@ public class CollisionAPI extends API {
 					GameObject objA = (GameObject) bodyA.getUserData();
 					GameObject objB = (GameObject) bodyB.getUserData();
 
-					objA.startCollision(objB);
-					objA.endCollision(objA);
+// 					Apaguei na hora de reescrever os GameObject
+//					objA.startCollision(objB);
+//					objA.endCollision(objA);
 				}
 
 				@Override
