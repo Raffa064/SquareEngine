@@ -8,23 +8,23 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.raffa064.engine.environments.Android;
 import com.raffa064.engine.environments.editor.EditorCore;
 import com.raffa064.engine.environments.editor.EditorGame;
 import com.raffa064.engine.modules.EditorModule;
 import com.raffa064.engine.ui.FloatBubble;
+import com.raffa064.engine.ui.FloatNotifications;
 import com.raffa064.engine.ui.FloatWindow;
 import java.io.File;
+import java.util.Random;
 
 import static com.raffa064.engine.environments.editor.EditorCore.*;
-import com.raffa064.engine.ui.FloatNotifications;
-import android.widget.ScrollView;
-import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 public class EditorActivity extends AndroidApplication implements Android {
 	public static final String EXTRA_PROJECT_DIR_NAME = "projectDirName";
-	
+
 	public static final int OPEN_CODE_EDITOR = 1;
 
 	// Editor Runtime
@@ -61,7 +61,29 @@ public class EditorActivity extends AndroidApplication implements Android {
 
 		ScrollView scrollContainer = findViewById(R.id.float_notification_scroll_container);
 		LinearLayout container = findViewById(R.id.float_notification_container);
-		FloatNotifications n = new FloatNotifications(this, scrollContainer, container);
+
+		final FloatNotifications n = new FloatNotifications(this, scrollContainer, container);
+
+		Thread notificationThread = new Thread() {
+			public void run() {
+				for (int i = 0; i < 10; i++) {
+					runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								n.createNotification("Title", "This is the coolest message ever!");
+							}
+						});
+					try {
+						int randomInterval = new Random().nextInt(2000);
+						Thread.sleep(randomInterval);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+
+		notificationThread.start();
 	}
 
 	@Override
@@ -91,12 +113,12 @@ public class EditorActivity extends AndroidApplication implements Android {
 	@Override
 	public void setOrientation(final String orientationName) {
 		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				int orientationCode = getOrientationCode(orientationName);
-				setRequestedOrientation(orientationCode);
-			}
-		});
+				@Override
+				public void run() {
+					int orientationCode = getOrientationCode(orientationName);
+					setRequestedOrientation(orientationCode);
+				}
+			});
 	}
 
 	private int getOrientationCode(String orientationName) {
@@ -127,20 +149,20 @@ public class EditorActivity extends AndroidApplication implements Android {
 				return value;
 			}
 		}
-		
+
 		return ActivityInfo.SCREEN_ORIENTATION_SENSOR;
 	}
 
  	private void setupDirs() {
 		File engineDir = new File(Environment.getExternalStorageDirectory(), "SquareEngine");
-		
+
 		String projectDirName = "project";
-		
+
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			projectDirName = extras.getString(EXTRA_PROJECT_DIR_NAME, "project");
 		}
-		
+
 		File projectDir = new File(engineDir, projectDirName);
 
 		core.event(EVENT_CHANGE_ENGINE_DIR, engineDir);
@@ -172,7 +194,7 @@ public class EditorActivity extends AndroidApplication implements Android {
 					core.event(action);
 				}
 			});
-			
+
 		bubble.addAction(EVENT_TOGGLE_TURBO, R.drawable.gmd_play_arrow, "Turbo");
 		bubble.addAction(EVENT_RELOAD_PROJECT, R.drawable.cmd_autorenew, "Reload");
 		bubble.addAction(EVENT_OPEN_CODE_EDITOR, R.drawable.gmd_code, "Code editor");
