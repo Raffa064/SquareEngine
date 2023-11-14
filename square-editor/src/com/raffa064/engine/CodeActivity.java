@@ -1,9 +1,5 @@
 package com.raffa064.engine;
 
-/*
-	TODO: Refactor, and restructure this class
-*/
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;

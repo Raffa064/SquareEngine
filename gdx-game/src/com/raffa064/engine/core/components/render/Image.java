@@ -30,8 +30,9 @@ public class Image extends Native {
 			"color", COLOR,
 			"columns", INTEGER,
 			"rows", INTEGER,
-			"frame", INTEGER
-			// Todo: add flipX/Y
+			"frame", INTEGER,
+			"flipX", BOOLEAN,
+			"flipY", BOOLEAN	
 		);
 	}
 

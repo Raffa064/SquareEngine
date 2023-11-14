@@ -21,9 +21,7 @@ public class Scene extends GameObject {
 	public ShapeRenderer shape;
 	public HashMap<API, APIState> states;
 	public String orientation;
-	
-	public Scene() {}
-	
+
 	public void loadSceneState() {
 		if (states == null) {
 			states = new HashMap<>();
@@ -40,8 +38,6 @@ public class Scene extends GameObject {
 		}
 	}
 
-	/*
-	TODO: reimplement z-index
 	@Override
 	public int getZIndex() {
 		return 0;
@@ -49,18 +45,16 @@ public class Scene extends GameObject {
 
 	@Override
 	public void setZIndex(int zIndex) {}
-	*/
 	
 	public void init() {
 		loadSceneState();
 		
-		// TODO: reimplement isReady flag
-//		if (!isReady) {
+		if (!isReady) {
 			setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			batch = new SpriteBatch();
 			shape = new ShapeRenderer();
 			ready();
-//		}
+		}
 	}
 
 	public void setupCamera(float screenWidth, float screenHeight) {

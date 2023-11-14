@@ -140,8 +140,6 @@ public class HomeActivity extends Activity {
 		createProjectApply.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					// TODO: check inputs, if valid, create project and open it
-
 					if (isEmptyInput(createProjectName)) return;
 					if (isEmptyInput(createProjectPackage)) return;
 					if (isEmptyInput(createProjectWidth)) return;

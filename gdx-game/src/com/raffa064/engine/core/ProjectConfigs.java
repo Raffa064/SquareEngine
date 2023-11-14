@@ -72,7 +72,7 @@ public class ProjectConfigs {
 				customKeytore = configs.getString("customKeystore");
 			}
 
-			// TODO: permissions;
+			// TODO: read and store permissions;
 		}
 		
 		mainScene = JSONUtils.getString(configs, "mainScene", "main");

@@ -5,25 +5,18 @@ import java.util.List;
 
 public class Main {
 	public static void main(String[] args) {
-		List<Integer> list = new ArrayList<>();
+		// ADDING CHILD:
 		
-		for (int i = 0; i < 10; i++) {
-			int random = (int) (Math.random() * 10);
-			
-			addSort(list, random);
-		}
+		GameObject A = new GameObject();
+		GameObject B = new GameObject();
 		
-		System.out.println(list);
-	}
+		A.addChild(B); // Add before ready -> call ready within obj
+		A.ready();
 
-	private static void addSort(List<Integer> list, int random) {
-		for (int j = 0; j < list.size(); j++) {
-			if (random < list.get(j)) {
-				list.add(j, random);
-				return;
-			}
-		}
+		GameObject C = new GameObject();
+		GameObject D = new GameObject();
 
-		list.add(random);
+		C.ready();
+		C.addChild(D); // Add after ready -> call ready in the next frame
 	}
 }
