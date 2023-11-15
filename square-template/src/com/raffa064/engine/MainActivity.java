@@ -13,6 +13,9 @@ import com.raffa064.engine.core.ProjectConfigs;
 import com.raffa064.engine.environments.Android;
 import com.raffa064.engine.environments.runtime.RuntimeGame;
 import com.square.template.R;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.text.ClipboardManager;
 
 public class MainActivity extends AndroidApplication implements Android {
 	public RuntimeGame game;
@@ -23,42 +26,82 @@ public class MainActivity extends AndroidApplication implements Android {
 
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		getActionBar().hide();
-		
+
 		try {
 			AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
-			
-			game = new RuntimeGame(this) {
-				@Override
-				public void error(final String message) {
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
-						}
-					});
-				}
-			};
+
+			game = new RuntimeGame(this);
 
 			View gameView = initializeForView(game, cfg);
 			setContentView(gameView);
-			
+
 			int decodeKey = getApplication().getPackageName().hashCode();
 			ProjectConfigs configs = new ProjectConfigs("project", false, false, true, decodeKey);
 			game.setConfigs(configs);
 		} catch (Exception e) {
-			Toast.makeText(this, "Error: "+e, Toast.LENGTH_LONG).show();
+			error("Sorry, an error occurred while initializing the game.", e);
 		}		
     }
 
 	@Override
+	public void debug(String message) {
+		// Ignored for runtime game
+	}
+
+	@Override
+	public void warning(String warning) {
+		// Ignored for runtime game
+	}
+
+	@Override
+	public void error(String message, final Throwable error) {
+		game.stop();
+
+		runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					new AlertDialog.Builder(MainActivity.this)
+						.setTitle("Error")
+						.setMessage("Unffortunelly, the game has crashed.")
+						.setNegativeButton("Close Game", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface p1, int p2) {
+								finish();
+							}
+						})
+						.setPositiveButton("Copy logs", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface p1, int p2) {
+								ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+
+								String msg = "Error Message: " + error;
+
+								for (StackTraceElement  ste : error.getStackTrace()) {
+									msg += "\n" + ste;
+								}
+
+								cm.setText(msg);
+								Toast.makeText(MainActivity.this, "Error copied!", Toast.LENGTH_LONG).show();
+								
+								finish();
+							}
+						})
+						.setCancelable(false)
+						.create()
+						.show();
+				}
+			});
+	}
+
+	@Override
 	public void setOrientation(final String orientationName) {
 		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				int orientationCode = getOrientationCode(orientationName);
-				setRequestedOrientation(orientationCode);
-			}
-		});
+				@Override
+				public void run() {
+					int orientationCode = getOrientationCode(orientationName);
+					setRequestedOrientation(orientationCode);
+				}
+			});
 	}
 
 	private int getOrientationCode(String orientationName) {

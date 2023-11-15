@@ -14,12 +14,4 @@ public final class R {
         public static final int float_window_background=0x7f020000;
         public static final int ic_launcher=0x7f020001;
     }
-    public static final class id {
-        public static final int debug=0x7f040002;
-        public static final int game_parent=0x7f040001;
-        public static final int root_layout=0x7f040000;
-    }
-    public static final class layout {
-        public static final int activity_main=0x7f030000;
-    }
 }

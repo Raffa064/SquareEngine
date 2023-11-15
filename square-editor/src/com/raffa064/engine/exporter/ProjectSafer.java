@@ -24,6 +24,7 @@ public class ProjectSafer {
 		String encryptedContent = Encryptor.encrypt(bigFileContent, decodeKey);
 		
 		File bigFile = new File(projectDir, BIG_JS_FILE_NAME);
+		
 		FileUtils.writeFile(bigFile, encryptedContent);
 	}
 }

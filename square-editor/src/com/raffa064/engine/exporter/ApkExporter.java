@@ -48,7 +48,13 @@ public class ApkExporter {
 	}
 	
 	public ExportProcess exportProject(ProjectConfigs projectConfigs, File outputFile) throws Exception {
-		// Extract template and defult keystore from assets
+		FileUtils.deleteFiles(outputFile); // Delete old apk, if exists
+		
+		// Prepare bild dir
+		FileUtils.deleteFiles(buildDir); // Delete old build dir (if it exists, probably an error occurred)
+		buildDir.mkdir(); // Create empty build dir
+		
+		// Extract template and default keystore from assets into build dir
 		extractAsset("template.apk", templateFile);
 		extractAsset("default.keystore", keyStoreFile);
 

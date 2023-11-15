@@ -13,9 +13,18 @@ import org.mozilla.javascript.EvaluatorException;
 	This is the code that runs the game on exported APK files
 */
 
-public abstract class RuntimeGame extends BaseGame {
+public class RuntimeGame extends BaseGame {
+	public boolean stopped;
 	public RuntimeGame(Android android) {
 		super(android);
+	}
+
+	public void stop() {
+		this.stopped = true;
+	}
+
+	public boolean isStopped() {
+		return stopped;
 	}
 
 	@Override
@@ -31,6 +40,8 @@ public abstract class RuntimeGame extends BaseGame {
 	
 	@Override
 	public void render() {
+		if (isStopped()) return;
+		
 		try {
 			app.render(Gdx.graphics.getDeltaTime());
 		} catch(Exception e) {
@@ -40,6 +51,8 @@ public abstract class RuntimeGame extends BaseGame {
 
 	@Override
 	public void resize(int width, int height) {
+		if (isStopped()) return;
+		
 		try {
 			app.resize(width, height);
 		} catch(Exception e) {

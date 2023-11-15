@@ -30,8 +30,6 @@ public class ExportProcess extends Thread {
 	@Override
 	public void run() {
 		try {
-			prepareFiles();
-			
 			// Start export process
 			apk64.setConfigs(configs);
 			apk64.loadTemplate();
@@ -59,12 +57,6 @@ public class ExportProcess extends Thread {
 		}
 	}
 
-	private void prepareFiles() {
-		FileUtils.deleteFiles(buildDir); // Delete old build dir (if it exists, probably an error occurred)
-		FileUtils.deleteFiles(configs.outputFile); // Delete old apk, if exists
-		buildDir.mkdir(); // Create build directory
-	}
-	
 	private void applyMetadata() {
 		//Apply changes
 		apk64.changeAppName(projectInfo.name);
@@ -81,9 +73,17 @@ public class ExportProcess extends Thread {
 	}
 	
 	private void injectSources() throws Exception {
-		apk64.addToAssets(projectInfo.getProjectDirAsFile()); // Move project dir to assets folder
+		File assets = apk64.getAssets();
+		File projectDir = projectInfo.getProjectDirAsFile();
+		
+		apk64.addToAssets(projectDir); // Move project dir to assets folder
+		
+		// Rename project dir to "assets/project"
+		File assets_projectDir = new File(assets, projectDir.getName());
+		File assets_renamedProjectDir = new File(assets, "project");
+		assets_projectDir.renameTo(assets_renamedProjectDir);
+		assets_projectDir = assets_renamedProjectDir;
 
-		File assets_projectDir = new File(apk64.getAssets(), "project"); // Folder assets/project inside apk
 		ProjectOptimizer.optimizeScripts(assets_projectDir);
 
 		int key = projectInfo.packageName.hashCode();
@@ -93,4 +93,3 @@ public class ExportProcess extends Thread {
 		FileUtils.deleteFiles(editorFile); // remove .editor file from exported apk
 	}
 }
-

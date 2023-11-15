@@ -79,7 +79,7 @@ public class EditorModule implements Module, ExportListener {
 	
 	@Override
 	public void onError(Throwable error) {
-		activity.createNotification(R.drawable.gmd_error, "Export Fail", "An unexpected error uccurred when exporting apk file: " + error);
+		activity.createNotification(R.drawable.gmd_error, "Export Fail", "An unexpected error uccurred when exporting apk file:\n" + getLogs(error));
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class EditorModule implements Module, ExportListener {
 	
 	private void openProject(File projectDir) {
 		if (!projectDir.exists()) {
-			activity.error("Project don't exists", new FileNotFoundException("FileNotFoundException: "+projectDir.getAbsolutePath()));
+			activity.createNotification(R.drawable.gmd_error, "Unknown Project", "Project folder don't exists:\n" + projectDir.getAbsolutePath());
 			return;
 		}
 		
@@ -118,8 +118,8 @@ public class EditorModule implements Module, ExportListener {
 			process.setListener(this);
 
 			isExporting = true;
-		} catch (final Exception e) {
-			activity.error("Export error: %s", e);
+		} catch (Exception e) {
+			activity.createNotification(R.drawable.gmd_error, "Export error", "Error while creating export process:\n" + getLogs(e));
 		}
 	}
 
@@ -158,5 +158,15 @@ public class EditorModule implements Module, ExportListener {
 		Intent intent = new Intent(activity, CodeActivity.class);
 		intent.putExtra(CodeActivity.EXTRA_PROJECT_PATH, projectDir.toString());		
 		activity.startActivityForResult(intent, EditorActivity.OPEN_CODE_EDITOR);
+	}
+	
+	private String getLogs(Throwable error) {
+		String msg = "Error Message: " + error;
+
+		for (StackTraceElement  ste : error.getStackTrace()) {
+			msg += "\n" + ste;
+		}
+		
+		return msg;
 	}
 }
