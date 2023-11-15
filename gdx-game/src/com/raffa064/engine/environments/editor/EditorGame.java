@@ -53,7 +53,7 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 			app = newApp;
 			isStable = true;
 		} catch (Exception e) {
-			error("Error on load project: %s", e);
+			error("Error on load project:\n%s", e);
 		}
 	}
 	
@@ -84,7 +84,7 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 					app.render(Gdx.graphics.getDeltaTime()/fpsMultiplier);
 				}
 			} catch (Exception e) {
-				error("Error on render frame: %s", e);
+				error("Error on render frame:\n%s", e);
 			}
 		}
 	}
@@ -113,7 +113,7 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 			try {
 				app.resize(width, height);
 			} catch (Exception e) {
-				error("Error on resize: %s", e);
+				error("Error on resize:\n%s", e);
 			}
 		}
 	}
@@ -126,7 +126,7 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 			try {
 				app.dispose();
 			} catch (Exception e) {
-				error("Error on dispose: %s", e);
+				error("Error on dispose:\n%s", e);
 			}
 		}
 	}

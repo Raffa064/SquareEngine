@@ -37,6 +37,7 @@ public class EditorActivity extends AndroidApplication implements Android {
 	// Views
 	private RelativeLayout rootLayout;
 	private LinearLayout gameParent;
+	private FloatNotifications notifications;
 
 	public EditorActivity() {
 		core = EditorCore.instance();
@@ -62,28 +63,7 @@ public class EditorActivity extends AndroidApplication implements Android {
 		ScrollView scrollContainer = findViewById(R.id.float_notification_scroll_container);
 		LinearLayout container = findViewById(R.id.float_notification_container);
 
-		final FloatNotifications n = new FloatNotifications(this, scrollContainer, container);
-
-		Thread notificationThread = new Thread() {
-			public void run() {
-				for (int i = 0; i < 10; i++) {
-					runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								n.createNotification("Title", "This is the coolest message ever!");
-							}
-						});
-					try {
-						int randomInterval = new Random().nextInt(2000);
-						Thread.sleep(randomInterval);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		};
-
-		notificationThread.start();
+		notifications = new FloatNotifications(this, scrollContainer, container);
 	}
 
 	@Override
@@ -212,5 +192,13 @@ public class EditorActivity extends AndroidApplication implements Android {
 		window.width(500);
 		window.height(500);
 		window.addIntoView(rootLayout);
+	}
+	
+	public void createNotification(int iconResId, String title, String message) {
+		notifications.createNotification(iconResId, title, message);
+	}
+	
+	public void clearNotifications() {
+		notifications.clear();
 	}
 }

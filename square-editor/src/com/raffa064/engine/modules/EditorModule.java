@@ -5,9 +5,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.widget.Toast;
 import androidx.core.content.FileProvider;
-import apk64.FileUtils;
 import com.raffa064.engine.CodeActivity;
 import com.raffa064.engine.EditorActivity;
+import com.raffa064.engine.R;
 import com.raffa064.engine.core.ProjectConfigs;
 import com.raffa064.engine.exporter.ApkExporter;
 import com.raffa064.engine.exporter.ExportListener;
@@ -53,6 +53,9 @@ public class EditorModule implements Module, ExportListener {
 			case EVENT_CHANGE_ENGINE_DIR:
 				changeEngineDir((File) params[0]);
 				break;
+			case EVENT_RELOAD_PROJECT:
+				activity.clearNotifications();
+				break;
 			case EVENT_OPEN_PROJECT:
 				openProject((File) params[0]);
 				break;
@@ -73,12 +76,12 @@ public class EditorModule implements Module, ExportListener {
 
 	@Override
 	public void onSucess() {
-		// TODO: Log sucess
+		activity.createNotification(R.drawable.gmd_check_circle, "Export Sucessfull", "The generated apk file is in your project folder.");
 	}
 	
 	@Override
 	public void onError(Throwable error) {
-		// TODO: Log error
+		activity.createNotification(R.drawable.gmd_error, "Export Fail", "An unexpected error uccurred when exporting apk file: " + error);
 	}
 
 	@Override
@@ -88,28 +91,33 @@ public class EditorModule implements Module, ExportListener {
 	
 	private void error(Object[] params) {
 		String message = (String) params[0];
-		Exception error = null;
+		Throwable error = null;
 
 		if (params[1] != null) {
-			error = (Exception) params[1];
+			error = (Throwable) params[1];
 		}
 
 		error(message, error);
 	}
 	
 	
-	private void error(String message, Exception error) {
+	private void error(String message, Throwable error) {
+		String stack = "";
+		
 		if (error != null) {
 			message = String.format(message, error.toString());
-		}
-
-		final String finalMessage = message;
-		activity.runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				Toast.makeText(activity, finalMessage, Toast.LENGTH_LONG).show();
+			
+			for (StackTraceElement ste : error.getStackTrace()) {
+				String className = ste.getClassName();
+				className = className.substring(className.lastIndexOf('.'), className.length());
+				String methodName = ste.getMethodName();
+				int lineNumber = ste.getLineNumber();
+				
+				stack += String.format("\n%s.%s:%d", className, methodName, lineNumber);
 			}
-		});
+		}
+		
+		activity.createNotification(R.drawable.gmd_error, "Runtime Error", message + stack);
 	}
 	
 	private void changeEngineDir(File engineDir) {
