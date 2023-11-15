@@ -2,6 +2,7 @@ package com.raffa064.engine.core.api;
 
 import com.raffa064.engine.core.App;
 import java.util.List;
+import org.mozilla.javascript.Undefined;
 
 /*
 	API to provide debug functions
@@ -40,7 +41,7 @@ public class DebugAPI extends API {
 	}
 
 	public void notNull(Object value, String message) {
-		if (value == null) {
+		if (value == null || value == Undefined.instance) {
 			error(message);
 		}
 	}
@@ -78,13 +79,13 @@ public class DebugAPI extends API {
 		}
 	}
 
-	public void set(Object value, List list, String message) {
+	public void contains(Object value, List list, String message) {
 		if (!list.contains(value)) {
 			error(message);
 		}
 	}
 
-	public <T> void set(T value, T... list, String message) {
+	public <T> void contains(T value, T... list, String message) {
 		for (T item : list) {
 			if (value.equals(item)) return;
 		}

@@ -107,7 +107,9 @@ public class EditorModule implements Module, ExportListener {
 
 	private void exportProject() {
 		if (isExporting) return;
-
+		
+		activity.createNotification(R.drawable.cmd_alert, "Exporting...", "Please wait, it can take a few seconds depending by project...");
+		
 		try {
 			File buildDir = new File(engineDir, BUILD_DIRECTORY_NAME);
 			File outputFile = new File(projectDir, EXPORTED_APK_NAME);
