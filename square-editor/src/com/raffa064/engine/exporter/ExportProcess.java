@@ -30,13 +30,15 @@ public class ExportProcess extends Thread {
 	@Override
 	public void run() {
 		try {
+			prepareFiles();
+			
 			// Start export process
 			apk64.setConfigs(configs);
 			apk64.loadTemplate();
 
 			applyMetadata(); // Change template icon, name, version, etc...
 			injectSources(); // Add game code and assets into apk
-
+			
 			// Finish apk (compress and sign)
 			apk64.finish();
 			
@@ -55,6 +57,12 @@ public class ExportProcess extends Thread {
 		if (listener != null) {
 			listener.onFinished();
 		}
+	}
+
+	private void prepareFiles() {
+		FileUtils.deleteFiles(buildDir); // Delete old build dir (if it exists, probably an error occurred)
+		FileUtils.deleteFiles(configs.outputFile); // Delete old apk, if exists
+		buildDir.mkdir(); // Create build directory
 	}
 	
 	private void applyMetadata() {
@@ -80,6 +88,9 @@ public class ExportProcess extends Thread {
 
 		int key = projectInfo.packageName.hashCode();
 		ProjectSafer.safe(assets_projectDir, key);
+		
+		File editorFile = new File(assets_projectDir, ".editor");
+		FileUtils.deleteFiles(editorFile); // remove .editor file from exported apk
 	}
 }
 

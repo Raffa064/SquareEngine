@@ -136,10 +136,6 @@ public class EditorModule implements Module, ExportListener {
 			File buildDir = new File(engineDir, BUILD_DIRECTORY_NAME);
 			File outputFile = new File(projectDir, EXPORTED_APK_NAME);
 
-			buildDir.mkdir(); // Create build directory
-
-			FileUtils.deleteFiles(outputFile); // Delete old apk
-
 			ApkExporter exporter = new ApkExporter(activity, buildDir);
 			ProjectConfigs projectConfigs = (ProjectConfigs) core.get(GET_PROJECT_CONFIGS);
 			ExportProcess process = exporter.exportProject(projectConfigs, outputFile);
