@@ -101,6 +101,50 @@ public class EditorActivity extends AndroidApplication implements Android {
 			});
 	}
 
+	@Override
+	public void debug(String message) {
+		int lineBreak = message.indexOf("\n");
+		String title = message.substring(0, lineBreak).trim();
+		message = message.substring(lineBreak+1, message.length()).trim();
+		
+		createNotification(R.drawable.gmd_bug_report, title, message);
+	}
+
+	@Override
+	public void warning(String message) {
+		int lineBreak = message.indexOf("\n");
+		String title = message.substring(0, lineBreak).trim();
+		message = message.substring(lineBreak+1, message.length()).trim();
+
+		// TODO: add an warning icon
+		createNotification(R.drawable.gmd_notifications, title, message);
+	}
+
+	@Override
+	public void error(String message, Throwable error) {
+		String stack = "";
+		
+		int lineBreak = message.indexOf("\n");
+		String title = message.substring(0, lineBreak).trim();
+		message = message.substring(lineBreak+1, message.length()).trim();
+
+		if (error != null) {
+			message = String.format(message, error.toString());
+
+			for (StackTraceElement ste : error.getStackTrace()) {
+				String className = ste.getClassName();
+				className = className.substring(className.lastIndexOf('.'), className.length());
+				String methodName = ste.getMethodName();
+				int lineNumber = ste.getLineNumber();
+
+				stack += String.format("\nat %s.%s:%d", className, methodName, lineNumber);
+			}
+		}
+
+		createNotification(R.drawable.gmd_error, title, message + stack);
+		core.event(EVENT_ERROR);
+	}
+
 	private int getOrientationCode(String orientationName) {
 		Object[][] map = {
 			{ "behind", ActivityInfo.SCREEN_ORIENTATION_BEHIND },
@@ -160,7 +204,7 @@ public class EditorActivity extends AndroidApplication implements Android {
 			View gameView = initializeForView(editorGame);
 			gameParent.addView(gameView);
 		} catch (Exception e) {
-			core.event(EVENT_ERROR, "Error on initialize game: %s", e);
+			error("Error on initialize game: %s", e);
 		}
 	}
 

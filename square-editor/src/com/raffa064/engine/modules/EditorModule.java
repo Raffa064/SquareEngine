@@ -15,6 +15,7 @@ import com.raffa064.engine.exporter.ExportProcess;
 import java.io.File;
 
 import static com.raffa064.engine.environments.editor.EditorCore.*;
+import java.io.FileNotFoundException;
 
 public class EditorModule implements Module, ExportListener {
 	private final String BUILD_DIRECTORY_NAME = ".build";
@@ -47,9 +48,6 @@ public class EditorModule implements Module, ExportListener {
 	@Override
 	public void onEvent(int event, Object[] params) {
 		switch (event) {
-			case EVENT_ERROR:
-				error(params);
-				break;
 			case EVENT_CHANGE_ENGINE_DIR:
 				changeEngineDir((File) params[0]);
 				break;
@@ -89,36 +87,6 @@ public class EditorModule implements Module, ExportListener {
 		isExporting = false;
 	}
 	
-	private void error(Object[] params) {
-		String message = (String) params[0];
-		Throwable error = null;
-
-		if (params[1] != null) {
-			error = (Throwable) params[1];
-		}
-
-		error(message, error);
-	}
-	
-	
-	private void error(String message, Throwable error) {
-		String stack = "";
-		
-		if (error != null) {
-			message = String.format(message, error.toString());
-			
-			for (StackTraceElement ste : error.getStackTrace()) {
-				String className = ste.getClassName();
-				className = className.substring(className.lastIndexOf('.'), className.length());
-				String methodName = ste.getMethodName();
-				int lineNumber = ste.getLineNumber();
-				
-				stack += String.format("\n%s.%s:%d", className, methodName, lineNumber);
-			}
-		}
-		
-		activity.createNotification(R.drawable.gmd_error, "Runtime Error", message + stack);
-	}
 	
 	private void changeEngineDir(File engineDir) {
 		if (!engineDir.exists()) {
@@ -130,7 +98,7 @@ public class EditorModule implements Module, ExportListener {
 	
 	private void openProject(File projectDir) {
 		if (!projectDir.exists()) {
-			core.event(EVENT_ERROR, "Project don't exists");
+			activity.error("Project don't exists", new FileNotFoundException("FileNotFoundException: "+projectDir.getAbsolutePath()));
 			return;
 		}
 		
@@ -151,7 +119,7 @@ public class EditorModule implements Module, ExportListener {
 
 			isExporting = true;
 		} catch (final Exception e) {
-			error("Export error: %s", e);
+			activity.error("Export error: %s", e);
 		}
 	}
 

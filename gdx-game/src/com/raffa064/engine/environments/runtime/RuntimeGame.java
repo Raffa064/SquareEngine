@@ -25,19 +25,16 @@ public abstract class RuntimeGame extends BaseGame {
 			app.loadProject(configs);
 			app.scriptEngine.setErrorListener(this);
 		} catch(Exception e) {
-			error("Load Error: "+e.getMessage());
+			android.error("Error on load project\nAn unexpected error occured when loading project:\n%s", e);
 		}
 	}
-	
-	@Override
-	public abstract void error(String message);
 	
 	@Override
 	public void render() {
 		try {
 			app.render(Gdx.graphics.getDeltaTime());
 		} catch(Exception e) {
-			error("Render error: " + e.toString());
+			android.error("Error on render frame\nSome error occurred when rendering frame:\n%s", e);
 		}
 	}
 
@@ -46,7 +43,7 @@ public abstract class RuntimeGame extends BaseGame {
 		try {
 			app.resize(width, height);
 		} catch(Exception e) {
-			error("Resize error: " + e.toString());
+			android.error("Error on resize\nError while resize window:\n%s", e);
 		}
 	}
 
@@ -55,7 +52,7 @@ public abstract class RuntimeGame extends BaseGame {
 		try {
 			app.dispose();
 		} catch(Exception e) {
-			error("Dispose error: " + e.toString());
+			android.error("Error on dispose\nSomething went wrong while disposing resources:\n%s", e);
 		}
 	}
 }

@@ -11,6 +11,7 @@ import java.io.File;
 import org.mozilla.javascript.EvaluatorException;
 
 import static com.raffa064.engine.environments.editor.EditorCore.*;
+import com.raffa064.engine.core.OutputHandler;
 
 /*
 	This is the in-editor game. It provides some debug and edition stuff.
@@ -27,13 +28,26 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 		core.add(this);
 	}
 	
-	private void error(String message, Exception e) {
-		core.event(EVENT_ERROR, ""+message, e);
-		isStable = false;
-	}
-
 	public boolean isStable() {
 		return app != null && isStable;
+	}
+	
+	private void keyboardShortcuts() {
+		if (Gdx.input.isKeyPressed(Input.Keys.F1)) {
+			core.event(EditorCore.EVENT_EXPORT_PROJECT);
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.F2)) {
+			core.event(EditorCore.EVENT_INSTALL_PROJECT);
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.F3)) {
+			core.event(EditorCore.EVENT_OPEN_CODE_EDITOR);
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.F4)) {
+			core.event(EditorCore.EVENT_RELOAD_PROJECT);
+		}
 	}
 
 	@Override
@@ -53,15 +67,10 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 			app = newApp;
 			isStable = true;
 		} catch (Exception e) {
-			error("Error on load project:\n%s", e);
+			android.error("Error on load project\nAn unexpected error occured when loading project:\n%s", e);
 		}
 	}
 	
-	@Override
-	public void error(String message) {
-		error(message, null);
-	}
-
 	@Override
 	public void render() {
 		boolean isExporting = (boolean) core.get(EditorCore.GET_IS_EXPORTING_PROJECT);
@@ -84,26 +93,8 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 					app.render(Gdx.graphics.getDeltaTime()/fpsMultiplier);
 				}
 			} catch (Exception e) {
-				error("Error on render frame:\n%s", e);
+				android.error("Error on render frame\nSome error occurred when rendering frame:\n%s", e);
 			}
-		}
-	}
-
-	private void keyboardShortcuts() {
-		if (Gdx.input.isKeyPressed(Input.Keys.F1)) {
-			core.event(EditorCore.EVENT_EXPORT_PROJECT);
-		}
-
-		if (Gdx.input.isKeyPressed(Input.Keys.F2)) {
-			core.event(EditorCore.EVENT_INSTALL_PROJECT);
-		}
-
-		if (Gdx.input.isKeyPressed(Input.Keys.F3)) {
-			core.event(EditorCore.EVENT_OPEN_CODE_EDITOR);
-		}
-
-		if (Gdx.input.isKeyPressed(Input.Keys.F4)) {
-			core.event(EditorCore.EVENT_RELOAD_PROJECT);
 		}
 	}
 
@@ -113,7 +104,7 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 			try {
 				app.resize(width, height);
 			} catch (Exception e) {
-				error("Error on resize:\n%s", e);
+				android.error("Error on resize\nError while resize window:\n%s", e);
 			}
 		}
 	}
@@ -122,12 +113,10 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 	public void dispose() {
 		core.remove(this);
 		
-		if (isStable()) {
-			try {
-				app.dispose();
-			} catch (Exception e) {
-				error("Error on dispose:\n%s", e);
-			}
+		try {
+			app.dispose();
+		} catch (Exception e) {
+			android.error("Error on dispose\nSomething went wrong while disposing resources:\n%s", e);
 		}
 	}
 	
@@ -143,6 +132,9 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 	@Override
 	public void onEvent(int event, Object[] params) {
 		switch (event) {
+			case EVENT_ERROR:
+				isStable = false;
+				break;
 			case EVENT_RELOAD_PROJECT: 
 				reloadRequest = true; 
 				break;

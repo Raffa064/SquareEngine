@@ -22,10 +22,12 @@ public class LoggerAPI extends API {
 	}
 	
 	public void log(Object... params) {
+		String str = "";
+		
 		for (Object p : params) {
-			System.out.print(p.getClass());
+			str += p;
 		}
 		
-		System.out.println();
+		app.android.debug("Debug log"+str);
 	}
 }

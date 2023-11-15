@@ -93,6 +93,6 @@ public class DebugAPI extends API {
 	}
 
 	public void error(String message) {
-		System.out.println(message);
+		app.android.error("Debug Error (called from script)\n"+message, null);
 	}
 }
