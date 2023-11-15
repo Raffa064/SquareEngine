@@ -3,6 +3,7 @@ package com.raffa064.engine.core.components.commons2d;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.raffa064.engine.core.components.Native;
+import com.badlogic.gdx.graphics.Texture;
 
 /*
 	Add 2d transformations such as position, scale and rotation 
@@ -33,7 +34,7 @@ public class Transform2D extends Native {
 		mat.rotate(rotation);
 		
 		if (parentTransform != null) {
-			mat.mul(parentTransform.transformed());
+			mat.mulLeft(parentTransform.transformed());
 		} 
 		
 		return mat;
@@ -46,6 +47,12 @@ public class Transform2D extends Native {
 
 	@Override
 	public void process(float delta) {
+		Texture yes = Assets.placeholder("0000ffff", 10);
+		Texture no = Assets.placeholder("ff0000ff", 10);
+		
+		Vector2 pos = transformed().getTranslation(new Vector2());
+		
+		batch.draw(parentTransform == null ? no : yes, pos.x, pos.y);
 	}
 
 	@Override

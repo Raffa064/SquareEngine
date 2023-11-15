@@ -83,14 +83,13 @@ public class Image extends Native {
 		float halfWidth = width / 2;
 		float halfHeight = height / 2;
 		
-		Color batchColor = batch.getColor();
-		
 		Matrix3 transformed = transform.transformed();
 		
 		Vector2 pos = transformed.getTranslation(new Vector2());
 		Vector2 scale = transformed.getScale(new Vector2());
 		float rotation = transformed.getRotation();
 		
+		Color batchColor = batch.getColor();
 		batch.setColor(color);
 		batch.draw(
 			region, 

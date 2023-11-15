@@ -39,6 +39,10 @@ public class GameObject {
 	
 	public void setApp(App app) {
 		this.app = app;
+		
+		for (GameObject child : children) {
+			child.setApp(app);
+		}
 	}
 
 	public void add(Component component) {
@@ -102,7 +106,7 @@ public class GameObject {
 	}
 	
 	public void addChild(GameObject child) {
-		child.app = app;
+		child.setApp(app);
 		child.parent = this;
 
 		if (isReady) {
