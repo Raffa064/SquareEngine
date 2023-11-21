@@ -61,11 +61,14 @@ function loadFileList(Explorer, explorerList, path, state = []) {
 
     const createFileElement = (file) => {
         const fileItem = document.createElement('li')
+        const headerContainer = document.createElement('div')
         const fileName = document.createElement('span')
+        
+        fileItem.appendChild(headerContainer)
 
         fileName.classList.add('name')
         fileName.innerText = file.name
-        fileItem.appendChild(fileName)
+        headerContainer.appendChild(fileName)
 
         var holdTimeout, doubleClickTimeout, waitingForDoubleClick;
 
@@ -147,7 +150,7 @@ function loadFileList(Explorer, explorerList, path, state = []) {
                 }
             }
 
-            fileItem.appendChild(fileAddChild)
+            headerContainer.appendChild(fileAddChild)
             fileItem.appendChild(fileChildren)
 
 

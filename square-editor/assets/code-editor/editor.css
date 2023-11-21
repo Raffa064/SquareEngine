@@ -1,5 +1,5 @@
 :root {
-  --info-height: 30px;
+    --info-height: 30px;
 }
 
 * {
@@ -42,7 +42,7 @@ header div.option {
 }
 
 header div.option::after {
-    content: '...'; 
+    content: '...';
 }
 
 header div.option div {
@@ -72,34 +72,66 @@ header div.option:hover div button:hover {
     background: #3d3d3d;
 }
 
-header div.option:hover div button + button {
+header div.option:hover div button+button {
     margin-top: 10px;
 }
 
 #info {
-  user-select: none;
-  -ms-user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  
-  display: flex;
-  padding-inline: 8px;
-  flex-direction: row;
-  justify-content: stretch;
-  align-items: center;
-  width: 100vw;
-  max-width: 100vw;
-  height: var(--info-height);
-  color: #999;
-  background: #222;/*#1e1e1e;*/
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+
+    position: relative;
+    display: flex;
+    padding-inline: 8px;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: center;
+    width: 100vw;
+    max-width: 100vw;
+    height: var(--info-height);
+    color: #ddd;
+    background: transparent;
+    overflow: hidden
+}
+
+#info::before,
+#info::after {
+    content: '';
+    position: absolute;
+    width: var(--radius);
+    height: var(--radius);
+    background: linear-gradient(90deg, var(--color-0), var(--color-1));
+    border-radius: 50%; 
+    filter: blur(20px);
+    z-index: -1;
+    opacity: 0.1;
+}
+
+#info::before {
+    --radius: 50vw;
+    --color-0: #08f;
+    --color-1: #0fa;
+    top: 0;
+    left: 0;
+    /* transform: translate(-50%, -50%) */
+}
+
+#info::after {
+    --radius: 40vw;
+    --color-0: #f40;
+    --color-1: #f0a;
+    bottom: 0;
+    right: 0;
+    /* transform: translate(50%, 50%) */
 }
 
 #info span {
-  flex: 1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  color: #aaa;
+    flex: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 main {
@@ -111,7 +143,9 @@ main {
 
 .CodeMirror {
     flex: 1;
-    height: calc(100vh /* - 40px */ - var(--info-height));
+    height: calc(100vh
+            /* - 40px */
+            - var(--info-height));
 }
 
 .CodeMirror * {

@@ -9,11 +9,12 @@
 
 #explorer {
     width: 0px;
-    height: calc(100vh /*- 40px */ - var(--info-height));
+    height: calc(100vh
+            /*- 40px */
+            - var(--info-height));
     min-width: 15px;
-    max-width: 80%;
-    padding-right: 10px;
-    overflow: hidden;
+    max-width: 90%;
+    padding: 10px;
     background: #222;
     position: relative;
     box-sizing: border-box;
@@ -25,7 +26,8 @@
     top: 0;
     width: 15px;
     height: 100%;
-    background: #242424; /*#333;*/
+    background: #242424;
+    /*#333;*/
 }
 
 .resizer::after {
@@ -41,7 +43,8 @@
 }
 
 .resizer.active {
-    background: #282828; /*#393939;*/
+    background: #282828;
+    /*#393939;*/
 }
 
 .resizer.active::after {
@@ -53,59 +56,72 @@
     height: 100%;
     padding: 4px;
     list-style: none;
-    overflow: scroll;
+    overflow-y: scroll;
     white-space: nowrap;
 }
 
 .folder {
-    padding-block: 5px;
+    overflow: hidden;
+    /* background: linear-gradient(to right, red, blue); */
+}
+
+.folder>div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-block: 6px;
+}
+
+.folder>div>.name {
+    color: #aaa;
+}
+
+.folder:not(.fold)>div>.name {
+    color: #fff;
 }
 
 .folder.fold {
     color: #ddd;
 }
 
-.folder>.name {
-    color: #afa;
-	font-weight: bold;
+.folder>div>.name {
+    flex: 1;
+    font-weight: bold;
 }
 
-.folder>.name::before {
+.folder>div>.name::before {
     content: '📂 ';
 }
 
-.folder.fold>.name::before {
+.folder.fold>div>.name::before {
     content: '📁 ';
 }
 
-.folder>.name::after {
+.folder>div>.name::after {
     content: '/';
 }
 
-.folder.fold > button {
-  display: none;
+.folder.fold>div>button {
+    display: none;
 }
 
-.folder button {
-    background: #282828;
+.folder>div>button {
+    background: transparent;
     color: #ffffff;
     padding-inline: 5px;
-    padding-block: 2px;
-    margin-left: 8px;
+    margin-inline: 8px;
     font-size: 1rem;
-    border-radius: 4px;
+    float: right;
 }
 
-.folder button:active {
-    border: 1px solid #444;
-	background: #2f2f2f;
+.folder>div>button:active {
+    background: #2f2f2f;
 }
 
 .folder>.children {
     padding-left: 10px;
-    margin-top: px;
     margin-bottom: 10px;
-    border-left: 1px dashed #aaa;
+    border-left: 1px solid #444;
     list-style: none;
 }
 
@@ -121,11 +137,14 @@
     background: #2a2a2a;
 }
 
+.file {
+    padding-block: 6px;
+}
+
 .file .name {
     display: block;
-	color: #aaa;
-	font-weight: normal;
-    padding-block: 5px;
+    color: #aaa;
+    font-weight: normal;
 }
 
 .editable-file .name {
@@ -148,7 +167,7 @@
 
 .file.js .name::before,
 .editable-file .icon.js::before {
-    content: '📑 ';
+    content: '📜 ';
 }
 
 .file.png .name::before,
