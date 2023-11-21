@@ -79,6 +79,7 @@ public final class R {
         public static final int float_notification=0x7f030005;
         public static final int float_window=0x7f030006;
         public static final int home_project_item=0x7f030007;
+        public static final int home_project_item_last_openned=0x7f030008;
     }
     public static final class string {
         public static final int app_name=0x7f050000;

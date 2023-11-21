@@ -19,8 +19,8 @@ import com.raffa064.engine.ui.FloatNotifications;
 import com.raffa064.engine.ui.FloatWindow;
 import java.io.File;
 import java.util.Random;
-
 import static com.raffa064.engine.environments.editor.EditorCore.*;
+import com.raffa064.engine.modules.EngineDataModule;
 
 public class EditorActivity extends AndroidApplication implements Android {
 	public static final String EXTRA_PROJECT_DIR_NAME = "projectDirName";
@@ -53,17 +53,10 @@ public class EditorActivity extends AndroidApplication implements Android {
 		getActionBar().hide();
 		setContentView(R.layout.activity_main);
 
-		setupDirs();
 		initializeViews();
+		
+		setupDirs();
 		initializeGame();
-
-		createFloatBubble();
-		createFloatWindows();
-
-		ScrollView scrollContainer = findViewById(R.id.float_notification_scroll_container);
-		LinearLayout container = findViewById(R.id.float_notification_container);
-
-		notifications = new FloatNotifications(this, scrollContainer, container);
 	}
 
 	@Override
@@ -179,7 +172,7 @@ public class EditorActivity extends AndroidApplication implements Android {
 
  	private void setupDirs() {
 		File engineDir = new File(Environment.getExternalStorageDirectory(), "SquareEngine");
-
+		
 		String projectDirName = "project";
 
 		Bundle extras = getIntent().getExtras();
@@ -196,6 +189,13 @@ public class EditorActivity extends AndroidApplication implements Android {
 	private void initializeViews() {
 		rootLayout = findViewById(R.id.root_layout);
 		gameParent = findViewById(R.id.game_parent);
+		
+		ScrollView notificationScrollContainer = findViewById(R.id.float_notification_scroll_container);
+		LinearLayout notificationContainer = findViewById(R.id.float_notification_container);
+		notifications = new FloatNotifications(this, notificationScrollContainer, notificationContainer);
+		
+		createFloatBubble();
+		createFloatWindows();
 	}
 
 	private void initializeGame() {

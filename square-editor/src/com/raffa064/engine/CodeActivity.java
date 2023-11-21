@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.raffa064.engine.ui.MyCustomInputConnection;
 import android.widget.Toast;
+import android.view.WindowManager;
 
 public class CodeActivity extends Activity {
 	public static final String EXTRA_PROJECT_PATH = "projectPath";
@@ -34,6 +35,11 @@ public class CodeActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		getWindow().setFlags(
+			WindowManager.LayoutParams.FLAG_FULLSCREEN,
+			WindowManager.LayoutParams.FLAG_FULLSCREEN
+		);
 
 		androidJSI = new AndroidJSI();
 		checkPermissions();
@@ -81,7 +87,7 @@ public class CodeActivity extends Activity {
 		setContentView(webView);
 
 		WebSettings webSettings = webView.getSettings();
-		webSettings.setUseWideViewPort(true);
+//		webSettings.setUseWideViewPort(true);
 		webSettings.setJavaScriptEnabled(true);  
 
 		webView.setWebViewClient(new WebViewClient());

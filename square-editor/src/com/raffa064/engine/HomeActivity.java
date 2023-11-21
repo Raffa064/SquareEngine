@@ -35,13 +35,25 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.raffa064.engine.modules.EngineDataModule;
+import com.raffa064.engine.environments.editor.EditorCore;
+import static com.raffa064.engine.environments.editor.EditorCore.*;
 
 public class HomeActivity extends Activity {
+	private EditorCore core;
+	private EngineDataModule engineDataModule;
+	
 	private File engineDir;
 	private ListView projectList;
 	private Button createProject;
 	private Button importProject;
 	private LinearLayout createProjectDialogContainer;
+
+	public HomeActivity() {
+		core = EditorCore.instance();
+		engineDataModule = new EngineDataModule(this);
+		core.add(engineDataModule);
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +63,10 @@ public class HomeActivity extends Activity {
 		setContentView(R.layout.activity_home);
 
 		engineDir = new File(Environment.getExternalStorageDirectory(), "SquareEngine");
-
+		
+		File engineDataDir = getFilesDir();
+		core.event(EVENT_CHANGE_ENGINE_DATA_DIR, engineDataDir);
+		
 		initializeViews();
 		setupViews();
 	}
@@ -63,8 +78,21 @@ public class HomeActivity extends Activity {
 		onCreate(null);
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		core.remove(engineDataModule);
+	}
+
 	public List<ProjectItem> loadProjectList() {
 		List<ProjectItem> projects = new ArrayList<>();
+		
+		File lastProjectDir = (File) core.get(GET_LAST_OPENNED_PROJECT);
+		if (lastProjectDir != null) {
+			ProjectItem projectItem = new ProjectItem(lastProjectDir, true);
+			projects.add(projectItem);
+		}
+		
 		for (File dir : engineDir.listFiles()) {
 			ProjectItem projectItem = new ProjectItem(dir);
 			projects.add(projectItem);
@@ -265,9 +293,23 @@ public class HomeActivity extends Activity {
 
 	public static class ProjectItem {
 		private File directory;
+		private boolean lastOpenned;
+
+		public ProjectItem(File directory, boolean lastOpenned) {
+			this.directory = directory;
+			this.lastOpenned = lastOpenned;
+		}
 
 		public ProjectItem(File directory) {
 			this.directory = directory;
+		}
+
+		public void setLastOpenned(boolean lastOpenned) {
+			this.lastOpenned = lastOpenned;
+		}
+
+		public boolean isLastOpenned() {
+			return lastOpenned;
 		}
 
 		public Bitmap getIcon() {
@@ -309,7 +351,8 @@ public class HomeActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ProjectItem item = getItem(position);
 
-			View view = LayoutInflater.from(ctx).inflate(R.layout.home_project_item, parent, false);
+			int layoutResId = item.isLastOpenned()? R.layout.home_project_item_last_openned : R.layout.home_project_item;
+			View view = LayoutInflater.from(ctx).inflate(layoutResId, parent, false);
 
 			ImageView icon = view.findViewById(R.id.project_item_icon);
 			Bitmap iconBitmap = item.getIcon();

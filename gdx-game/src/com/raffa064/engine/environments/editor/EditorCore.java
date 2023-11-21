@@ -14,18 +14,20 @@ public class EditorCore {
 	public static final int GET_PROJECT_CONFIGS = 2;
 	public static final int GET_IS_EXPORTING_PROJECT = 3;
 	public static final int GET_IS_IN_CODE_EDITOR = 4;
-
+	public static final int GET_LAST_OPENNED_PROJECT = 5;
+	
 	public static final int EVENT_ERROR = 1;
 	public static final int EVENT_CHANGE_ENGINE_DIR = 2;
-	public static final int EVENT_OPEN_PROJECT = 3;
-	public static final int EVENT_RELOAD_PROJECT = 4;
-	public static final int EVENT_EXPORT_PROJECT = 5;
-	public static final int EVENT_INSTALL_PROJECT = 6;
-	public static final int EVENT_OPEN_CODE_EDITOR = 7;
-	public static final int EVENT_CODE_EDITOR_CLOSED = 8;
-	public static final int EVENT_OPEN_SCENE_TREE = 9;
-	public static final int EVENT_OPEN_INSPECTOR = 10;
-	public static final int EVENT_TOGGLE_TURBO = 11;
+	public static final int EVENT_CHANGE_ENGINE_DATA_DIR = 3;
+	public static final int EVENT_OPEN_PROJECT = 4;
+	public static final int EVENT_RELOAD_PROJECT = 5;
+	public static final int EVENT_EXPORT_PROJECT = 6;
+	public static final int EVENT_INSTALL_PROJECT = 7;
+	public static final int EVENT_OPEN_CODE_EDITOR = 8;
+	public static final int EVENT_CODE_EDITOR_CLOSED = 9;
+	public static final int EVENT_OPEN_SCENE_TREE = 10;
+	public static final int EVENT_OPEN_INSPECTOR = 11;
+	public static final int EVENT_TOGGLE_TURBO = 12;
 	
 	private List<Module> moduleList = new ArrayList<>();
 

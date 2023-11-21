@@ -15,6 +15,7 @@ import org.mozilla.javascript.EvaluatorException;
 
 public class RuntimeGame extends BaseGame {
 	public boolean stopped;
+	
 	public RuntimeGame(Android android) {
 		super(android);
 	}
