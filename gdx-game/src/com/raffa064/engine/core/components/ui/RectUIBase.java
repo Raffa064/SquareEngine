@@ -45,6 +45,11 @@ public abstract class RectUIBase extends Native {
 		transform = (Transform2D) obj.get("Transform2D");
 		Input.subscribe(this);
 	}
+	
+	@Override
+	public void editor(float delta) {
+		// TODO: add resizers
+	}
 
 	@Override
 	public abstract boolean input(InputAPI.Event event);

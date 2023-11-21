@@ -60,6 +60,8 @@ public abstract class Component {
 	public abstract void ready();
 
 	public abstract boolean input(Event event);
+
+	public abstract void editor(float delta);
 	
 	public abstract void process(float delta);
 

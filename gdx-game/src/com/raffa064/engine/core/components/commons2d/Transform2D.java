@@ -44,6 +44,11 @@ public class Transform2D extends Native {
 	public void ready() {
 		parentTransform = (Transform2D) obj.parent.get("Transform2D");
 	}
+	
+	@Override
+	public void editor(float delta) {
+		// TODO: add draggable dots
+	}
 
 	@Override
 	public void process(float delta) {

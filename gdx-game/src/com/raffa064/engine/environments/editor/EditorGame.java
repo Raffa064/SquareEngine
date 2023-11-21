@@ -57,6 +57,7 @@ public class EditorGame extends BaseGame implements Module, ErrorListener {
 			configs = new ProjectConfigs(projectPath);
 			
 			App newApp = new App(android);
+			newApp.editorMode = true;
 			newApp.loadProject(configs);
 			newApp.scriptEngine.setErrorListener(this);
 

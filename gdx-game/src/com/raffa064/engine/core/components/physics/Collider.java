@@ -91,6 +91,11 @@ public class Collider extends Native {
 		this.shape.shape = shape;
 		updateCollisionShape();
 	}
+	
+	@Override
+	public void editor(float delta) {
+		// TODO: add resizers
+	}
 
 	@Override
 	public void process(float delta) {

@@ -44,6 +44,7 @@ public class App {
 	public boolean autoTranspile = true;
 	public boolean isEncrypted;
 	public int decodeKey;
+	public boolean editorMode;
 
 	public float viewportWidth = 1024;
 	public float viewportHeight = 600;
@@ -245,8 +246,8 @@ public class App {
 
 		Input.update();
 		Trigger.update();
-
-		currentScene.process(delta);
+		
+		currentScene.process(delta, editorMode);
 		
 		Collision.stepPhysics(delta);
 		Collision.renderDebug();

@@ -79,7 +79,13 @@ public class Script extends Component {
 		
 		return false;
 	}
-	
+
+
+	@Override
+	public void editor(float delta) {
+		call("editor", delta);
+	}
+
 	@Override
 	public void process(float delta) {
 		call("process", delta);

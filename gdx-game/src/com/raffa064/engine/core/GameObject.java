@@ -185,7 +185,7 @@ public class GameObject {
 		}
 	}
 	
-	public void process(float delta) {
+	public void process(float delta, boolean editorMode) {
 		for (GameObject child : nextFrameChildren) {
 			checkChildName(child);
 			addChildByIndex(child);
@@ -196,12 +196,16 @@ public class GameObject {
 		nextFrameChildren.clear();
 		
 		for (Component component : components) {
-			component.process(delta);
+			if (editorMode) {
+				component.editor(delta);
+			} else {
+				component.process(delta);
+			}
 		}
 		
 		List<GameObject> trash = new ArrayList<>();
 		for (GameObject child : children) {
-			child.process(delta);
+			child.process(delta, editorMode);
 			
 			if (child.isQueuedFree()) {
 				trash.add(child);
@@ -213,7 +217,7 @@ public class GameObject {
 			children.remove(child);
 		}
 	}
-
+	
 	public void queueFree() {
 		queuedFree = true;
 	}

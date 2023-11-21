@@ -39,6 +39,11 @@ public class RectTrigger extends Trigger {
 
 		return rect;
 	}
+	
+	@Override
+	public void editor(float delta) {
+		// TODO: add resizers
+	}
 
 	@Override
 	public void process(float delta) {
