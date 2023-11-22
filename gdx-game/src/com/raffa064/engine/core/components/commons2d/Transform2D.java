@@ -47,14 +47,6 @@ public class Transform2D extends Native {
 
 	@Override
 	public void process(float delta) {
-		if (Input.keyPressed(Input.D)) {
-			Texture yes = Assets.placeholder("0000ffff", 10);
-			Texture no = Assets.placeholder("ff0000ff", 10);
-
-			Vector2 pos = transformed().getTranslation(new Vector2());
-
-			batch.draw(parentTransform == null ? no : yes, pos.x - 5, pos.y - 5);
-		}
 	}
 
 	@Override

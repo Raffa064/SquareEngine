@@ -42,11 +42,6 @@ public class RectTrigger extends Trigger {
 
 	@Override
 	public void process(float delta) {
-		if (Input.keyPressed(Input.D)) {
-			Texture dbg = Assets.placeholder(collided.isEmpty()? Color.BLUE : Color.RED);
-			Rectangle rect = getTransformedRect();
-			batch.draw(dbg, rect.x, rect.y, rect.width, rect.height);
-		}
 	}
 
 	@Override
