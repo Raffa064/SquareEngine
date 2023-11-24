@@ -247,7 +247,7 @@ public class App {
 		Input.update();
 		Trigger.update();
 		
-		currentScene.process(delta, editorMode);
+		currentScene.process(delta);
 		
 		Collision.stepPhysics(delta);
 		Collision.renderDebug();

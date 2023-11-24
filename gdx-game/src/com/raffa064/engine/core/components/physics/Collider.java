@@ -93,11 +93,6 @@ public class Collider extends Native {
 	}
 	
 	@Override
-	public void editor(float delta) {
-		// TODO: add resizers
-	}
-
-	@Override
 	public void process(float delta) {
 		transform.pos.set(body.getPosition());
 		transform.rotation = body.getAngle() / (MathUtils.PI/180);

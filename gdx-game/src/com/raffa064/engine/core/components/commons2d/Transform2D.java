@@ -1,9 +1,12 @@
 package com.raffa064.engine.core.components.commons2d;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.raffa064.engine.core.components.Native;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 
 /*
 	Add 2d transformations such as position, scale and rotation 
@@ -46,12 +49,27 @@ public class Transform2D extends Native {
 	}
 	
 	@Override
-	public void editor(float delta) {
-		// TODO: add draggable dots
-	}
-
-	@Override
 	public void process(float delta) {
+		if (Scene.editor()) {
+			Matrix3 transformed = transformed();
+
+			Vector2 pos = transformed.getTranslation(new Vector2());
+			float rotation = transformed.getRotation();
+
+			Texture handle = Assets.texture(Gdx.files.internal("gizmo/handle.png"));
+
+			batch.setColor(Color.BLUE);
+			batch.draw(handle, pos.x - 15, pos.y - 15, 30, 30);
+
+			batch.setColor(Color.RED);
+			batch.draw(handle, pos.x + 100 - 15, pos.y - 15, 30, 30);
+
+			batch.setColor(Color.GREEN);
+			batch.draw(handle, pos.x - 15, pos.y + 100 - 15, 30, 30);
+
+			batch.setColor(Color.GRAY);
+			batch.draw(handle, pos.x + MathUtils.cosDeg(rotation) * 50 - 15, pos.y  + MathUtils.sinDeg(rotation) * 50 - 15, 30, 30);
+		}
 	}
 
 	@Override

@@ -1,10 +1,9 @@
 package com.raffa064.engine.core.components.commons2d.triggers;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.raffa064.engine.core.components.ComponentUtils;
 import com.raffa064.engine.core.components.commons2d.Transform2D;
 import com.raffa064.engine.core.components.commons2d.Trigger;
 
@@ -39,14 +38,12 @@ public class RectTrigger extends Trigger {
 
 		return rect;
 	}
-	
-	@Override
-	public void editor(float delta) {
-		// TODO: add resizers
-	}
 
 	@Override
 	public void process(float delta) {
+		if (Scene.editor()) {
+			ComponentUtils.boundingBox(Assets, batch, width, height, transform.transformed());
+		}
 	}
 
 	@Override

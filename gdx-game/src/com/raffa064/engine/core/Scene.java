@@ -79,7 +79,7 @@ public class Scene extends GameObject {
 	}
 
 	@Override
-	public void process(float delta, boolean editorMode) {
+	public void process(float delta) {
 		camera.update();
 
 		batch.setProjectionMatrix(camera.combined);
@@ -90,7 +90,7 @@ public class Scene extends GameObject {
 		shape.setProjectionMatrix(camera.combined);
 		shape.setColor(Color.WHITE);
 
-		super.process(delta, editorMode);
+		super.process(delta);
 
 		shape.end();
 

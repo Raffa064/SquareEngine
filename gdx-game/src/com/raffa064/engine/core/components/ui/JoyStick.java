@@ -11,16 +11,16 @@ public class JoyStick extends SingleTouchRectUiBase {
 
 	private float angle;
 	private float value;
-	
+
 	public JoyStick() {
 		super("JoyStick");
-		
+
 		exportProps(
 			"background", TEXTURE,
 			"foreground", TEXTURE
 		);
 	}
-	
+
 	private void updateValue() {
 		Rectangle rect = getRectangle();
 		Vector2 center = rect.getCenter(new Vector2());
@@ -33,7 +33,7 @@ public class JoyStick extends SingleTouchRectUiBase {
 		float maxDistance = Math.min(rect.width, rect.height) / 2;
 		value = Math.min(maxDistance, distance.len()) / maxDistance;
 	}
-	
+
 	@Override
 	protected boolean onTouchDown() {
 		updateValue();
@@ -64,7 +64,7 @@ public class JoyStick extends SingleTouchRectUiBase {
 	public float angle() {
 		return angle;
 	}
-	
+
 	public float angleRad() {
 		return (angle / 180) * MathUtils.PI;
 	}
@@ -72,7 +72,7 @@ public class JoyStick extends SingleTouchRectUiBase {
 	public float value() {
 		return value;
 	}
-	
+
 	public float value(float scalar) {
 		return value * scalar;
 	}
@@ -83,12 +83,12 @@ public class JoyStick extends SingleTouchRectUiBase {
 
 		batch.draw(background, rect.x, rect.y, rect.width, rect.height);
 		batch.draw(foreground, 
-			rect.x + MathUtils.cosDeg(angle) * rect.width / 2 * value,
-			rect.y + MathUtils.sinDeg(angle) * rect.height / 2 * value, 
-			rect.width, 
-			rect.height
+		   rect.x + MathUtils.cosDeg(angle) * rect.width / 2 * value,
+		   rect.y + MathUtils.sinDeg(angle) * rect.height / 2 * value, 
+		   rect.width, 
+		   rect.height
 		);
-		
+
 		super.process(delta);
 	}
 }

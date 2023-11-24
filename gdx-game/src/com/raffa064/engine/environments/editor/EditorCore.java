@@ -27,7 +27,7 @@ public class EditorCore {
 	public static final int EVENT_CODE_EDITOR_CLOSED = 9;
 	public static final int EVENT_OPEN_SCENE_TREE = 10;
 	public static final int EVENT_OPEN_INSPECTOR = 11;
-	public static final int EVENT_TOGGLE_TURBO = 12;
+	public static final int EVENT_TOGGLE_EDITOR_MODE = 12;
 	
 	private List<Module> moduleList = new ArrayList<>();
 

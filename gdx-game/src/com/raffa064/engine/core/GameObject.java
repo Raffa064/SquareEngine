@@ -185,7 +185,7 @@ public class GameObject {
 		}
 	}
 	
-	public void process(float delta, boolean editorMode) {
+	public void process(float delta) {
 		for (GameObject child : nextFrameChildren) {
 			checkChildName(child);
 			addChildByIndex(child);
@@ -196,16 +196,12 @@ public class GameObject {
 		nextFrameChildren.clear();
 		
 		for (Component component : components) {
-			if (editorMode) {
-				component.editor(delta);
-			} else {
-				component.process(delta);
-			}
+			component.process(delta);
 		}
 		
 		List<GameObject> trash = new ArrayList<>();
 		for (GameObject child : children) {
-			child.process(delta, editorMode);
+			child.process(delta);
 			
 			if (child.isQueuedFree()) {
 				trash.add(child);

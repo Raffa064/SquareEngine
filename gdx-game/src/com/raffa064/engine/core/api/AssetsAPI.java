@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 
 /*
  API for use and manage assets 
@@ -131,15 +132,40 @@ public class AssetsAPI extends API {
 		return placeholder(color.toString(), size);
 	}
 
-	public Texture texture(String path) {
-		if (assets.containsKey(path)) {
-			return (Texture) assets.get(path);
+	public Texture texture(FileHandle file) {
+		String name = file.path();
+		
+		if (assets.containsKey(name)) {
+			return (Texture) assets.get(name);
 		}
 
-		Texture texture = new Texture(app.path(path));
-		assets.put(path, texture);
+		Texture texture = new Texture(file);
+		assets.put(name, texture);
 
 		return texture;
+	}
+	
+	public Texture texture(String path) {
+		return texture(app.path(path));
+	}
+	
+	public NinePatch ninePatch(FileHandle file, int left, int right, int top, int bottom) {
+		String name = "np-" + file.path() + "-"+left+"-"+right+"-"+top+"-"+bottom;
+		
+		if (assets.containsKey(name)) {
+			return (NinePatch) assets.get(name);
+		}
+
+		Texture texture = texture(file);
+		NinePatch ninepatch = new NinePatch(texture, left, right, top, bottom);
+		
+		assets.put(name, ninepatch);
+
+		return ninepatch;
+	}
+	
+	public NinePatch ninePatch(String path, int left, int right, int top, int bottom) {
+		return ninePatch(app.path(path), left, right, top, bottom);
 	}
 
 	public Shape shape(String path) {

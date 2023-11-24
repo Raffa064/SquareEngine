@@ -15,8 +15,9 @@ public abstract class SingleTouchRectUiBase extends RectUIBase {
 	
 	@Override
 	public boolean input(InputAPI.Event event) {
+		if (Scene.editor()) return false;
+		
 		Rectangle rect = getRectangle();
-
 		switch (event.type) { 
 			case Input.TOUCH_EVENT:
 				Vector2 cursor = event.getWorldTouch(Scene.getCamera());
@@ -75,6 +76,8 @@ public abstract class SingleTouchRectUiBase extends RectUIBase {
 
 	@Override
 	public void process(float delta) {
+		super.process(delta); // render in-editor bounding box
+		
 		down = false;
 		up = false;
 	}

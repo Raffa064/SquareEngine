@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.raffa064.engine.core.api.InputAPI;
 import com.raffa064.engine.core.components.Native;
 import com.raffa064.engine.core.components.commons2d.Transform2D;
+import com.raffa064.engine.core.components.ComponentUtils;
 
 public abstract class RectUIBase extends Native {
 	protected Transform2D transform;
@@ -47,15 +48,15 @@ public abstract class RectUIBase extends Native {
 	}
 	
 	@Override
-	public void editor(float delta) {
-		// TODO: add resizers
-	}
-
-	@Override
 	public abstract boolean input(InputAPI.Event event);
 	
 	@Override
-	public abstract void process(float delta);
+	public void process(float delta) {
+		if (Scene.editor()) {
+			Matrix3 transformed = transform.transformed();
+			ComponentUtils.boundingBox(Assets, batch, width, height, transformed, false);
+		}
+	}
 
 	@Override
 	public void exit() {

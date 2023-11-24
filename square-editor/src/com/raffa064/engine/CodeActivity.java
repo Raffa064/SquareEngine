@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 import com.raffa064.engine.ui.MyCustomInputConnection;
 import android.widget.Toast;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 public class CodeActivity extends Activity {
 	public static final String EXTRA_PROJECT_PATH = "projectPath";
@@ -40,7 +41,9 @@ public class CodeActivity extends Activity {
 			WindowManager.LayoutParams.FLAG_FULLSCREEN,
 			WindowManager.LayoutParams.FLAG_FULLSCREEN
 		);
-
+		
+		setContentView(R.layout.activity_code);
+		
 		androidJSI = new AndroidJSI();
 		checkPermissions();
 	}
@@ -75,21 +78,23 @@ public class CodeActivity extends Activity {
 		if (getActionBar() != null) {
 			getActionBar().hide();
 		}
+		
+		LinearLayout parent = findViewById(R.id.parent);
 
 		webView = new WebView(this) {
 			@Override
 			public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-				MyCustomInputConnection myCustomInputConnection = new MyCustomInputConnection(webView, true);
+				MyCustomInputConnection myCustomInputConnection = new MyCustomInputConnection(webView, false);
 				return myCustomInputConnection;
 			}
 		};
-		
-		setContentView(webView);
 
 		WebSettings webSettings = webView.getSettings();
-//		webSettings.setUseWideViewPort(true);
-		webSettings.setJavaScriptEnabled(true);  
+    	webSettings.setUseWideViewPort(true);
+		webSettings.setJavaScriptEnabled(true); 
+		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
+		webView.setForceDarkAllowed(false);
 		webView.setWebViewClient(new WebViewClient());
 		webView.setAddStatesFromChildren(true);
 		
@@ -98,6 +103,12 @@ public class CodeActivity extends Activity {
 		webView.addJavascriptInterface(androidJSI, AndroidJSI.INTERFACE_NAME);
 
 		webView.loadUrl("file:///android_asset/code-editor/editor.html");
+		
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+			LinearLayout.LayoutParams.MATCH_PARENT,
+			LinearLayout.LayoutParams.MATCH_PARENT
+		);
+		parent.addView(webView, params);
 	}
 
 	@Override

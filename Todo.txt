@@ -1,18 +1,18 @@
 • Fix exported apk files without icon
 • Make a easy way to use tags and groups in object, and layers and masks on triggers
 • Solve screen orientation bug on exported apk
-• Create EngineDataModule
-• Add "recent" to project list of HomeActivity
 • Refactor to AndroidJSI
 • Refactor to all classes in ui folder (square-editor)
-• Add screen orientation to apk export
 • Add collision event handlers
 • Make collider shape editable
-• Implement open project
 • Make animations easy to use
-• Add nodes list debug
-• Implement LoggerAPI/DebugAPI to show messages on screen/interrupt execution
 • Fix explorer createItem duplication, and duplication crash
+x Create EngineDataModule
+x Add nodes list debug
+x Implement open project
+x Implement LoggerAPI/DebugAPI to show messages on screen/interrupt execution
+x Add screen orientation to apk export
+x Add "recent" to project list of HomeActivity
 x Create json wrapper class
 x Create project optimizer/obfuscator
 × Replace for-in into normal for
