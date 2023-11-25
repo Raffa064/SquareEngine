@@ -37,10 +37,10 @@ public class Transform2D extends Native {
 	
 	public Matrix3 transformed() {
 		Matrix3 mat = new Matrix3();
-
+		
 		mat.translate(pos);
-		mat.scale(scale);
 		mat.rotate(rotation);
+		mat.scale(scale);
 		
 		if (parentTransform != null) {
 			mat.mulLeft(parentTransform.transformed());
@@ -48,7 +48,7 @@ public class Transform2D extends Native {
 		
 		return mat;
 	}
-
+	
 	@Override
 	public void ready() {
 		parentTransform = (Transform2D) obj.parent.get("Transform2D");
@@ -81,7 +81,7 @@ public class Transform2D extends Native {
 	
 	@Override
 	public void process(float delta) {
-		if (Engine.editor()) { //&& Engine.focusIn(obj)) {
+		if (Engine.editor() && Engine.focusIn(obj)) {
 			gizmo.render(Assets, batch);
 		}
 	}
@@ -108,28 +108,38 @@ public class Transform2D extends Native {
 			
 			initializeHandlers();
 		}
+		
+		public Vector2 screnToObject(float screenX, float screenY) {
+			Matrix3 matrix = null;
+
+			// Get (inverse) parent transformation matrix
+			if (transform.parentTransform != null) {
+				matrix = transform.parentTransform.transformed().inv();
+			} else {
+				matrix = new Matrix3().inv();
+			}
+
+			Vector2 tmp = new Vector2();
+
+			// Create affine2 with scale and rotation (translation will not be used)
+			Affine2 affine2 = new Affine2();
+			affine2.rotate(matrix.getRotation());
+			affine2.scale(matrix.getScale(tmp));
+			
+			// Apply matrix to the motion vector
+			tmp.set(screenX, screenY);
+			affine2.applyTo(tmp);
+
+			return tmp;
+		}
 
 		public void initializeHandlers() {
 			motionHandle = new Handle(transform, Color.BLUE) {
 				@Override
 				public void onDrag(Vector2 cursor, float x, float y) {
-					Matrix3 parent = null;
+					Vector2 motion = screnToObject(x, y);
 					
-					if (transform.parentTransform != null) {
-						parent = transform.parentTransform.transformed();
-					} else {
-						parent = new Matrix3();
-					}
-					
-					parent = parent.inv();
-					
-					Affine2 affine2 = new Affine2();
-					affine2.scale(parent.getScale(new Vector2()));
-					affine2.rotate(parent.getRotation());
-					
-					Vector2 motion = new Vector2(x, y);
-					affine2.applyTo(motion);
-					
+					// Add motion vector to position vector
 					transform.pos.add(motion);
 				}
 			};
@@ -151,8 +161,26 @@ public class Transform2D extends Native {
 					transform.rotation = distance.angleDeg() - parentAngle;
 				}
 			};
+
+			scaleXHandle = new Handle(transform, Color.RED) {
+				@Override
+				public void onDrag(Vector2 cursor, float x, float y) {
+					Vector2 resize = screnToObject(x, y);
+
+					transform.scale.x += resize.x * .001;
+				}				
+			};
+
+			scaleYHandle = new Handle(transform, Color.GREEN) {
+				@Override
+				public void onDrag(Vector2 cursor, float x, float y) {
+					Vector2 resize = screnToObject(x, y);
+
+					transform.scale.y += resize.x * .001;
+				}				
+			};
 			
-			handlers = new Handle[]{ motionHandle, rotationHandle };
+			handlers = new Handle[]{ motionHandle, rotationHandle, scaleXHandle, scaleYHandle };
 		}
 		
 		public boolean input(Event event, OrthographicCamera cam) {
@@ -182,15 +210,28 @@ public class Transform2D extends Native {
 			Vector2 pos = transformed.getTranslation(new Vector2());
 			float rotation = transformed.getRotation();
 			
-			// Update rotation handle position
+			// Update (dynamic) handlers position
 			rotationHandle.relativePos.set(
-				MathUtils.cosDeg(rotation) * 70,
-				MathUtils.sinDeg(rotation) * 70
+				MathUtils.cosDeg(rotation) * 50,
+				MathUtils.sinDeg(rotation) * 50
 			);
+			
+			scaleXHandle.relativePos.set(
+				MathUtils.cosDeg(rotation) * 100,
+				MathUtils.sinDeg(rotation) * 100
+			);
+			
+			scaleYHandle.relativePos.set(
+				MathUtils.cosDeg(rotation + 90) * 100,
+				MathUtils.sinDeg(rotation + 90) * 100
+			);
+			
 
+			Color batchColor = batch.getColor();
 			for (Handle handle : handlers) {
 				float radius = handle.radius;
 				
+				handle.color.a = handle.activedPointer < 0 ? 1 : .5f;
 				batch.setColor(handle.color);
 				batch.draw(
 					handleTexture,
@@ -200,6 +241,8 @@ public class Transform2D extends Native {
 					radius * 2
 				);
 			}
+			
+			batch.setColor(batchColor);
 		}
 	}
 	
@@ -207,7 +250,7 @@ public class Transform2D extends Native {
 		private Transform2D transform;
 		private Color color;
 		private Vector2 relativePos = new Vector2();
-		private float radius = 15;
+		private float radius = 18;
 		private int activedPointer = -1;
 		private Vector2 dragOffset = new Vector2();
 
