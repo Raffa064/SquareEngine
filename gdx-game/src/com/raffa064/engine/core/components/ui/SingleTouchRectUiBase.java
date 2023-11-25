@@ -15,7 +15,7 @@ public abstract class SingleTouchRectUiBase extends RectUIBase {
 	
 	@Override
 	public boolean input(InputAPI.Event event) {
-		if (Scene.editor()) return false;
+		if (Engine.editor()) return false;
 		
 		Rectangle rect = getRectangle();
 		switch (event.type) { 

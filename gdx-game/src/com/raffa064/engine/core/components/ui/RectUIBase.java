@@ -52,7 +52,7 @@ public abstract class RectUIBase extends Native {
 	
 	@Override
 	public void process(float delta) {
-		if (Scene.editor()) {
+		if (Engine.editor() && Engine.focusIn(obj)) {
 			Matrix3 transformed = transform.transformed();
 			ComponentUtils.boundingBox(Assets, batch, width, height, transformed, false);
 		}

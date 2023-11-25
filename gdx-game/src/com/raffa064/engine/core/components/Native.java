@@ -13,8 +13,10 @@ import com.raffa064.engine.core.api.LoggerAPI;
 import com.raffa064.engine.core.api.SceneAPI;
 import com.raffa064.engine.core.api.TagAPI;
 import com.raffa064.engine.core.api.TriggerAPI;
+import com.raffa064.engine.core.api.EngineAPI;
 
 public abstract class Native extends Component  {
+	public EngineAPI Engine;
 	public TriggerAPI Trigger;
 	public DebugAPI Debug;
 	public InputAPI Input;

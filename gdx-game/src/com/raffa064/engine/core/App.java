@@ -16,6 +16,7 @@ import com.raffa064.engine.core.api.AssetsAPI;
 import com.raffa064.engine.core.api.CollisionAPI;
 import com.raffa064.engine.core.api.ComponentAPI;
 import com.raffa064.engine.core.api.DebugAPI;
+import com.raffa064.engine.core.api.EngineAPI;
 import com.raffa064.engine.core.api.GroupAPI;
 import com.raffa064.engine.core.api.InputAPI;
 import com.raffa064.engine.core.api.LoggerAPI;
@@ -25,7 +26,6 @@ import com.raffa064.engine.core.api.TriggerAPI;
 import com.raffa064.engine.core.collision.Shape;
 import com.raffa064.engine.core.components.Native;
 import com.raffa064.engine.core.components.StandardComponents;
-import com.raffa064.engine.core.components.commons2d.Trigger;
 import com.raffa064.engine.core.json.JSONLoader;
 import com.raffa064.engine.environments.Android;
 import com.raffa064.engine.environments.runtime.Encryptor;
@@ -38,6 +38,9 @@ import java.util.List;
 */
 
 public class App {
+	public static final int VERSION = 1;
+	public static final String VERSION_NAME = "1.0.beta";
+	
 	public ProjectConfigs configs;
 	public FileHandle projectDir;
 	public boolean isAbsolutePath; // switch between absolute/internal project folder
@@ -45,6 +48,7 @@ public class App {
 	public boolean isEncrypted;
 	public int decodeKey;
 	public boolean editorMode;
+	public GameObject focusedObject;
 
 	public float viewportWidth = 1024;
 	public float viewportHeight = 600;
@@ -57,6 +61,7 @@ public class App {
 	public ScriptEngine scriptEngine;
 
 	public List<API> apiList = new ArrayList<>();
+	public EngineAPI Engine;
 	public TriggerAPI Trigger;
 	public DebugAPI Debug;
 	public InputAPI Input;
@@ -90,6 +95,7 @@ public class App {
 		apiList.clear();
 
 		// APIs
+		Engine = new EngineAPI(this);
 		Trigger = new TriggerAPI(this);
 		Debug = new DebugAPI(this);
 		Input = new InputAPI(this);
@@ -137,6 +143,8 @@ public class App {
 
 		// Injecting APIs 
 		scriptEngine
+			.inject("Engine", Engine)
+			.inject("Trigger", Trigger)
 			.inject("Debug", Debug)
 			.inject("Input", Input)
 			.inject("Collision", Collision)
@@ -146,7 +154,7 @@ public class App {
 			.inject("Component", Component.js())
 			.inject("Assets", Assets)
 			.inject("Logger", Logger);
-
+			
 		// Injecting native components
 		Component.loadComponentList(StandardComponents.class);
 	}
@@ -223,6 +231,7 @@ public class App {
 	}
 
 	public void injectDependencies(Native component) {
+		component.Engine = Engine;
 		component.Trigger = Trigger;
 		component.Debug = Debug;
 		component.Input = Input;

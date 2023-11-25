@@ -164,10 +164,6 @@ public class SceneAPI extends API {
 		return findObject(name, app.currentScene);
 	}
 	
-	public boolean editor() {
-		return app.editorMode;
-	}
-	
 	public static class HistoryList<T> {
 		public List<T> history = new ArrayList<>();
 		public int index;

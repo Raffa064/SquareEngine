@@ -50,7 +50,7 @@ public class Transform2D extends Native {
 	
 	@Override
 	public void process(float delta) {
-		if (Scene.editor()) {
+		if (Engine.editor() && Engine.focusIn(obj)) {
 			Matrix3 transformed = transformed();
 
 			Vector2 pos = transformed.getTranslation(new Vector2());

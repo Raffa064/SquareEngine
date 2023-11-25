@@ -41,7 +41,7 @@ public class RectTrigger extends Trigger {
 
 	@Override
 	public void process(float delta) {
-		if (Scene.editor()) {
+		if (Engine.editor() && Engine.focusIn(obj)) {
 			ComponentUtils.boundingBox(Assets, batch, width, height, transform.transformed());
 		}
 	}
