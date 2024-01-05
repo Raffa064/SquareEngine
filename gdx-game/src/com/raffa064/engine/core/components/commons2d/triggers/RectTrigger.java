@@ -27,7 +27,7 @@ public class RectTrigger extends Trigger {
 	}
 	
 	public Rectangle getTransformedRect() {
-		Matrix3 transformed = transform.transformed();
+		Matrix3 transformed = transform.worldMatrix;
 		Vector2 pos = transformed.getTranslation(new Vector2());
 		Vector2 scale = transformed.getScale(new Vector2());
 
@@ -42,7 +42,7 @@ public class RectTrigger extends Trigger {
 	@Override
 	public void process(float delta) {
 		if (Engine.editor() && Engine.focusIn(obj)) {
-			ComponentUtils.boundingBox(Assets, batch, width, height, transform.transformed(), false);
+			ComponentUtils.boundingBox(Assets, batch, width, height, transform.worldMatrix, false);
 		}
 	}
 

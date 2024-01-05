@@ -16,33 +16,33 @@ import com.raffa064.engine.core.components.commons2d.Transform2D;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Collider extends Native {
-	public Transform2D transform;
-	
-	public World world;
-	public Body body;
-	public Shape shape = new Shape();
-	public PolygonShape pShape;
-	public Fixture fixture;
-	public BodyType type;
-	
-	public float mass;
-	public boolean active;
-	public boolean allowSleep;
-	public float density;
-    public short categoryBits;
-    public short maskBits;
-    public float friction;
-    public boolean isSensor;
-    public float restitution;
-
+//	public Transform2D transform;
+//	
+//	public World world;
+//	public Body body;
+//	public Shape shape = new Shape();
+//	public PolygonShape pShape;
+//	public Fixture fixture;
+//	public BodyType type;
+//	
+//	public float mass;
+//	public boolean active;
+//	public boolean allowSleep;
+//	public float density;
+//    public short categoryBits;
+//    public short maskBits;
+//    public float friction;
+//    public boolean isSensor;
+//    public float restitution;
+//
 	public Collider(String name, BodyType type) {
 		super(name);
-		this.type = type;
+//		this.type = type;
 	}   
 	
 	@Override
 	public void ready() {
-		transform = (Transform2D) obj.get("Transform2D");
+		/*transform = (Transform2D) obj.get("Transform2D");
 		world = Collision.world;
 		
 		BodyDef bodyDef = new BodyDef();
@@ -50,7 +50,7 @@ public class Collider extends Native {
 		bodyDef.allowSleep = allowSleep;
 		bodyDef.type = type;
 		
-		Matrix3 transformed = transform.transformed();
+		Matrix3 transformed = transform.worldMatrix;
 		bodyDef.position.set(transformed.getTranslation(new Vector2()));
 		bodyDef.angle = transformed.getRotation();
 		
@@ -74,11 +74,12 @@ public class Collider extends Native {
 		fixtureDef.restitution = restitution;
 	
 		fixture = body.createFixture(fixtureDef);
+		*/
 	}
 
-	private void updateCollisionShape() {
+	/*private void updateCollisionShape() {
 		Vector2 scale = new Vector2();
-		transform.transformed().getScale(scale);
+		transform.worldMatrix.getScale(scale);
 		pShape.set(shape.scaled(scale));
 	}
 	
@@ -90,17 +91,17 @@ public class Collider extends Native {
 	public void setShape(float[] shape) {
 		this.shape.shape = shape;
 		updateCollisionShape();
-	}
+	}*/
 	
 	@Override
 	public void process(float delta) {
-		transform.pos.set(body.getPosition());
-		transform.rotation = body.getAngle() / (MathUtils.PI/180);
+//		transform.pos.set(body.getPosition());
+//		transform.rotation = body.getAngle() / (MathUtils.PI/180);
 	}
 
 	@Override
 	public void exit() {
-		world.destroyBody(body);
-		pShape.dispose();
+//		world.destroyBody(body);
+//		pShape.dispose();
 	}
 }

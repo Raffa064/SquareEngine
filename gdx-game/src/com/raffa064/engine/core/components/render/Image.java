@@ -83,7 +83,7 @@ public class Image extends Native {
 		float halfWidth = width / 2;
 		float halfHeight = height / 2;
 
-		Matrix3 transformed = transform.transformed();
+		Matrix3 transformed = transform.worldMatrix;
 
 		Vector2 pos = transformed.getTranslation(new Vector2());
 		Vector2 scale = transformed.getScale(new Vector2());

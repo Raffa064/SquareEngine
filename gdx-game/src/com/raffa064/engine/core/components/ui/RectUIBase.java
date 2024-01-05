@@ -25,7 +25,7 @@ public abstract class RectUIBase extends Native {
 	}
 
 	public Rectangle getRectangle() {
-		Matrix3 transformed = transform.transformed();
+		Matrix3 transformed = transform.worldMatrix;
 		Vector2 pos = transformed.getTranslation(new Vector2());
 		Vector2 scale = transformed.getScale(new Vector2());
 
@@ -53,7 +53,7 @@ public abstract class RectUIBase extends Native {
 	@Override
 	public void process(float delta) {
 		if (Engine.editor() && Engine.focusIn(obj)) {
-			Matrix3 transformed = transform.transformed();
+			Matrix3 transformed = transform.worldMatrix;
 			ComponentUtils.boundingBox(Assets, batch, width, height, transformed, false);
 		}
 	}
